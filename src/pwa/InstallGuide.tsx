@@ -58,8 +58,8 @@ export function InstallGuide() {
       <h3>What works offline?</h3>
       <p>
         After the app finishes its first online load, your local ShoreDex,
-        equipment and CPU battles work offline. Camera captures can be reviewed
-        manually. Gemini and new map tiles need an internet connection.
+        equipment and CPU battles work offline. New discoveries require online
+        AI identification. Gemini and new map tiles need an internet connection.
       </p>
       <p>
         Allow camera access when you scan. If access is blocked, enable it in

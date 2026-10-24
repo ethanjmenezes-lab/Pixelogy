@@ -167,3 +167,35 @@ test("map service failure offers retry without blocking local gameplay", async (
     page.getByRole("button", { name: "Pinch A trusty little hit" }),
   ).toBeVisible();
 });
+
+test("pixel terrain loads real-coordinate vector features with crisp controls and an offset companion", async ({
+  page,
+}) => {
+  await mockLocation(page);
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
+  await page.getByRole("button", { name: "Enable location" }).click();
+  await expect(page.locator(".geographic-map")).toHaveAttribute(
+    "data-map-ready",
+    "true",
+  );
+  const canvas = page.locator(".geographic-map canvas");
+  const sizes = await canvas.evaluate((c) => ({
+    width: (c as HTMLCanvasElement).width,
+    display: c.getBoundingClientRect().width,
+    rendering: getComputedStyle(c).imageRendering,
+  }));
+  expect(sizes.width).toBeCloseTo(sizes.display / 3, 0);
+  expect(sizes.rendering).toBe("pixelated");
+  const player = await page.locator(".gps-avatar").boundingBox();
+  const crab = await page.locator(".gps-crab").boundingBox();
+  expect(Math.abs(player!.x - crab!.x)).toBeGreaterThan(15);
+  await expect(
+    page.getByRole("link", { name: "OpenFreeMap", exact: true }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: `test-results/pixel-world-${test.info().project.name}.png`,
+  });
+  expect(errors).toEqual([]);
+});

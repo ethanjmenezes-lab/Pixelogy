@@ -1,3 +1,4 @@
+import { mapTile } from "./mapFixture";
 import type { Page } from "@playwright/test";
 // Test fixtures replace browser APIs only. No mock provider is shipped in the application.
 export async function mockCamera(page: Page) {
@@ -61,23 +62,59 @@ export async function mockLocation(page: Page) {
       watchers.forEach((fn) => fn(position()));
     });
   });
-  await page.route("https://tiles.openfreemap.org/**", (route) =>
-    route.fulfill({
-      json: {
-        version: 8,
-        sources: {},
-        layers: [
-          {
-            id: "background",
-            type: "background",
-            paint: { "background-color": "#b8d7cf" },
-          },
-        ],
-      },
-    }),
-  );
+  await page.route("https://tiles.openfreemap.org/**", (route) => {
+    const url = new URL(route.request().url());
+    if (url.pathname === "/planet")
+      return route.fulfill({
+        json: {
+          tilejson: "3.0.0",
+          tiles: ["https://tiles.openfreemap.org/test/{z}/{x}/{y}.pbf"],
+          minzoom: 0,
+          maxzoom: 14,
+          vector_layers: [
+            "landcover",
+            "landuse",
+            "waterway",
+            "park",
+            "water",
+            "building",
+            "transportation",
+            "transportation_name",
+          ].map((id) => ({ id, fields: {} })),
+        },
+      });
+    const match = url.pathname.match(/\/test\/(\d+)\/(\d+)\/(\d+)\.pbf/);
+    if (match)
+      return route.fulfill({
+        contentType: "application/x-protobuf",
+        body: mapTile(+match[1], +match[2], +match[3]),
+      });
+    return route.abort();
+  });
 }
 export async function takePhoto(page: Page) {
   await page.getByRole("button", { name: "Take photo", exact: true }).click();
-  await page.getByRole("button", { name: "Choose item manually" }).waitFor();
+  await page.getByRole("checkbox", { name: "I agree to send" }).waitFor();
+}
+
+export const safeRecognition = {
+  label: "Plastic bag",
+  category: "plastic_bag",
+  subtype: null,
+  safety: "allowed",
+  bbox: [100, 100, 900, 900],
+};
+export async function mockRecognition(
+  page: Page,
+  result: unknown = safeRecognition,
+) {
+  await page.route("**/api/analyze", (route) =>
+    route.fulfill({ json: result }),
+  );
+}
+export async function identify(page: Page) {
+  await page.getByRole("checkbox", { name: "I agree to send" }).check();
+  await page
+    .getByText("Gemini identification · review required", { exact: true })
+    .waitFor();
 }

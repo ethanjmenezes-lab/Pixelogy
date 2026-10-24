@@ -1,0 +1,362 @@
+/* Pixelogy's original tropical palette, inspired by the supplied color reference. */
+:root {
+  --turquoise: #25c6b2;
+  --mint: #a9ddab;
+  --orange: #f58a08;
+  --cream: #fff8df;
+  --purple: #594793;
+  --ink: #282044;
+  --muted: #615475;
+  color: var(--ink);
+  background: var(--ink);
+}
+.game-device {
+  background: var(--mint);
+  border-color: var(--purple);
+}
+p,
+.field-help,
+.feature-content .page-title p {
+  color: var(--muted);
+}
+h1,
+h2,
+h3,
+.eyebrow,
+.field-label {
+  color: var(--ink);
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 4px;
+}
+input[type="checkbox"],
+input[type="range"] {
+  accent-color: var(--purple);
+}
+.feature-overlay {
+  background: linear-gradient(150deg, #dcf3ce, var(--cream) 45%, #fbe1b1);
+}
+.feature-header {
+  background: var(--purple);
+  border-color: var(--ink);
+  color: var(--cream);
+}
+.back-world,
+.header-pixel {
+  color: var(--cream);
+}
+.feature-content .panel,
+.panel,
+.item-dialog,
+.pwa-update {
+  background: var(--cream);
+  border: 2px solid var(--purple);
+  border-radius: 3px;
+  box-shadow: 3px 4px 0 #59479325;
+}
+.feature-content .primary,
+.button.primary {
+  background: var(--purple);
+  border-color: var(--ink);
+  color: var(--cream);
+}
+.feature-content .secondary,
+.button.secondary {
+  background: var(--orange);
+  border-color: #995118;
+  color: var(--ink);
+}
+.button.text,
+.success {
+  color: var(--purple);
+}
+.feature-content .button {
+  font-size: 12px;
+}
+.feature-content .eyebrow {
+  font-size: 9px;
+}
+.feature-content .page-title p,
+.profile-page p {
+  font-size: 12px;
+}
+.player-hud,
+.discovery-counter,
+.world-round {
+  background: var(--cream);
+  border-color: var(--purple);
+  color: var(--ink);
+  border-radius: 3px;
+  box-shadow: 3px 4px 0 #28204435;
+}
+.portrait,
+.profile-preview > .player-avatar {
+  background: var(--mint);
+  border-color: var(--purple);
+}
+.portrait > span {
+  background: var(--orange);
+  color: var(--ink);
+  border-color: var(--cream);
+}
+.hud-info > span,
+.hud-info > small {
+  color: var(--muted);
+}
+.xp-track {
+  background: #e4d9f0;
+  border-color: var(--purple);
+}
+.xp-track > i {
+  background: var(--orange);
+}
+.discovery-counter svg {
+  color: var(--purple);
+}
+.location-tag,
+.menu-dot,
+.offline-status {
+  background: var(--purple);
+  color: var(--cream);
+}
+.location-tag small {
+  color: var(--cream);
+}
+.location-tag > span {
+  background: var(--turquoise);
+  box-shadow: 2px 0 var(--turquoise);
+}
+.world-round.detached {
+  background: var(--orange);
+  border-color: var(--purple);
+}
+.menu-orbit {
+  background: var(--cream);
+  border-color: var(--orange);
+}
+.control-caption {
+  color: var(--ink);
+  text-shadow:
+    0 1px var(--cream),
+    1px 0 var(--cream),
+    -1px 0 var(--cream);
+}
+.world-hint {
+  background: var(--cream);
+  color: var(--ink);
+  text-shadow: none;
+  padding: 4px;
+}
+.game-menu {
+  background: var(--cream);
+  border-color: var(--purple);
+  color: var(--ink);
+  border-radius: 8px 8px 0 0;
+}
+.game-menu::backdrop {
+  background: #28204499;
+}
+.menu-handle {
+  background: var(--purple);
+}
+.menu-title small,
+.menu-tile small,
+.menu-note {
+  color: var(--muted);
+}
+.menu-tile {
+  background: #fffdf4;
+  border: 2px solid var(--purple);
+  border-bottom-width: 4px;
+  border-radius: 3px;
+}
+.menu-tile .menu-icon {
+  color: var(--ink);
+  background: var(--mint);
+  border-color: var(--purple);
+  border-radius: 2px;
+}
+.menu-tile.scan .menu-icon {
+  background: var(--turquoise);
+}
+.menu-tile.battle .menu-icon,
+.menu-tile.crab .menu-icon {
+  background: #ffd093;
+}
+.menu-tile.profile .menu-icon {
+  background: #ded4ef;
+}
+.pixel-close {
+  background: var(--mint);
+  border-color: var(--purple);
+}
+.menu-tile small {
+  font-size: 9px;
+}
+.menu-tile strong {
+  font-size: 12px;
+}
+.location-backdrop {
+  background:
+    radial-gradient(ellipse at 20% 15%, #f5e9ab, transparent 55%),
+    linear-gradient(160deg, var(--mint), var(--turquoise));
+}
+.location-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image:
+    linear-gradient(90deg, var(--purple) 1px, transparent 1px),
+    linear-gradient(var(--purple) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.location-message {
+  border: 2px solid var(--purple);
+}
+.map-error,
+.notice.error {
+  background: #fff0d7;
+  border: 2px solid #a74732;
+  color: #702e25;
+}
+.map-error button {
+  min-height: 44px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.game-loading {
+  background: var(--mint);
+  color: var(--ink);
+}
+.camera-live,
+.empty-preview {
+  background: var(--ink);
+  border-radius: 3px;
+}
+.scan-steps .active,
+.mode-badge {
+  background: var(--mint);
+  color: var(--ink);
+  border-color: var(--purple);
+}
+.gear-preview,
+.cleanup-box,
+.safety-note,
+.profile-stats,
+.drawer-note {
+  background: #e5f1d2;
+  color: var(--ink);
+  border-color: var(--purple);
+}
+.item-card,
+.gear-row,
+.gear-slot,
+.slot,
+.equipment-slot,
+.move,
+.stat-card {
+  border-color: var(--purple);
+  border-radius: 3px;
+}
+.item-card,
+.gear-row,
+.move,
+.stat-card {
+  background: var(--cream);
+}
+.item-card.selected,
+.gear-row.selected,
+.gear-slot.selected,
+.move:hover:not(:disabled) {
+  background: var(--mint);
+  border-color: var(--purple);
+}
+.item-card h3,
+.item-card small,
+.stat-grid strong,
+.move strong,
+.move small,
+.fighter-info,
+.turn-count {
+  color: var(--ink);
+}
+.arena,
+.battle-arena {
+  background: linear-gradient(var(--mint), #dcf3ce 65%, #f6d69b 65%);
+  border-color: var(--purple);
+}
+.turn-banner {
+  background: var(--purple);
+  color: var(--cream);
+}
+.combat-log {
+  background: var(--cream);
+}
+.combat-log p {
+  color: var(--ink);
+}
+.palette-group button[aria-pressed="true"] {
+  outline-color: var(--purple);
+}
+.profile-page input:not([type="checkbox"]),
+select {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--purple);
+}
+/* Only terrain is pixelated; controls, labels and sprites stay at native resolution. */
+.geographic-map canvas {
+  image-rendering: pixelated;
+}
+.gps-crab {
+  margin-left: 0;
+  pointer-events: none;
+}
+.gps-avatar {
+  pointer-events: none;
+}
+.street-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.street-labels span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font:
+    bold 10px/1.3 "Trebuchet MS",
+    sans-serif;
+  color: var(--ink);
+  background: #fff8dfdf;
+  padding: 2px 5px;
+  border-radius: 2px;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.maplibregl-ctrl-attrib {
+  font-size: 10px;
+  background: var(--cream);
+  color: var(--ink);
+}
+.maplibregl-ctrl-attrib a {
+  color: var(--ink);
+}
+.map-loading {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--purple);
+  font-size: 11px;
+  white-space: nowrap;
+}

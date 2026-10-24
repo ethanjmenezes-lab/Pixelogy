@@ -16,7 +16,7 @@ You are implementing **Pixelogy v4**, an original mobile-first beach-cleanup / c
 ## Unalterable game requirements
 
 - Two connected loops: **safe trash discovery → saved item → equip original red crab → battle**, plus an **optional self-reported cleanup → cleanup XP → weekly leaderboard** loop. Every equipped item is backed by a unique saved, safe ShoreDex collectible, not an arbitrary granted item (except explicitly labeled tutorial mock gear, which must not enter persistence).
-- Immediate camera capture → **Gemini-first** consent-based object identification/localization, **manual fallback** → editable object-centered crop → pixel art. Do not pixelate the entire scene and call that isolation.
+- Immediate camera capture → **AI-only** consent-based object identification/localization (online required; retry/retake on failure; no category or safety overrides) → editable object-centered crop → pixel art. Do not pixelate the entire scene and call that isolation.
 - **Do not gate ShoreDex cards or gear on disposal.** After a safe scan is reviewed, save its card/gear; ask for **optional** `I safely disposed of this litter` confirmation now or later. Only a unique confirmed cleanup grants cleanup XP. Never claim AI verifies disposal.
 - Store rarity (Common/Uncommon/Rare/Legendary) once; rarity affects only presentation, **not attack, defense, speed, cleanup XP or matchmaking**.
 - Collectibles have deterministic **gear blueprint** based on safe category/subtype. Render an original **red crab base** plus layered, slot-anchored gear. Standardized stats prevent unknown/hazardous items from giving advantages.

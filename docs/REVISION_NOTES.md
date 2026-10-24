@@ -1,5 +1,15 @@
 # Revision history and key decisions
 
+## Tropical pixel world and AI-only scanning — October 24, 2026
+
+- Replaced the stock Liberty basemap/recoloring with an authored MapLibre style over live OpenFreeMap vector data: original pixel grass/water/path/roof textures, geographic building footprints, road hierarchy, bridges and rail. Terrain uses a one-third-resolution backing canvas; UI, sparse street labels and original avatar/crab sprites stay sharp. The crab has a visible side offset and movement-only animation. Added honest map loading/timeout/error states.
+- Applied turquoise, mint, orange, cream and purple branding across world controls, menus, feature screens and manifest/HTML theme colors. The supplied image guided colors only; its mascot, lettering and logo were not copied.
+- Removed manual category/subtype/safety controls and manual fallback. A validated safe Gemini response for the current capture plus review is required to save. Consent revocation, navigation and retake invalidate/abort late responses. Crop changes require renewed review. Offline/service/schema failures offer retry/retake without saving. Existing inventories, loadouts, cosmetic rarity and cleanup transactions are unchanged.
+- Traced prior GPS browser failures to stale Vite optimized dependency chunks (`504 Outdated Optimize Dep`), not a successful location fix being discarded. Browser tests now own port 5175 with a separate Vite dependency cache. Added a deterministic vector-tile fixture, official MapLibre style validation, palette contrast checks and AI error/race regressions. Fixed source-error masking on map load and used MapLibre 6's missing-image resolver for generated patterns.
+- Verified: typecheck, lint, 43 unit/API/configuration tests, five plain-Node API smoke assertions, production build and all 44 browser checks (22 each Chromium/WebKit). The full capture → AI review → save without cleanup → equip → CPU battle → reload → optional cleanup flow passed in both browsers. Layout checks include 375/390/430px, landscape, keyboard/reduced motion and PWA offline/update/cache exclusions.
+- Inspected mobile map/menu visuals and loaded live OpenFreeMap tiles in production preview using a synthetic TAMU coordinate (30.6177, -96.3365), with no page errors. This is not physical-device location validation. Hosted Gemini, deployment acceptance and physical iPhone camera/GPS/performance remain unverified. The existing lazy MapLibre chunk-size warning remains.
+
+
 ## API runtime import repair — October 24, 2026
 
 - Reproduced `ERR_MODULE_NOT_FOUND` by loading emitted API JavaScript in plain Node. `/api/analyze` already used `.js` specifiers, but its shared recognition module retained `./gear.ts` and `./pixel.ts`. Changed those transitive runtime imports to `.js`; no source files were renamed or runtime errors suppressed. `api/analyze.ts` is the only current API route.

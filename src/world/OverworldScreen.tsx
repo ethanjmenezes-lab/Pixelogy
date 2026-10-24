@@ -47,6 +47,7 @@ export function OverworldScreen({ covered }: { covered: boolean }) {
         <Suspense fallback={<div className="location-backdrop" />}>
           <GeographicMap
             fix={gps.fix}
+            active={gps.active && !covered && !menu && gps.status === "ready"}
             follow={!detached}
             recenter={recenter}
             profile={profile}

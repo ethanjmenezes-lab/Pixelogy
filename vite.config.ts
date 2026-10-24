@@ -52,7 +52,7 @@ function localApi(): Plugin {
           );
         } catch {
           if (!res.writableEnded)
-            respond(500, { error: "Local API failed. Use manual mode." });
+            respond(500, { error: "Local API failed. Retry identification later." });
         }
       });
     },
@@ -65,6 +65,7 @@ export default defineConfig(({ mode }) => {
       if (env[key]) process.env[key] = env[key];
   }
   return {
+    cacheDir: mode === "e2e" ? "node_modules/.vite-e2e" : "node_modules/.vite",
     plugins: [
       react(),
       tailwindcss(),

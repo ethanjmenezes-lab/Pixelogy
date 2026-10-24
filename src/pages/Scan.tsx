@@ -11,13 +11,7 @@ import {
   Sparkles,
   RotateCcw,
 } from "lucide-react";
-import {
-  categories,
-  categoryLabels,
-  gearFor,
-  type Category,
-  type Collectible,
-} from "../lib/gear";
+import { categoryLabels, gearFor, type Collectible } from "../lib/gear";
 import { normalizePhoto, pixelate, boxToCrop, type Crop } from "../lib/pixel";
 import { recognitionSchema } from "../lib/recognition";
 import { saveDiscovery, claimCleanup } from "../lib/storage";
@@ -27,20 +21,39 @@ import { ItemArt } from "../components/ItemCard";
 export function Scan() {
   const { refresh } = useGame();
   const [source, setSource] = useState("");
-  const [category, setCategory] = useState<Category>("plastic_bag");
-  const [subtype, setSubtype] = useState<"magazine" | null>(null);
+  type Recognition = ReturnType<typeof recognitionSchema.parse>;
+  const [result, setResult] = useState<Recognition | null>(null);
+  const category = result?.category ?? "plastic_bag";
+  const subtype = result?.subtype ?? null;
+  const safety = result?.safety ?? "uncertain";
   const [crop, setCrop] = useState<Crop>({
     x: 15,
     y: 15,
     width: 70,
     height: 70,
   });
-  const [mode, setMode] = useState<"choose" | "manual" | "gemini">("choose");
+  const [mode, setMode] = useState<
+    | "capture"
+    | "consent"
+    | "analyzing"
+    | "review"
+    | "blocked"
+    | "error"
+    | "saved"
+  >("capture");
+  const generation = useRef(0);
+  const request = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      generation.current++;
+      request.current?.abort();
+    };
+  }, []);
   const [consent, setConsent] = useState(false);
   const [safe, setSafe] = useState(false);
-  const [safety, setSafety] = useState<"allowed" | "hazardous" | "uncertain">(
-    "uncertain",
-  );
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState<Collectible | null>(null);
@@ -51,10 +64,18 @@ export function Scan() {
   const [consentSaving, setConsentSaving] = useState(false);
   const [consentLoaded, setConsentLoaded] = useState(false);
   useEffect(() => {
+    let active = true;
     void readConsent()
-      .then(setConsent)
+      .then((value) => {
+        if (active) setConsent(value);
+      })
       .catch(() => {})
-      .finally(() => setConsentLoaded(true));
+      .finally(() => {
+        if (active) setConsentLoaded(true);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
   const analyzed = useRef("");
   useEffect(() => {
@@ -86,72 +107,111 @@ export function Scan() {
       if (url) URL.revokeObjectURL(url);
     };
   }, [source, crop]);
+  function invalidate() {
+    generation.current++;
+    request.current?.abort();
+    request.current = null;
+    lock.current = false;
+    setBusy(false);
+    setResult(null);
+    setSafe(false);
+  }
+  function retake() {
+    invalidate();
+    analyzed.current = "";
+    setSource("");
+    setPreview("");
+    setSaved(null);
+    setError("");
+    setMode("capture");
+  }
   async function selectPhoto(file?: File) {
     if (!file) return;
+    invalidate();
+    const version = generation.current;
     setError("");
     setBusy(true);
     try {
       const normalized = await normalizePhoto(file);
+      if (!mounted.current || version !== generation.current) return;
       analyzed.current = "";
+      id.current = crypto.randomUUID();
       setSource(normalized);
       setSaved(null);
-      setMode("choose");
-
-      setSafe(false);
-      setSafety("uncertain");
+      setMode("consent");
       setCrop({ x: 15, y: 15, width: 70, height: 70 });
-      id.current = crypto.randomUUID();
       setClaimMessage("");
     } catch (e) {
-      setError((e as Error).message);
+      if (mounted.current && version === generation.current)
+        setError((e as Error).message);
     } finally {
-      setBusy(false);
+      if (mounted.current && version === generation.current) setBusy(false);
     }
   }
   async function analyze(image = source) {
-    if (!consent || lock.current) return;
+    if (!image || !consent || consentSaving || lock.current) return;
+    invalidate();
+    const version = generation.current;
+    const controller = new AbortController();
+    request.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 30000);
     lock.current = true;
     setBusy(true);
+    setMode("analyzing");
     setError("");
-    setSafe(false);
     try {
       if (!navigator.onLine) throw new Error("Offline");
       const response = await fetch(analyzeUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ consent: true, image }),
-        signal: AbortSignal.timeout(30000),
+        signal: controller.signal,
       });
-      if (!response.ok)
-        throw new Error("Gemini is unavailable. Manual mode is ready below.");
-      const result = recognitionSchema.parse(await response.json());
-      setCategory(result.category);
-      setSubtype(result.subtype);
-      setCrop(boxToCrop(result.bbox));
-      setSafety(result.safety);
-      setMode("gemini");
-      if (result.safety !== "allowed")
+      if (!response.ok) throw new Error("Analysis unavailable");
+      const recognition = recognitionSchema.parse(await response.json());
+      if (!mounted.current || version !== generation.current) return;
+      setResult(recognition);
+      setCrop(boxToCrop(recognition.bbox));
+      setMode(recognition.safety === "allowed" ? "review" : "blocked");
+      if (recognition.safety !== "allowed")
         setError(
-          "This may be dangerous or uncertain. Do not pick it up for points. Choose another safe object.",
+          "This may be dangerous or uncertain. Do not pick it up for points. Retake a different safe object.",
         );
     } catch {
-      setMode("manual");
-      setSafety("uncertain");
+      if (!mounted.current || version !== generation.current) return;
+      setMode("error");
+      setResult(null);
       setError(
-        "Gemini is unavailable or returned an invalid result. Review your item in manual mode.",
+        navigator.onLine
+          ? "Gemini is unavailable or returned an invalid result. Retry identification or retake the photo. Nothing has been saved."
+          : "You’re offline. New discoveries need an internet connection and Gemini identification. Reconnect and retry; nothing has been saved.",
       );
     } finally {
-      setBusy(false);
-      lock.current = false;
+      clearTimeout(timeout);
+      if (mounted.current && version === generation.current) {
+        setBusy(false);
+        lock.current = false;
+        request.current = null;
+      }
     }
   }
   async function save() {
-    if (lock.current || !safe || safety !== "allowed") return;
+    if (
+      lock.current ||
+      !consent ||
+      !result ||
+      mode !== "review" ||
+      !safe ||
+      safety !== "allowed"
+    )
+      return;
     lock.current = true;
     setBusy(true);
     setError("");
     try {
+      const version = generation.current;
       const art = await pixelate(source, crop);
+      if (!mounted.current || version !== generation.current) return;
       const item = await saveDiscovery({
         id: id.current,
         category,
@@ -161,6 +221,7 @@ export function Scan() {
         art,
       });
       setSaved(item);
+      setMode("saved");
       await refresh();
     } catch {
       setError(
@@ -189,7 +250,6 @@ export function Scan() {
     }
   }
   const gear = gearFor(category, subtype);
-  const blocked = mode === "gemini" && safety !== "allowed";
   return (
     <>
       <div className="section-heading page-title">
@@ -266,14 +326,7 @@ export function Scan() {
               {saved.gearBlueprintId ? "Equip on your crab" : "Open ShoreDex"}
               <ArrowRight size={17} />
             </Link>
-            <button
-              className="button text"
-              onClick={() => {
-                setSource("");
-                setSaved(null);
-                setError("");
-              }}
-            >
+            <button className="button text" onClick={retake}>
               Scan again
             </button>
             <Link className="button text" to="/collection">
@@ -292,18 +345,22 @@ export function Scan() {
                 <button
                   className="icon-button"
                   aria-label="Retake photo"
-                  disabled={busy}
-                  onClick={() => {
-                    setSource("");
-                    setError("");
-                  }}
+                  disabled={busy && mode !== "analyzing"}
+                  onClick={retake}
                 >
                   <RotateCcw size={18} />
                 </button>
               )}
             </div>
             {source ? (
-              <CropEditor source={source} crop={crop} onChange={setCrop} />
+              <CropEditor
+                source={source}
+                crop={crop}
+                onChange={(value) => {
+                  setCrop(value);
+                  setSafe(false);
+                }}
+              />
             ) : (
               <CameraCapture onPhoto={(file) => void selectPhoto(file)} />
             )}
@@ -316,7 +373,7 @@ export function Scan() {
               </p>
             </div>
           </section>
-          <aside className="scan-sidebar panel">
+          <aside className="scan-sidebar panel" data-scan-state={mode}>
             <span className="eyebrow">YOUR DISCOVERY KIT</span>
             <h2>{source ? "Make it yours." : "From shore to ShoreDex."}</h2>
             {!source ? (
@@ -341,17 +398,25 @@ export function Scan() {
                     checked={consent}
                     onChange={(e) => {
                       const value = e.target.checked;
+                      if (!value) {
+                        invalidate();
+                        setMode("consent");
+                      }
+                      analyzed.current = "";
                       setConsent(value);
                       setConsentSaving(true);
                       void saveConsent(value)
-                        .catch(() =>
+                        .catch(() => {
+                          setConsent(false);
+                          invalidate();
+                          setMode("consent");
                           setError(
-                            "Consent could not be remembered on this device.",
-                          ),
-                        )
+                            "Consent could not be remembered on this device. Please retry.",
+                          );
+                        })
                         .finally(() => setConsentSaving(false));
                     }}
-                    disabled={busy}
+                    disabled={consentSaving || (busy && mode !== "analyzing")}
                   />{" "}
                   I agree to send resized photos to Google Gemini for
                   identification. Remember my choice; revoke it in Profile.
@@ -362,60 +427,34 @@ export function Scan() {
                   disabled={!consent || busy || consentSaving}
                 >
                   <Sparkles size={17} />
-                  {busy ? "Working…" : "Identify with Gemini"}
+                  {mode === "analyzing"
+                    ? "Identifying…"
+                    : mode === "error"
+                      ? "Retry identification"
+                      : "Identify with Gemini"}
                 </button>
-                <button
-                  className="button text full"
-                  disabled={busy || blocked}
-                  onClick={() => {
-                    setMode("manual");
-                    setSafety("uncertain");
-                    setSafe(false);
-                  }}
-                >
-                  Choose item manually
-                </button>
-                {mode !== "choose" && (
+                {!consent && (
+                  <p className="field-help">
+                    Identification requires your permission. You can return to
+                    the world without sending a photo.
+                  </p>
+                )}
+                <p className="field-help">
+                  New discoveries require online AI identification. If the
+                  result is wrong, retake your photo.
+                </p>
+                {(mode === "review" || mode === "blocked") && result && (
                   <>
                     <div className="divider" />
                     <span className="mode-badge">
-                      {mode === "manual"
-                        ? "Manual mode"
-                        : "Gemini suggestion · review required"}
+                      Gemini identification · review required
                     </span>
-                    <label className="field-label">
-                      What is it?
-                      <select
-                        value={category}
-                        disabled={blocked || busy}
-                        onChange={(e) => {
-                          setCategory(e.target.value as Category);
-                          setSubtype(null);
-                          setSafe(false);
-                          setSafety("uncertain");
-                          setMode("manual");
-                        }}
-                      >
-                        {categories.map((c) => (
-                          <option key={c} value={c}>
-                            {categoryLabels[c]}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    {category === "paper_cardboard" && (
-                      <label className="check-label">
-                        <input
-                          type="checkbox"
-                          checked={subtype === "magazine"}
-                          disabled={blocked || busy}
-                          onChange={(e) =>
-                            setSubtype(e.target.checked ? "magazine" : null)
-                          }
-                        />{" "}
-                        It is a magazine or brochure
-                      </label>
-                    )}
+                    <h3>
+                      {result.subtype === "magazine"
+                        ? "Magazine"
+                        : categoryLabels[result.category]}
+                    </h3>
+                    <p>{result.label}</p>
                     <div className="gear-preview">
                       {preview && (
                         <img
@@ -433,27 +472,10 @@ export function Scan() {
                         </span>
                       </div>
                     </div>
-                    <label className="field-label">
-                      Safety review
-                      <select
-                        value={safety}
-                        disabled={blocked || busy}
-                        onChange={(e) => {
-                          setSafety(e.target.value as typeof safety);
-                          setSafe(false);
-                        }}
-                      >
-                        <option value="uncertain">
-                          I’m not sure / unknown object
-                        </option>
-                        <option value="hazardous">
-                          Hazardous / glass / contaminated
-                        </option>
-                        <option value="allowed">
-                          Recognizable, safe litter
-                        </option>
-                      </select>
-                    </label>
+                    <p className="field-help">
+                      Safety result: <strong>{safety}</strong>. This result
+                      cannot be overridden.
+                    </p>
                     {safety !== "allowed" && (
                       <p className="field-help">
                         Uncertain or hazardous objects cannot unlock cards, gear

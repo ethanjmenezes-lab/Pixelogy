@@ -45,7 +45,7 @@ export default async function handler(
   if (!process.env.GEMINI_API_KEY)
     return res
       .status(503)
-      .json({ error: "Gemini is not configured. Choose your item manually." });
+      .json({ error: "Gemini is not configured. Please try again later." });
   try {
     const ai = new GoogleGenAI({
       apiKey: process.env.GEMINI_API_KEY,
@@ -95,7 +95,7 @@ export default async function handler(
   } catch {
     return res.status(502).json({
       error:
-        "Gemini could not identify this photo. Use manual review and crop.",
+        "Gemini could not identify this photo. Retry identification or retake your photo.",
     });
   }
 }

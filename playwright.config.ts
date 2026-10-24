@@ -4,7 +4,7 @@ export default defineConfig({
   fullyParallel: false,
   workers: 2,
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: "http://127.0.0.1:5175",
     viewport: { width: 390, height: 844 },
     trace: "retain-on-failure",
   },
@@ -14,9 +14,9 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: "npm run dev -- --port 5173",
-      url: "http://127.0.0.1:5173",
-      reuseExistingServer: true,
+      command: "npm run dev -- --port 5175 --mode e2e --strictPort",
+      url: "http://127.0.0.1:5175",
+      reuseExistingServer: false,
     },
     {
       command: "npm run preview -- --port 4173",

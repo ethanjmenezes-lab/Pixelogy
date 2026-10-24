@@ -33,7 +33,7 @@ export function analyzeUrl() {
   if (!base) {
     if (native)
       throw new Error(
-        "Native Gemini endpoint is not configured. Choose your item manually.",
+        "Native Gemini endpoint is not configured. Please try again later.",
       );
     return "/api/analyze";
   }

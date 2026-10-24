@@ -26,11 +26,11 @@ Service-worker registration runs only in a production browser build. Test offlin
 
 `npm run build` now checks both the frontend and the API dependency graph. The server uses a separate NodeNext TypeScript configuration that rejects raw `.ts` runtime imports. Shared modules reachable from `api/` must use `.js` relative specifiers, which TypeScript resolves to their source `.ts` files and preserves correctly for emitted JavaScript.
 
-`npm run test:api-runtime` compiles every API entry and its dependencies into a temporary directory, loads the emitted entries in plain Node with TypeScript stripping disabled, and checks `/api/analyze` rejection/manual-fallback responses with Gemini credentials cleared. Temporary output is removed afterward and is never placed in the public `dist` directory. This catches module-load errors that Vite and Vitest can mask; it does not replace inspection of Vercel's own function artifact or a deployed cold-start test.
+`npm run test:api-runtime` compiles every API entry and its dependencies into a temporary directory, loads the emitted entries in plain Node with TypeScript stripping disabled, and checks `/api/analyze` rejection/unavailable-service responses with Gemini credentials cleared. Temporary output is removed afterward and is never placed in the public `dist` directory. This catches module-load errors that Vite and Vitest can mask; it does not replace inspection of Vercel's own function artifact or a deployed cold-start test.
 
 Import this existing repository into Vercel. The checked-in configuration builds with `npm run build`, serves `dist`, preserves API/static paths, and rewrites application routes to the SPA. Vercel supplies HTTPS for its deployment domains. Do not rewrite `sw.js`, manifest, icons or `/api/analyze` to HTML.
 
-Configure `GEMINI_API_KEY` and optional `GEMINI_MODEL` as server-side Vercel environment variables. Leave `VITE_API_BASE_URL` unset for the PWA so recognition uses same-origin `/api/analyze`. Never put a Gemini secret in a `VITE_*` variable. Maps use the existing OpenFreeMap style; keep provider attribution visible.
+Configure `GEMINI_API_KEY` and optional `GEMINI_MODEL` as server-side Vercel environment variables. Leave `VITE_API_BASE_URL` unset for the PWA so recognition uses same-origin `/api/analyze`. Never put a Gemini secret in a `VITE_*` variable. Maps use the local Pixelogy pixel style over OpenFreeMap vector data; keep provider attribution visible.
 
 `sw.js` has no-store/revalidation headers. The manifest uses `application/manifest+json`; hashed bundled assets have immutable cache headers. Source configuration tests cannot establish real Vercel edge behavior. Once a deployment URL exists, verify HTTPS, MIME/cache headers, deep-link reloads, camera/location prompts and a consented Gemini request on that URL.
 
@@ -54,7 +54,7 @@ The worker precaches only the build's explicit static list: HTML shell, manifest
 
 IndexedDB remains intentional local game storage for collectibles, generated artwork, loadouts, cleanup claims, profile and consent. It is separate from service-worker caching. Existing saves are preserved. Clearing website data, removing the installed app, storage eviction or switching origins can affect saves; no cloud backup is claimed. Browser/native/install contexts may have distinct storage behavior, so verify continuity on the target iPhone.
 
-After an initial successful online load, local inventory, equipment and CPU battles work offline. Captured photos can be reviewed manually where camera access remains available. Gemini and uncached geographic map data require connectivity. The app never invents locations when GPS or maps are unavailable.
+After an initial successful online load, local inventory, equipment and CPU battles work offline. New discoveries cannot be saved offline: they require successful safe Gemini identification and review. Captures remain memory-only and are not queued for background upload. Gemini and uncached geographic map data require connectivity. The app never invents locations when GPS or maps are unavailable.
 
 ## Updates
 

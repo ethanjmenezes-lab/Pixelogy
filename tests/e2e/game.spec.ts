@@ -1,10 +1,18 @@
 import { test, expect } from "@playwright/test";
-import { mockCamera, mockLocation, takePhoto } from "./device";
+import {
+  mockCamera,
+  mockLocation,
+  takePhoto,
+  mockRecognition,
+  safeRecognition,
+  identify,
+} from "./device";
 test.beforeEach(async ({ page }) => {
   await mockCamera(page);
   await mockLocation(page);
+  await mockRecognition(page);
 });
-test("manual discovery → saved gear → CPU battle → persistent optional cleanup", async ({
+test("AI discovery → saved gear → CPU battle → persistent optional cleanup", async ({
   page,
 }) => {
   let aiRequests = 0;
@@ -18,8 +26,7 @@ test("manual discovery → saved gear → CPU battle → persistent optional cle
   await page.getByRole("button", { name: "Open crab menu" }).click();
   await page.getByRole("link", { name: /^Scan A new discovery/ }).click();
   await takePhoto(page);
-  await page.getByRole("button", { name: "Choose item manually" }).click();
-  await page.getByLabel("Safety review").selectOption("allowed");
+  await identify(page);
   await page
     .getByRole("checkbox", { name: "I reviewed the object and crop." })
     .check();
@@ -28,7 +35,7 @@ test("manual discovery → saved gear → CPU battle → persistent optional cle
     page.getByRole("heading", { name: "A little treasure, all yours." }),
   ).toBeVisible();
   await expect(page.locator(".hud-info > small")).toContainText("0");
-  expect(aiRequests).toBe(0);
+  expect(aiRequests).toBe(1);
   await page.getByRole("link", { name: "Equip on your crab" }).click();
   await page.getByRole("button", { name: "Equip this find" }).click();
   await expect(
@@ -93,13 +100,20 @@ test("unsafe review blocks saving; denied consent does not upload", async ({
   await expect(
     page.getByRole("button", { name: "Identify with Gemini" }),
   ).toBeDisabled();
-  await page.getByRole("button", { name: "Choose item manually" }).click();
-  await page.getByLabel("Safety review").selectOption("hazardous");
+  await expect(
+    page.getByRole("button", { name: "Choose item manually" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toHaveCount(0);
+  await mockRecognition(page, { ...safeRecognition, safety: "hazardous" });
+  await identify(page);
+  await expect(page.getByRole("combobox")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Save discovery" }),
   ).toBeDisabled();
 });
-test("failed AI request offers manual mode and no fabricated result", async ({
+test("failed AI request offers retry and never allows an unrecognized save", async ({
   page,
 }) => {
   await page.route("**/api/analyze", (route) =>
@@ -109,7 +123,12 @@ test("failed AI request offers manual mode and no fabricated result", async ({
   await takePhoto(page);
   await page.getByRole("checkbox", { name: "I agree to send" }).check();
 
-  await expect(page.getByText("Manual mode", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Retry identification" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toHaveCount(0);
   await expect(page.getByRole("alert")).toContainText("Gemini is unavailable");
 });
 test("routes fit mobile and desktop, unavailable rankings stay honest", async ({
@@ -147,8 +166,7 @@ test("routes fit mobile and desktop, unavailable rankings stay honest", async ({
 test("failed storage never show a saved discovery", async ({ page }) => {
   await page.goto("/scan");
   await takePhoto(page);
-  await page.getByRole("button", { name: "Choose item manually" }).click();
-  await page.getByLabel("Safety review").selectOption("allowed");
+  await identify(page);
   await page
     .getByRole("checkbox", { name: "I reviewed the object and crop." })
     .check();
@@ -269,4 +287,75 @@ test("leaving the scanner stops its browser camera tracks", async ({
       ),
     )
     .toBe("ended");
+});
+
+test("offline and malformed analysis cannot create discoveries, retry recovers", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/scan");
+  await takePhoto(page);
+  await context.setOffline(true);
+  await page.getByRole("checkbox", { name: "I agree to send" }).check();
+  await expect(page.getByRole("alert")).toContainText("offline");
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toHaveCount(0);
+  await context.setOffline(false);
+  await mockRecognition(page, {
+    ...safeRecognition,
+    bbox: [900, 900, 100, 100],
+  });
+  await page.getByRole("button", { name: "Retry identification" }).click();
+  await expect(page.getByRole("alert")).toContainText("invalid result");
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toHaveCount(0);
+  await mockRecognition(page);
+  await page.getByRole("button", { name: "Retry identification" }).click();
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", { name: "I reviewed the object and crop." })
+    .check();
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toBeEnabled();
+});
+
+test("retake and consent revocation invalidate delayed recognition", async ({
+  page,
+}) => {
+  const pending: import("@playwright/test").Route[] = [];
+  await page.route("**/api/analyze", (route) => {
+    pending.push(route);
+  });
+  await page.goto("/scan");
+  await takePhoto(page);
+  await page.getByRole("checkbox", { name: "I agree to send" }).check();
+  await expect.poll(() => pending.length).toBe(1);
+  await page.getByRole("checkbox", { name: "I agree to send" }).uncheck();
+  await pending[0].fulfill({ json: safeRecognition }).catch(() => {});
+  await expect(page.locator(".scan-sidebar")).toHaveAttribute(
+    "data-scan-state",
+    "consent",
+  );
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toHaveCount(0);
+  await page.getByRole("checkbox", { name: "I agree to send" }).check();
+  await expect.poll(() => pending.length).toBe(2);
+  await page.getByRole("button", { name: "Retake photo" }).click();
+  await pending[1].fulfill({ json: safeRecognition }).catch(() => {});
+  await expect(
+    page.getByRole("button", { name: "Take photo", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".scan-sidebar")).toHaveAttribute(
+    "data-scan-state",
+    "capture",
+  );
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toHaveCount(0);
 });

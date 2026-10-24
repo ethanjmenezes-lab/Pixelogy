@@ -1,3 +1,5 @@
+> Current release update: AI-only identification is required for new discoveries; manual identification and safety/category overrides are removed. Online analysis must succeed before saving. Real geography uses the authored tropical pixel-art MapLibre style; older manual-fallback and Liberty-style descriptions below are historical. Existing saves remain intact.
+
 > Primary release: mobile-first PWA on Vercel HTTPS. Follow [PWA setup](PWA_SETUP.md). Native projects and store submission are optional future work, not release prerequisites. Keep browser camera/GPS, existing local saves and gameplay. Do not cache private/API/photo responses.
 
 > Current architecture (native GPS transition): production uses real foreground location, MapLibre/OpenFreeMap geography and immediate camera capture. Joystick movement and the fictional demo coast are historical, not production behavior. Preserve local gameplay; cloud accounts/rankings/PvP remain unavailable. See [mobile setup](MOBILE_APP_SETUP.md) and GPS_AND_CAMERA.md for the current contract. Native physical-device acceptance remains pending SDK/device access.
@@ -5,6 +7,17 @@
 # Codex implementation tasks and acceptance gates (v4)
 
 **Rule:** complete and test each task before checking it. Do not claim that a Figma design, API, real leaderboard or multiplayer is connected unless proven. These are future tasks, not already implemented features.
+
+## Current release: tropical pixel world / AI-only identification
+
+- [x] Authored geographic pixel style and original terrain textures, companion overlay, tropical UI palette.
+- [x] AI-only safe-result review with no category/safety overrides; retry/retake and late-response cancellation.
+- [x] Preserve saves and optional cleanup; full gameplay regression passes in Chromium and WebKit.
+- [x] Typecheck, lint, 43 unit/API tests, five plain-Node smoke assertions, build and 44 browser checks.
+- [x] Live tile loading at a synthetic coordinate in production preview, with no page errors.
+- [ ] Hosted Gemini/deployment acceptance and physical iPhone camera/GPS/performance.
+
+The original milestone ledger below records earlier release work; the current release section supersedes its manual-scanning requirements.
 
 ## M0 — Governance & Figma source (P0)
 - [x] Check current HowdyHack rules and confirm implementation timing/user approval.

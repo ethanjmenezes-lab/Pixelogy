@@ -21,11 +21,11 @@ The current machine has Xcode command-line tools only, no usable Java runtime an
 
 ## Backend and maps
 
-Set `VITE_API_BASE_URL=https://your-deployed-backend.example` before building native assets. It is a public backend address, never a secret. No production address has been supplied, so native Gemini falls back to manual review until configured. Browser builds default to same-origin `/api/analyze`.
+Set `VITE_API_BASE_URL=https://your-deployed-backend.example` before building native assets. It is a public backend address, never a secret. No production address has been supplied, so new native discoveries are blocked until Gemini is configured. Browser builds default to same-origin `/api/analyze`.
 
 Deploy the existing `api/analyze.ts` to Vercel with server-only `GEMINI_API_KEY` and optional `GEMINI_MODEL`. Set server `ALLOWED_ORIGINS=capacitor://localhost,https://localhost` for the configured native origins. Exact origin responses support preflight; CORS does not authenticate requests or prevent server-side abuse. Add backend rate limits and operational monitoring before public distribution. No deployment was performed as part of this conversion.
 
-Maps use MapLibre and `https://tiles.openfreemap.org/styles/liberty`; override with `VITE_MAP_STYLE_URL`. Attribution must remain visible. Tile requests reveal the viewed region to the provider. No offline tile download is implemented. Network failures show a map retry state without fabricated terrain.
+Maps use MapLibre with the authored `src/world/pixelStyle.ts` and OpenFreeMap’s `https://tiles.openfreemap.org/planet` vector source. `VITE_MAP_STYLE_URL` is no longer used. Attribution must remain visible. Tile requests reveal the viewed region to the provider. No offline tile download is implemented. Network failures show a map retry state without fabricated terrain.
 
 ## Local saves
 

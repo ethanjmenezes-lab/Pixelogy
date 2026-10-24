@@ -72,7 +72,7 @@ test("production worker waits for explicit update and never caches private or AP
     const manifest = await (
       await context.request.get(origin + "/manifest.webmanifest")
     ).json();
-    expect(manifest.theme_color).toBe("#315d4d");
+    expect(manifest.theme_color).toBe("#594793");
     expect(
       manifest.icons.some((i: { purpose: string }) => i.purpose === "maskable"),
     ).toBe(true);
