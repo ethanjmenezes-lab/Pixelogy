@@ -20,7 +20,7 @@ const statements = [
   ),
 ];
 writeFileSync(
-  "supabase/migrations/202610240002_catalog_seed.sql",
+  "supabase/migrations/20261024233221_catalog_seed.sql",
   statements.join("\n") + "\n",
 );
 console.log(`Seeded SQL definitions: ${shoreCatalog.length} collectibles`);

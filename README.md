@@ -1,3 +1,5 @@
+> Authentication repair (2026-10-24): dedicated auth routes and scan return are implemented; Supabase schema/catalog are applied and rollback RLS tests passed. Vercel public Supabase settings are saved, but a new deployment, receipt-signing secret, and hosted email/camera/Gemini acceptance remain pending. See [release status](docs/AUTH_RELEASE.md). This status supersedes earlier unapplied-schema notes below.
+
 > Current ShoreDex change: predefined 200-species catalog and authenticated Supabase account saves replace photo pixelization for new discoveries. See [cloud architecture and pending setup](docs/SHOREDEX_CLOUD.md). The prepared migrations are not yet applied; older local-only/crop descriptions below are historical. Existing local saves are preserved.
 
 # Pixelogy

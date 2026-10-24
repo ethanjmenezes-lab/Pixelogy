@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { CameraCapture } from "../mobile/CameraCapture";
 import { analyzeUrl } from "../mobile/platform";
 import { normalizePhoto } from "../lib/pixel";
@@ -13,7 +13,11 @@ import { moves } from "../lib/moves";
 type Analysis = ReturnType<typeof catalogAnalysisSchema.parse>;
 export function Scan() {
   const { userId } = useGame();
-  return <ScanSession key={userId ?? "local"} />;
+  return userId ? (
+    <ScanSession key={userId} />
+  ) : (
+    <Navigate replace to="/auth/login?next=%2Fscan" />
+  );
 }
 function ScanSession() {
   const { userId, refresh } = useGame();

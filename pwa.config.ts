@@ -63,7 +63,7 @@ export function offlineShell(): Plugin {
           source: `
 const CACHE='pixelogy-shell-${version}';
 const ASSETS=${JSON.stringify(assets)};
-const ROUTES=['/','/scan','/collection','/workshop','/battle/practice','/leaderboard','/profile'];
+const ROUTES=['/','/scan','/collection','/workshop','/battle/practice','/leaderboard','/profile','/auth/login','/auth/signup','/auth/reset','/auth/callback','/auth/update-password'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 const clientEntries=new Map();
 self.addEventListener('message',event=>{

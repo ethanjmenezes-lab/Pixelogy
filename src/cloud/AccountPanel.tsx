@@ -1,30 +1,21 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { cloud } from "./client";
 import { useGame } from "../components/GameContext";
 export function AccountPanel() {
   const { userId, refresh } = useGame();
-  const [email, setEmail] = useState(""),
-    [password, setPassword] = useState(""),
-    [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
-  async function submit(signup: boolean) {
-    if (!cloud) return;
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  async function logout() {
+    if (!cloud || busy) return;
     setBusy(true);
-    setMessage("");
+    setError("");
     try {
-      const { data, error } = signup
-        ? await cloud.auth.signUp({ email, password })
-        : await cloud.auth.signInWithPassword({ email, password });
+      const { error } = await cloud.auth.signOut();
       if (error) throw error;
-      setPassword("");
-      setMessage(
-        data.session
-          ? "Signed in. Loading your account ShoreDex…"
-          : "Check your email to confirm your account, then sign in.",
-      );
       await refresh();
     } catch (e) {
-      setMessage((e as Error).message);
+      setError((e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -33,70 +24,34 @@ export function AccountPanel() {
     <section className="panel account-panel">
       <h2>Your Pixelogy account</h2>
       <p>
-        Sign in with the same email on another device to restore your ShoreDex,
-        equipment and crab progression. Existing device-only saves remain
-        separate.
+        {userId
+          ? "Signed in. Your discoveries and progress belong to this account."
+          : "Sign in to collect across devices. Existing device-only saves remain separate."}
       </p>
-      {!cloud ? (
-        <p>Supabase is not configured for this deployment.</p>
-      ) : userId ? (
+      {userId ? (
         <>
-          <p>Signed in · cloud collection</p>
           <button
             className="button secondary"
-            onClick={() => void cloud!.auth.signOut().then(() => refresh())}
+            disabled={busy}
+            onClick={() => void logout()}
           >
-            Sign out
+            {busy ? "Signing out…" : "Log out"}
           </button>
+          <Link className="button text" to="/auth/reset?next=%2Fprofile">
+            Reset password
+          </Link>
         </>
       ) : (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void submit(false);
-          }}
-        >
-          <label>
-            Email
-            <input
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-          <label>
-            Password
-            <input
-              type="password"
-              autoComplete="current-password"
-              minLength={8}
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-          <div className="button-row">
-            <button className="button primary" disabled={busy}>
-              Sign in
-            </button>
-            <button
-              className="button secondary"
-              type="button"
-              disabled={busy || !email || password.length < 8}
-              onClick={() => void submit(true)}
-            >
-              Create account
-            </button>
-          </div>
-        </form>
+        <div className="button-row">
+          <Link className="button primary" to="/auth/login?next=%2Fprofile">
+            Log In
+          </Link>
+          <Link className="button secondary" to="/auth/signup?next=%2Fprofile">
+            Sign Up
+          </Link>
+        </div>
       )}
-      {message && (
-        <p role="status" aria-label="Account status">
-          {message}
-        </p>
-      )}
+      {error && <p role="alert">{error}</p>}
     </section>
   );
 }

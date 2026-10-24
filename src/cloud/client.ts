@@ -1,16 +1,33 @@
 import { createClient, type Session } from "@supabase/supabase-js";
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-export const cloud =
-  url && key
-    ? createClient(url, key, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-        },
-      })
-    : null;
+export const cloudConfigurationError =
+  !url || !key
+    ? "The deployment is missing its public Supabase configuration. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in Vercel, then redeploy."
+    : "The deployment has invalid Supabase configuration. Check the project URL and publishable key.";
+export const authCallbackError =
+  typeof window === "undefined"
+    ? ""
+    : (new URLSearchParams(window.location.hash.slice(1)).get(
+        "error_description",
+      ) ??
+      new URLSearchParams(window.location.search).get("error_description") ??
+      "");
+function initializeCloud() {
+  try {
+    if (!url || !key || new URL(url).protocol !== "https:") return null;
+    return createClient(url, key, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+export const cloud = initializeCloud();
 export async function cloudSession(): Promise<Session | null> {
   if (!cloud) return null;
   const { data, error } = await cloud.auth.getSession();

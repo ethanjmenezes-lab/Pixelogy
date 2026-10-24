@@ -1,3 +1,11 @@
+# Authentication repair — 2026-10-24
+
+- Reproduced the production account blocker: missing public Supabase build configuration hid the old Profile form. Added dedicated signup/login/reset/confirmation/recovery routes, safe scan-return navigation, error handling, persistent SDK sessions, and account links/logout.
+- Added VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to Vercel Production; a rebuild is still required. Existing Gemini credential untouched.
+- Applied existing schema and seed to the connected Supabase project. Verified 200 catalog rows and RLS on 12 public tables. Rollback RLS/replay/ownership tests passed with zero remaining fixture users. Renamed local migrations to match remote ledger versions and updated the seed generator.
+- Typecheck, lint, 67 unit tests, plain-Node loading of both APIs with 5 rejection checks, and production build passed. Full browser run: 70/72 passed, with only two newly added recovery fixtures failing. Corrected fixture navigation/selector/request-shape assumptions; final auth run: 12/12 passed. Thus all 62 pre-existing regression checks and all 12 new auth checks have passed, including mocked scan → save → equip → battle → reload → cleanup in both engines. Phone auth screenshots cover 375/390/430 widths.
+- Live signup/email/password recovery, Gemini scan, cross-device persistence and physical-phone acceptance are NOT verified. Supabase dashboard requires user login; signing-secret provisioning awaits browser action-time approval. Source has not been published or redeployed. Weekly leaderboard and 160 draft sprites remain incomplete. See AUTH_RELEASE.md for precise release steps.
+
 # Revision history and key decisions
 
 ## Predefined ShoreDex and account integration — October 24, 2026

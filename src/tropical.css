@@ -691,3 +691,9 @@ body {
 @media(min-width:420px){.dex-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.catalog-reveal{animation:none}}
 [data-reduced-motion=true] .catalog-reveal {animation:none}
+.auth-panel {margin:16px 0}
+.auth-panel form {display:grid;gap:16px}
+.auth-panel label {display:grid;gap:6px;font-weight:700}
+.auth-panel input {min-height:48px;padding:12px;width:100%;border:2px solid #594793;border-radius:6px;background:#fff8df;color:#282044;font-size:16px}
+.auth-links {display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.auth-links a {min-height:44px;display:flex;align-items:center;color:#594793;font-weight:700}

@@ -17,7 +17,7 @@ export function Profile() {
   return <ProfileSession key={userId ?? "local"} />;
 }
 function ProfileSession() {
-  const { profile, refresh, items, claims } = useGame();
+  const { profile, refresh, items, claims, userId } = useGame();
   const [consent, setConsent] = useState(false);
   useEffect(() => {
     void readConsent()
@@ -182,8 +182,10 @@ function ProfileSession() {
           walking and battles do not award cleanup XP or combat power.
         </p>
         <p>
-          This is a local profile. No cloud account is connected. GPS is used
-          only while the world is open.
+          {userId
+            ? "Your account profile and progress sync with Supabase."
+            : "Your guest profile is stored on this browser."}{" "}
+          GPS is used only while the world is open.
         </p>
       </section>
       <InstallGuide />
