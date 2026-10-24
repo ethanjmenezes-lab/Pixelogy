@@ -54,6 +54,11 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
   );
   await page.getByRole("button", { name: "Open crab menu" }).click();
   await page.getByRole("link", { name: /^Battle Practice/ }).click();
+  await page.getByRole("button", { name: "Start Battle", exact: true }).click();
+  await expect(page.locator(".arena-crab.ally")).toHaveAttribute(
+    "data-gear",
+    /bag_helm/,
+  );
   for (let n = 0; n < 15; n++) {
     if (
       await page

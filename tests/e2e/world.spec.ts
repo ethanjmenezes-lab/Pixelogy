@@ -163,6 +163,7 @@ test("map service failure offers retry without blocking local gameplay", async (
   await expect(page.getByRole("button", { name: "Retry map" })).toBeVisible();
   await openMenu(page);
   await page.getByRole("link", { name: /^Battle Practice/ }).click();
+  await page.getByRole("button", { name: "Start Battle", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Pinch A trusty little hit" }),
   ).toBeVisible();

@@ -110,11 +110,17 @@ test("production worker waits for explicit update and never caches private or AP
       ),
     ).toBe(true);
     await page
+      .getByRole("button", { name: "Start Battle", exact: true })
+      .click();
+    await page
       .getByRole("button", { name: "Pinch A trusty little hit" })
       .click();
     await expect(page.locator(".combat-log")).toContainText("You used Pinch");
     const secondTab = await context.newPage();
     await secondTab.goto(origin + "/battle/practice");
+    await secondTab
+      .getByRole("button", { name: "Start Battle", exact: true })
+      .click();
     await secondTab
       .getByRole("button", { name: "Pinch A trusty little hit" })
       .click();
@@ -152,7 +158,7 @@ test("production worker waits for explicit update and never caches private or AP
     await context.setOffline(true);
     await page.reload();
     await expect(
-      page.getByRole("button", { name: "Pinch A trusty little hit" }),
+      page.getByRole("button", { name: "Start Battle", exact: true }),
     ).toBeVisible();
   } finally {
     await context.setOffline(false);

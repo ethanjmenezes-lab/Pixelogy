@@ -1,5 +1,13 @@
 # Battle Bots — gameplay and system rules
 
+## Current beach arena
+
+`/battle/practice` opens the matchup preview; Start Battle creates a fresh in-memory match and snapshots current equipment, stats and trainer appearance. The active scene uses original SVG beach art, the customized trainer, layered crabs, top HP bars, actual move messages and Pinch/Guard/Tidal Slam controls. Match notes expand into an internally scrolling log.
+
+CPU scheduling pauses while the document is hidden, resumes on return, and is canceled on exit, replay or unmount. Exit Practice marks the match forfeited. Results support replay, return to matchup and changing gear. Reloading or leaving the route discards the match, never the inventory or cleanup records. No combat levels, critical hits, items or new rewards were added.
+
+The active arena fits the game viewport with safe-area padding; animations respect system and profile reduced motion. Presentation lives in `src/battle/`, session scheduling in `src/pages/Battle.tsx`, and the unchanged deterministic rules in `src/lib/battle.ts`.
+
 ## Player promise
 
 A **red crab** wears *your own scanned, safely categorized litter discoveries as visible gear*. Battle mode plays as an original, small, accessible **turn-based creature battle**. The inspiration is broad: approachable strategy similar to popular collectible RPGs, not a copyrighted recreation.

@@ -113,3 +113,15 @@ Vercel config now excludes static PWA assets/API routes from SPA rewrites and sp
 Verified: TypeScript, ESLint, 40 unit/API/configuration tests, production build, and 38 browser tests (19 Chromium + 19 WebKit). After the final multi-tab update improvement, all six targeted PWA/offline checks passed again. Coverage includes service-worker update waiting and explicit reload, second-tab reload, offline deep-link restart, API/private cache exclusions, install assets/guide, camera permission errors, full capture-to-cleanup flow and existing responsive/layout checks. Installation guide visually checked at 390px with no horizontal overflow. Existing MapLibre chunk-size warning remains; map code is lazy-loaded.
 
 Not verified: actual iPhone Add to Home Screen installation, physical camera/GPS, or deployed Vercel HTTPS/API behavior. No deployment URL was supplied. Apple membership, native SDKs and native signing are not prerequisites for this PWA release.
+
+
+## 2026-10-24 — Separate matchup preview and beach battle arena
+
+- Kept Practice vs CPU as the intro with current loadout, stats and Start Battle. Match creation now happens on Start; gear, stats and trainer appearance are snapshotted.
+- Added original pixel beach SVG, trainer plus equipped crab, opposing CPU, top HP bars, real action messages, expandable log and fixed phone controls. Results offer replay, matchup and workshop navigation.
+- Preserved the pure battle resolver, deterministic CPU, Guard/cooldown rules and zero cleanup XP. No data migration or API changes. CPU timers pause in background and are canceled on exit/replay/unmount.
+- New presentation: `src/battle/BattleScreens.tsx` and `src/battle/battle.css`; session controller: `src/pages/Battle.tsx`; stylesheet import: `src/main.tsx`. Updated gameplay, world, offline and PWA tests; added dedicated battle browser coverage.
+- Verified typecheck, lint, 43 unit/API/config tests, five plain-Node API smoke assertions and production build. Final uninterrupted browser run: **52 passed** in Chromium/WebKit, including complete AI discovery → gear → CPU battle → reload → optional cleanup, background pause, exit/replay, exact guarded HP and equipped sprite.
+- Inspected rendered phone/landscape screenshots; viewport tests cover 375×667, 390×844, 430×932 and 844×390 with reduced motion and 44px controls. Focus transitions are asserted.
+- An intermediate WebKit flow was interrupted by a dev-server reload while documentation was being edited; the final suite ran with files unchanged and passed. Non-failing Vite module-import messages still appear during some navigation tests. Production build retains the pre-existing large MapLibre chunk warning.
+- Vercel deployment and physical-phone acceptance were not performed. No external artwork or new Figma design was used.

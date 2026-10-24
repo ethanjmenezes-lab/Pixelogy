@@ -41,6 +41,7 @@ test("production app installs its shell, excludes API and works after offline re
   ).toBeVisible();
   await page.getByRole("button", { name: "Open crab menu" }).click();
   await page.getByRole("link", { name: /^Battle Practice/ }).click();
+  await page.getByRole("button", { name: "Start Battle", exact: true }).click();
   await expect(page.getByRole("button", { name: /Pinch/ })).toBeEnabled();
   await page.getByRole("button", { name: /Pinch/ }).click();
   await expect(page.locator(".combat-log")).toContainText("You used Pinch");

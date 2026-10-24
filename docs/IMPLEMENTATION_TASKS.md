@@ -131,3 +131,12 @@ If the remaining time is short: **M1/M2/M4/M5/M6/M7 first**, with honest manual 
 - [ ] Test installation, standalone safe areas, camera and offline relaunch on a physical iPhone.
 
 Native builds/signing/store publication remain optional future work, not blockers for the PWA.
+
+
+## Beach battle arena — verified locally
+
+- [x] Preserve matchup preview; explicit Start Battle snapshots equipment and trainer.
+- [x] Original beach arena, trainer/crab staging, HP, real move messages and accessible mobile controls.
+- [x] Preserve engine and saves; background pause, exit/replay cleanup and reduced motion.
+- [x] Typecheck, lint, 43 unit/API/config tests, five Node API checks, build and 52 Chromium/WebKit checks.
+- [ ] Deployed PWA and physical-phone acceptance for the new arena.
