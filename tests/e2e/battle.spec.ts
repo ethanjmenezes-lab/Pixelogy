@@ -21,10 +21,10 @@ test("matchup, frozen preview, arena, guard, replay and exit", async ({
   ).toBeFocused();
   await expect(page.locator(".battle-trainer svg")).toBeVisible();
   await expect(page.locator(".arena-crab")).toHaveCount(2);
-  await page.getByRole("button", { name: /^Guard/ }).click();
-  await expect(page.getByText("Guard · next hit halved")).toBeVisible();
+  await page.getByRole("button", { name: /^Defend/ }).click();
+  await expect(page.getByText("Defend · next hit halved")).toBeVisible();
   await expect(page.getByRole("button", { name: /^Pinch/ })).toBeEnabled();
-  await expect(page.getByText("Guard · next hit halved")).toHaveCount(0);
+  await expect(page.getByText("Defend · next hit halved")).toHaveCount(0);
   await expect(
     page.getByRole("meter", { name: "Your crab health" }),
   ).toHaveAttribute("aria-valuenow", "34");
@@ -63,7 +63,12 @@ test("arena fits phones and landscape with reduced motion", async ({
     { width: 844, height: 390 },
   ]) {
     await page.setViewportSize(size);
-    for (const name of [/^Pinch/, /^Guard/, /^Tidal Slam/, /^Exit Practice$/]) {
+    for (const name of [
+      /^Pinch/,
+      /^Defend/,
+      /^Basic Splash/,
+      /^Exit Practice$/,
+    ]) {
       const button = page.getByRole("button", { name });
       await expect(button).toBeInViewport({ ratio: 1 });
       const box = await button.boundingBox();

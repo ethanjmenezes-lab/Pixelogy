@@ -1,3 +1,4 @@
+import { WorkshopMoves } from "../battle/WorkshopMoves";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowUpRight, Plus, Check } from "lucide-react";
@@ -193,6 +194,7 @@ export function Workshop() {
           </div>
         </section>
       </div>
+      <WorkshopMoves />
     </>
   );
 }

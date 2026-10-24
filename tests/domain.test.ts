@@ -110,19 +110,19 @@ describe("battle resolver", () => {
     expect(b.fighters[0].currentHp).toBe(34);
     expect(b.fighters[0].guarding).toBe(false);
   });
-  it("blocks Tidal Slam for exactly two own turns, not opponent turns", () => {
+  it("blocks Basic Splash for exactly two own turns, not opponent turns", () => {
     let b = createBattle({ ...BASE_STATS, hp: 60 });
     b = resolveTurn(b, "player", "tidal_slam");
-    expect(b.fighters[0].tidalCooldownRemaining).toBe(2);
+    expect(b.fighters[0].cooldowns.tidal_slam).toBe(2);
     b = resolveTurn(b, "cpu", "guard");
-    expect(b.fighters[0].tidalCooldownRemaining).toBe(2);
+    expect(b.fighters[0].cooldowns.tidal_slam).toBe(2);
     expect(() => resolveTurn(b, "player", "tidal_slam")).toThrow();
     b = resolveTurn(b, "player", "guard");
     b = resolveTurn(b, "cpu", "guard");
     expect(() => resolveTurn(b, "player", "tidal_slam")).toThrow();
     b = resolveTurn(b, "player", "guard");
     b = resolveTurn(b, "cpu", "guard");
-    expect(b.fighters[0].tidalCooldownRemaining).toBe(0);
+    expect(b.fighters[0].cooldowns.tidal_slam).toBe(0);
     expect(() => resolveTurn(b, "player", "tidal_slam")).not.toThrow();
   });
   it("starts by speed with stable ties and rejects wrong actor or illegal action", () => {
@@ -142,7 +142,7 @@ describe("battle resolver", () => {
         b.currentActorId!,
         b.currentActorId === "cpu"
           ? cpuAction(b)
-          : b.fighters[0].tidalCooldownRemaining
+          : b.fighters[0].cooldowns.tidal_slam
             ? "pinch"
             : "tidal_slam",
       );

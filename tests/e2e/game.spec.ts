@@ -67,10 +67,10 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
     )
       break;
     const pinch = page.getByRole("button", {
-      name: "Pinch A trusty little hit",
+      name: "Pinch Attack Power 7",
     });
     await expect(pinch).toBeEnabled();
-    const slam = page.getByRole("button", { name: /Tidal Slam/ });
+    const slam = page.getByRole("button", { name: /Bag Snare/ });
     if (await slam.isEnabled()) await slam.click();
     else await pinch.click();
     await expect(page.locator(".turn-banner")).not.toContainText(

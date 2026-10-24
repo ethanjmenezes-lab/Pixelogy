@@ -1,3 +1,5 @@
+> Three-slot battle update: follow `docs/ATTACK_SYSTEM.md`. Main attacks unlock through crab battle XP; permanent Defend occupies slot 2; equipped trash grants slot 3 specials at any crab level. Preserve the separate cosmetic explorer level and cleanup XP. This supersedes the earlier fixed three-action combat contract below.
+
 > Primary release: mobile-first PWA on Vercel HTTPS. Follow [PWA setup](docs/PWA_SETUP.md). Native projects and store submission are optional future work, not release prerequisites. Keep browser camera/GPS, existing local saves and gameplay. Do not cache private/API/photo responses.
 
 > Current architecture (native GPS transition): production uses real foreground location, MapLibre/OpenFreeMap geography and immediate camera capture. Joystick movement and the fictional demo coast are historical, not production behavior. Preserve local gameplay; cloud accounts/rankings/PvP remain unavailable. See [mobile setup](docs/MOBILE_APP_SETUP.md) and [GPS/camera architecture](docs/GPS_AND_CAMERA.md) for the current contract. Native physical-device acceptance remains pending SDK/device access.

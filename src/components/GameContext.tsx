@@ -1,3 +1,4 @@
+import { initialProgression, type BattleProgression } from "../lib/moves";
 import { defaultProfile, type Profile } from "../world/profile";
 import {
   createContext,
@@ -10,6 +11,7 @@ import {
 import { readGame, readProfile, type CleanupClaim } from "../lib/storage";
 import type { Collectible, Equipment } from "../lib/gear";
 type Game = {
+  progression: BattleProgression;
   profile: Profile;
   items: Collectible[];
   claims: CleanupClaim[];
@@ -20,7 +22,10 @@ type Game = {
 };
 const Context = createContext<Game | null>(null);
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<Pick<Game, "items" | "claims" | "loadout">>({
+  const [data, setData] = useState<
+    Pick<Game, "items" | "claims" | "loadout" | "progression">
+  >({
+    progression: initialProgression(),
     items: [],
     claims: [],
     loadout: {},

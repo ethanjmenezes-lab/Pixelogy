@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useGame } from "../components/GameContext";
 import { statsFor } from "../lib/gear";
-import { equippedBlueprints } from "../lib/storage";
+import { equippedBlueprints, recordBattleResult } from "../lib/storage";
+import { crabLevel, ownedBlueprints, normalizeProgression } from "../lib/moves";
 import {
   createBattle,
   resolveTurn,
@@ -14,7 +15,13 @@ import { BattleIntroScreen, BattleArenaScreen } from "../battle/BattleScreens";
 
 type Session = { battle: BattleState; gear: string[]; trainer: Profile };
 export function Battle() {
-  const { items, loadout, profile } = useGame();
+  const { items, loadout, profile, progression, refresh } = useGame();
+  const [reward, setReward] = useState<{
+    id: string;
+    text: string;
+    saved: boolean;
+  } | null>(null);
+  const [rewardAttempt, setRewardAttempt] = useState(0);
   const [session, setSession] = useState<Session | null>(null);
   const [visible, setVisible] = useState(!document.hidden);
   useEffect(() => {
@@ -23,6 +30,33 @@ export function Battle() {
     return () => document.removeEventListener("visibilitychange", changed);
   }, []);
   const battle = session?.battle;
+  const blueprints = ownedBlueprints(loadout, items);
+  const selected = normalizeProgression(progression, blueprints);
+  useEffect(() => {
+    if (battle?.status !== "completed") return;
+    let active = true;
+    void recordBattleResult(battle)
+      .then(async (result) => {
+        await refresh();
+        if (active)
+          setReward({
+            id: battle.id,
+            text: `+${result.xp} battle XP saved.`,
+            saved: true,
+          });
+      })
+      .catch(() => {
+        if (active)
+          setReward({
+            id: battle.id,
+            text: "Battle XP could not be saved. Retry before leaving.",
+            saved: false,
+          });
+      });
+    return () => {
+      active = false;
+    };
+  }, [battle, rewardAttempt, refresh]);
   useEffect(() => {
     if (
       !visible ||
@@ -69,6 +103,11 @@ export function Battle() {
             battle: createBattle(
               statsFor(loadout, items),
               Object.values(loadout),
+              {
+                level: crabLevel(selected.xp),
+                blueprints,
+                moves: [selected.main, "guard", selected.special],
+              },
             ),
             gear: equippedBlueprints(loadout, items),
             trainer: { ...profile },
@@ -83,10 +122,7 @@ export function Battle() {
         current.battle.currentActorId !== "player"
       )
         return current;
-      if (
-        action === "tidal_slam" &&
-        current.battle.fighters[0].tidalCooldownRemaining > 0
-      )
+      if ((current.battle.fighters[0].cooldowns[action] ?? 0) > 0)
         return current;
       return {
         ...current,
@@ -99,12 +135,32 @@ export function Battle() {
       <BattleIntroScreen
         stats={statsFor(loadout, items)}
         gear={equippedBlueprints(loadout, items)}
+        level={crabLevel(selected.xp)}
+        selectedMoves={[selected.main, "guard", selected.special]}
         start={start}
       />
     );
   return (
     <BattleArenaScreen
       {...session}
+      rewardText={
+        battle?.status === "completed"
+          ? reward?.id === battle.id
+            ? reward.text
+            : "Saving battle XP…"
+          : "Exit grants no battle XP."
+      }
+      rewardReady={
+        battle?.status !== "completed" ||
+        (reward?.id === battle.id && reward.saved)
+      }
+      rewardFailed={
+        battle?.status === "completed" &&
+        reward?.id === battle.id &&
+        !reward.saved
+      }
+      retryReward={() => setRewardAttempt((n) => n + 1)}
+      currentLevel={crabLevel(progression.xp)}
       act={act}
       replay={start}
       intro={() => setSession(null)}

@@ -1,10 +1,12 @@
 # Battle Bots — gameplay and system rules
 
+> Current rules version 2: see [Three-slot attack system](ATTACK_SYSTEM.md). Each crab has a level-based main attack, permanent Defend, and an equipment special (or Basic Splash). Battle XP unlocks main attacks and is separate from cleanup XP. The older fixed Pinch/Guard/Tidal Slam and no-combat-level descriptions below document version 1 and are superseded by the linked current rules.
+
 ## Current beach arena
 
 `/battle/practice` opens the matchup preview; Start Battle creates a fresh in-memory match and snapshots current equipment, stats and trainer appearance. The active scene uses original SVG beach art, the customized trainer, layered crabs, top HP bars, actual move messages and Pinch/Guard/Tidal Slam controls. Match notes expand into an internally scrolling log.
 
-CPU scheduling pauses while the document is hidden, resumes on return, and is canceled on exit, replay or unmount. Exit Practice marks the match forfeited. Results support replay, return to matchup and changing gear. Reloading or leaving the route discards the match, never the inventory or cleanup records. No combat levels, critical hits, items or new rewards were added.
+CPU scheduling pauses while the document is hidden, resumes on return, and is canceled on exit, replay or unmount. Exit Practice marks the match forfeited. Results support replay, return to matchup and changing gear. Reloading or leaving the route discards the match, never the inventory or cleanup records. Crab combat levels and separate battle XP now unlock main attacks; critical hits and items remain unsupported.
 
 The active arena fits the game viewport with safe-area padding; animations respect system and profile reduced motion. Presentation lives in `src/battle/`, session scheduling in `src/pages/Battle.tsx`, and the unchanged deterministic rules in `src/lib/battle.ts`.
 

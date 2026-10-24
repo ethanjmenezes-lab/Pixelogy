@@ -3,17 +3,22 @@ import { Link } from "react-router-dom";
 import { Crab } from "../components/Crab";
 import { PlayerAvatar } from "../world/PlayerAvatar";
 import type { Profile } from "../world/profile";
-import { BASE_STATS, type Stats } from "../lib/gear";
+import { type Stats } from "../lib/gear";
 import { catalog } from "../lib/gear";
 import type { BattleAction, BattleState, FighterState } from "../lib/battle";
-const names = { pinch: "Pinch", guard: "Guard", tidal_slam: "Tidal Slam" };
+import { moves, moveValues, type MoveLoadout } from "../lib/moves";
+import { cpuSetup } from "../lib/battle";
 export function BattleIntroScreen({
   stats,
   gear,
+  level,
+  selectedMoves,
   start,
 }: {
   stats: Stats;
   gear: string[];
+  level: number;
+  selectedMoves: MoveLoadout;
   start: () => void;
 }) {
   return (
@@ -33,7 +38,7 @@ export function BattleIntroScreen({
             { name: "Your crab", stats, gear },
             {
               name: "Pebble · CPU",
-              stats: { ...BASE_STATS, def: 6 },
+              stats: cpuSetup(level).stats,
               gear: ["can_shield"],
             },
           ].map((f) => (
@@ -63,6 +68,14 @@ export function BattleIntroScreen({
         </p>
       </section>
       <section className="panel">
+        <p>
+          Crab level {level} · Pebble level {cpuSetup(level).level}
+        </p>
+        <p>
+          Your moves: {selectedMoves.map((id) => moves[id].name).join(" · ")}
+        </p>
+        <p>Pebble trains stronger main attacks as your crab levels up.</p>
+        <p>Win +40 battle XP · loss +15 · exit +0.</p>
         <p>
           Faster crab goes first; ties go to you. Battles award no cleanup XP.
         </p>
@@ -117,6 +130,7 @@ function HealthBar({ fighter }: { fighter: FighterState }) {
   return (
     <div className="battle-health">
       <strong>{fighter.nickname}</strong>
+      <small>Crab Lv. {fighter.level}</small>
       <div
         className="hp-track"
         role="meter"
@@ -134,7 +148,17 @@ function HealthBar({ fighter }: { fighter: FighterState }) {
       <span>
         {fighter.currentHp} / {fighter.startingStats.hp} HP
       </span>
-      {fighter.guarding && <small>Guard · next hit halved</small>}
+      {fighter.guarding && (
+        <small>
+          Defend · next hit halved
+          {fighter.counterDamage ? " · counter ready" : ""}
+        </small>
+      )}
+      {fighter.weakenedTurns > 0 && (
+        <small>
+          ATK −{fighter.attackReduction} · {fighter.weakenedTurns} turns
+        </small>
+      )}
     </div>
   );
 }
@@ -176,7 +200,7 @@ function BattleMessageBox({ battle }: { battle: BattleState }) {
   );
 }
 function describe(entry: BattleState["log"][number]) {
-  return `${entry.actorId === "player" ? "You" : "Pebble (CPU)"} used ${names[entry.action]}${entry.damage ? ` · ${entry.damage} damage` : " · guard ready"}.`;
+  return `${entry.actorId === "player" ? "You" : "Pebble (CPU)"} used ${moves[entry.action].name}${entry.damage ? ` · ${entry.damage} damage${entry.hits > 1 ? ` (${entry.hits} hits)` : ""}` : ""}${entry.effect ? ` · ${entry.effect}` : ""}${entry.counterDamage ? ` · counter dealt ${entry.counterDamage} damage` : ""}.`;
 }
 function BattleActionMenu({
   battle,
@@ -190,26 +214,21 @@ function BattleActionMenu({
   return (
     <div className="arena-actions">
       <div className="arena-moves">
-        {(["pinch", "guard", "tidal_slam"] as const).map((action) => (
+        {battle.fighters[0].moves.map((action, index) => (
           <button
             key={action}
-            className={`arena-move ${action}`}
+            className={`arena-move ${index === 1 ? "guard" : index === 2 ? "tidal_slam" : "pinch"}`}
             onClick={() => act(action)}
             disabled={
               battle.currentActorId !== "player" ||
-              (action === "tidal_slam" &&
-                battle.fighters[0].tidalCooldownRemaining > 0)
+              (battle.fighters[0].cooldowns[action] ?? 0) > 0
             }
           >
-            <strong>{names[action]}</strong>
+            <strong>{moves[action].name}</strong>
             <small>
-              {action === "pinch"
-                ? "A trusty little hit · power 7"
-                : action === "guard"
-                  ? "Halve the next hit"
-                  : battle.fighters[0].tidalCooldownRemaining
-                    ? `${battle.fighters[0].tidalCooldownRemaining} own turns remaining`
-                    : "Make a splash · power 12"}
+              {(battle.fighters[0].cooldowns[action] ?? 0) > 0
+                ? `${battle.fighters[0].cooldowns[action]} own turns remaining`
+                : moveValues(moves[action])}
             </small>
           </button>
         ))}
@@ -228,6 +247,11 @@ export function BattleArenaScreen({
   quit,
   replay,
   intro,
+  rewardText,
+  rewardReady,
+  rewardFailed,
+  retryReward,
+  currentLevel,
 }: {
   battle: BattleState;
   gear: string[];
@@ -236,6 +260,11 @@ export function BattleArenaScreen({
   quit: () => void;
   replay: () => void;
   intro: () => void;
+  rewardText: string;
+  rewardReady: boolean;
+  rewardFailed: boolean;
+  retryReward: () => void;
+  currentLevel: number;
 }) {
   const heading = useRef<HTMLHeadingElement>(null);
   const ended = battle.status !== "active";
@@ -273,9 +302,7 @@ export function BattleArenaScreen({
               className={
                 latest
                   ? latest.actorId === f.userId
-                    ? latest.action === "guard"
-                      ? "guard-pulse"
-                      : "attack-lunge"
+                    ? moves[latest.action].animation
                     : latest.damage
                       ? "hit-reaction"
                       : ""
@@ -290,9 +317,25 @@ export function BattleArenaScreen({
       <BattleMessageBox battle={battle} />
       {ended ? (
         <div className="arena-results">
-          <p>No cleanup XP awarded. Your gear stays yours.</p>
+          <p role="status">
+            {rewardText} Crab level {currentLevel}. No cleanup XP awarded.
+          </p>
+          {currentLevel > battle.fighters[0].level && (
+            <p>
+              Level up! Visit Workshop → Moves to choose newly unlocked attacks.
+            </p>
+          )}
+          {rewardFailed && (
+            <button className="button secondary" onClick={retryReward}>
+              Retry XP save
+            </button>
+          )}
           <div className="button-row">
-            <button className="button primary" onClick={replay}>
+            <button
+              className="button primary"
+              disabled={!rewardReady}
+              onClick={replay}
+            >
               Play again
             </button>
             <button className="button secondary" onClick={intro}>

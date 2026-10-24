@@ -1,3 +1,13 @@
+import {
+  normalizeProgression,
+  ownedBlueprints,
+  mainAtLevel,
+  crabLevel,
+  specialMoves,
+  type BattleProgression,
+  type MoveId,
+} from "./moves";
+import { battleXpAward, type BattleState } from "./battle";
 import { defaultProfile, validProfile, type Profile } from "../world/profile";
 import { cleanupAward, rollRarity } from "./rewards";
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
@@ -20,6 +30,16 @@ export type CleanupClaim = {
   selfReported: true;
 };
 export interface PixelDB extends DBSchema {
+  battleProgression: { key: string; value: BattleProgression };
+  battleRewards: {
+    key: string;
+    value: {
+      matchId: string;
+      xp: number;
+      winnerId: string;
+      createdAtIso: string;
+    };
+  };
   preferences: { key: string; value: { version: 1; analysisConsent: boolean } };
   profiles: { key: string; value: Profile };
   collectibles: { key: string; value: Collectible };
@@ -52,22 +72,26 @@ export function upgradePixelDB(db: IDBPDatabase<PixelDB>, oldVersion: number) {
   }
   if (oldVersion < 2) db.createObjectStore("profiles");
   if (oldVersion < 3) db.createObjectStore("preferences");
+  if (oldVersion < 4) {
+    db.createObjectStore("battleProgression");
+    db.createObjectStore("battleRewards", { keyPath: "matchId" });
+  }
 }
-export const dbPromise = openDB<PixelDB>("pixelogy-v4", 3, {
+export const dbPromise = openDB<PixelDB>("pixelogy-v4", 4, {
   upgrade: upgradePixelDB,
 });
 export async function readGame() {
   const db = await dbPromise;
   const tx = db.transaction(
-    ["collectibles", "cleanupEvents", "loadouts"],
-    "readonly",
+    ["collectibles", "cleanupEvents", "loadouts", "battleProgression"],
+    "readwrite",
   );
-  const [items, claims, raw] = await Promise.all([
+  const [items, claims, raw, rawProgression] = await Promise.all([
     tx.objectStore("collectibles").getAll(),
     tx.objectStore("cleanupEvents").getAll(),
     tx.objectStore("loadouts").get("local"),
+    tx.objectStore("battleProgression").get("local"),
   ]);
-  await tx.done;
   const loadout: Equipment = {};
   let repaired = false;
   for (const slot of slots) {
@@ -79,12 +103,19 @@ export async function readGame() {
       }
     }
   }
-  if (repaired) await db.put("loadouts", loadout, "local");
+  if (repaired) await tx.objectStore("loadouts").put(loadout, "local");
+  const progression = normalizeProgression(
+    rawProgression,
+    ownedBlueprints(loadout, items),
+  );
+  await tx.objectStore("battleProgression").put(progression, "local");
+  await tx.done;
   return {
     items: items.sort((a, b) => b.createdAtIso.localeCompare(a.createdAtIso)),
     claims,
     loadout,
     repaired,
+    progression,
   };
 }
 export async function saveDiscovery(input: {
@@ -188,12 +219,20 @@ export async function saveEquipment(
   id: string | null,
 ) {
   const db = await dbPromise;
-  const tx = db.transaction(["collectibles", "loadouts"], "readwrite");
+  const tx = db.transaction(
+    ["collectibles", "loadouts", "battleProgression"],
+    "readwrite",
+  );
   const items = await tx.objectStore("collectibles").getAll();
   const current = (await tx.objectStore("loadouts").get("local")) ?? {};
   try {
     const next = equip(current, items, slot, id);
     await tx.objectStore("loadouts").put(next, "local");
+    const progression = normalizeProgression(
+      await tx.objectStore("battleProgression").get("local"),
+      ownedBlueprints(next, items),
+    );
+    await tx.objectStore("battleProgression").put(progression, "local");
     await tx.done;
     return next;
   } catch (error) {
@@ -238,4 +277,98 @@ export async function saveConsent(analysisConsent: boolean) {
   await (
     await dbPromise
   ).put("preferences", { version: 1, analysisConsent }, "privacy");
+}
+
+export async function saveMoveSelection(slot: "main" | "special", id: MoveId) {
+  const db = await dbPromise;
+  const tx = db.transaction(
+    ["collectibles", "loadouts", "battleProgression"],
+    "readwrite",
+  );
+  try {
+    const items = await tx.objectStore("collectibles").getAll();
+    const loadout = (await tx.objectStore("loadouts").get("local")) ?? {};
+    const blueprints = ownedBlueprints(loadout, items);
+    const progression = normalizeProgression(
+      await tx.objectStore("battleProgression").get("local"),
+      blueprints,
+    );
+    const eligible =
+      slot === "main"
+        ? mainAtLevel(crabLevel(progression.xp))
+        : slot === "special"
+          ? specialMoves(blueprints)
+          : [];
+    if (!eligible.includes(id))
+      throw new Error("This move is locked or its gear is not equipped.");
+    await tx
+      .objectStore("battleProgression")
+      .put({ ...progression, [slot]: id }, "local");
+    await tx.done;
+  } catch (error) {
+    tx.abort();
+    await tx.done.catch(() => {});
+    throw error;
+  }
+}
+// Local practice bookkeeping only, not a trusted multiplayer/leaderboard endpoint.
+export async function recordBattleResult(battle: BattleState) {
+  const xp = battleXpAward(battle);
+  if (
+    !xp ||
+    battle.mode !== "practice" ||
+    !["player", "cpu"].includes(battle.winnerId ?? "") ||
+    !battle.fighters.some(
+      (f) => f.userId === battle.winnerId && f.currentHp > 0,
+    ) ||
+    !battle.winnerId ||
+    !battle.id ||
+    !battle.log.length ||
+    battle.currentActorId !== null ||
+    !battle.fighters.some(
+      (f) => f.currentHp === 0 && f.userId !== battle.winnerId,
+    )
+  )
+    throw new Error("Only completed practice matches earn battle XP.");
+  const db = await dbPromise;
+  const tx = db.transaction(
+    ["battleRewards", "battleProgression", "collectibles", "loadouts"],
+    "readwrite",
+  );
+  try {
+    const existing = await tx.objectStore("battleRewards").get(battle.id);
+    if (existing) {
+      await tx.done;
+      return existing;
+    }
+    const items = await tx.objectStore("collectibles").getAll();
+    const loadout = (await tx.objectStore("loadouts").get("local")) ?? {};
+    const blueprints = ownedBlueprints(loadout, items);
+    const before = normalizeProgression(
+      await tx.objectStore("battleProgression").get("local"),
+      blueprints,
+    );
+    const next = normalizeProgression(
+      { ...before, xp: Math.min(Number.MAX_SAFE_INTEGER, before.xp + xp) },
+      blueprints,
+    );
+    const reward = {
+      matchId: battle.id,
+      xp,
+      winnerId: battle.winnerId,
+      createdAtIso: new Date().toISOString(),
+    };
+    await tx.objectStore("battleRewards").add(reward);
+    await tx.objectStore("battleProgression").put(next, "local");
+    await tx.done;
+    return reward;
+  } catch (error) {
+    try {
+      tx.abort();
+    } catch {
+      /* The failed request may already have aborted it. */
+    }
+    await tx.done.catch(() => {});
+    throw error;
+  }
 }

@@ -313,3 +313,49 @@
   animation: none !important;
   transition: none !important;
 }
+.workshop-moves {
+  margin-top: 18px;
+}
+.workshop-moves > progress {
+  width: 100%;
+  accent-color: #594793;
+}
+.move-library {
+  margin-top: 18px;
+}
+.move-card {
+  margin: 10px 0;
+  padding: 12px;
+  border: 2px solid #594793;
+  background: #fff8df;
+  border-radius: 6px;
+}
+.move-card.selected {
+  background: #d9efd0;
+  box-shadow: 3px 3px #594793;
+}
+.move-card h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.move-card p {
+  font-size: 13px;
+  margin: 6px 0;
+}
+.move-card small {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.move-card .button {
+  width: 100%;
+}
+.snare-pulse {
+  animation: battle-guard 0.5s steps(3, end);
+}
+.dash-lunge {
+  animation: battle-lunge 0.2s steps(3, end);
+}
+.multi-lunge {
+  animation: battle-lunge 0.18s steps(3, end) 3;
+}

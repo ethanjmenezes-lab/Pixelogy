@@ -112,7 +112,7 @@ it("migrates version-one saves additively without changing owned items or XP", a
     selfReported: true,
   });
   old.close();
-  const current = await openDB<PixelDB>(name, 3, { upgrade: upgradePixelDB });
+  const current = await openDB<PixelDB>(name, 4, { upgrade: upgradePixelDB });
   expect(await current.get("collectibles", "original")).toEqual(item);
   expect(await current.get("loadouts", "local")).toEqual({ head: "original" });
   expect((await current.get("cleanupEvents", "claim"))?.xpAwarded).toBe(15);
@@ -144,7 +144,7 @@ it("upgrades an existing version-two profile while preserving its appearance", a
     "local",
   );
   old.close();
-  const next = await openDB<PixelDB>(name, 3, { upgrade: upgradePixelDB });
+  const next = await openDB<PixelDB>(name, 4, { upgrade: upgradePixelDB });
   expect((await next.get("profiles", "local"))?.nickname).toBe(
     "Existing explorer",
   );

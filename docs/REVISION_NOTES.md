@@ -125,3 +125,13 @@ Not verified: actual iPhone Add to Home Screen installation, physical camera/GPS
 - Inspected rendered phone/landscape screenshots; viewport tests cover 375×667, 390×844, 430×932 and 844×390 with reduced motion and 44px controls. Focus transitions are asserted.
 - An intermediate WebKit flow was interrupted by a dev-server reload while documentation was being edited; the final suite ran with files unchanged and passed. Non-failing Vite module-import messages still appear during some navigation tests. Production build retains the pre-existing large MapLibre chunk warning.
 - Vercel deployment and physical-phone acceptance were not performed. No external artwork or new Figma design was used.
+
+
+## 2026-10-24 — Three-slot attacks and separate crab progression
+
+- Added a pure central move registry and eligibility module (`src/lib/moves.ts`). Main attacks unlock at crab levels 1/3/5/8/12; Defend is permanent; five specials require equipped owned gear at any level. Basic Splash is the explicit no-special fallback. Unlocks never replace a selected main attack.
+- Expanded the deterministic resolver to rules version 2 with per-move own-turn cooldowns, counterattacks, full-action defense, multi-hit damage, temporary ATK reduction and Speed scaling. The CPU snapshots eligible moves and learns stronger main attacks at the player's level. Preserved gear stats, speed-first turns and beach/trainer/crab presentation.
+- Added Workshop Moves cards and dynamic three-action arena buttons, real effect messages and registry-selected animations. Main/special selections persist; removing source gear reconciles the special in the equipment transaction.
+- Added local crab battle progression: 40 XP win / 15 loss / 0 exit, 100 XP per level. Explorer/cleanup XP stays independent. IndexedDB v4 adds progression and unique match-reward stores without replacing existing saves. Completed result saving is atomic/idempotent; storage failures offer retry before replay. No Supabase tables or cloud progression existed to reuse; none were fabricated.
+- Verified 57 unit/API/config tests, typecheck, lint, five Node API smoke assertions and production build. Final complete browser run: **56 passed** in Chromium/WebKit, including reward retry/level unlocking, selected actions, removal/persistence, full discovery-to-cleanup regression, background CPU pause and production offline/PWA upgrade behavior. Inspected arena phone/landscape and Workshop screenshots.
+- Initial balance values are documented in ATTACK_SYSTEM.md; long-term balance tuning, deployment and physical-device acceptance remain open. Production build retains the existing MapLibre chunk-size warning.

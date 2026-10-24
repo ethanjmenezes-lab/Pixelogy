@@ -140,3 +140,12 @@ Native builds/signing/store publication remain optional future work, not blocker
 - [x] Preserve engine and saves; background pause, exit/replay cleanup and reduced motion.
 - [x] Typecheck, lint, 43 unit/API/config tests, five Node API checks, build and 52 Chromium/WebKit checks.
 - [ ] Deployed PWA and physical-phone acceptance for the new arena.
+
+
+## Three-slot crab attacks — verified locally
+
+- [x] Level-unlocked main library, permanent Defend and gear-only specials, with explicit saved selections.
+- [x] Workshop move cards, real arena actions, cooldowns, counter, multi-hit, ATK reduction and speed damage.
+- [x] Additive IndexedDB v4 migration; atomic special invalidation and idempotent battle XP separate from cleanup.
+- [x] Typecheck, lint, 57 unit/API tests, five plain-Node API checks, production build and 56 Chromium/WebKit tests.
+- [ ] Hosted deployment, physical-phone acceptance and longer-term balance playtesting.
