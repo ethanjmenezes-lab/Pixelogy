@@ -16,12 +16,17 @@ npm run preview
 npm run typecheck
 npm run lint
 npm test
+npm run test:api-runtime
 npm run test:e2e
 ```
 
 Service-worker registration runs only in a production browser build. Test offline behavior at the production preview, not the Vite development server. Camera and geolocation require HTTPS, except browsers allow localhost for local development. Opening a plain LAN HTTP address on a phone does not provide an equivalent secure context.
 
 ## Deploy to Vercel
+
+`npm run build` now checks both the frontend and the API dependency graph. The server uses a separate NodeNext TypeScript configuration that rejects raw `.ts` runtime imports. Shared modules reachable from `api/` must use `.js` relative specifiers, which TypeScript resolves to their source `.ts` files and preserves correctly for emitted JavaScript.
+
+`npm run test:api-runtime` compiles every API entry and its dependencies into a temporary directory, loads the emitted entries in plain Node with TypeScript stripping disabled, and checks `/api/analyze` rejection/manual-fallback responses with Gemini credentials cleared. Temporary output is removed afterward and is never placed in the public `dist` directory. This catches module-load errors that Vite and Vitest can mask; it does not replace inspection of Vercel's own function artifact or a deployed cold-start test.
 
 Import this existing repository into Vercel. The checked-in configuration builds with `npm run build`, serves `dist`, preserves API/static paths, and rewrites application routes to the SPA. Vercel supplies HTTPS for its deployment domains. Do not rewrite `sw.js`, manifest, icons or `/api/analyze` to HTML.
 

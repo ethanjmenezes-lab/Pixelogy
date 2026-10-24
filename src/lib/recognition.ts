@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { categories } from "./gear.ts";
-import { boxToCrop } from "./pixel.ts";
+import { categories } from "./gear.js";
+import { boxToCrop } from "./pixel.js";
 export const recognitionSchema = z
   .object({
     label: z.string().min(1).max(80),

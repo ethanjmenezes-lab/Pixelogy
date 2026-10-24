@@ -1,5 +1,12 @@
 # Revision history and key decisions
 
+## API runtime import repair — October 24, 2026
+
+- Reproduced `ERR_MODULE_NOT_FOUND` by loading emitted API JavaScript in plain Node. `/api/analyze` already used `.js` specifiers, but its shared recognition module retained `./gear.ts` and `./pixel.ts`. Changed those transitive runtime imports to `.js`; no source files were renamed or runtime errors suppressed. `api/analyze.ts` is the only current API route.
+- Added a separate NodeNext server typecheck and a temporary emitted-JavaScript runtime smoke check to the production build. The smoke runner imports all compiled API entries with TypeScript stripping disabled and checks five rejection/manual-fallback responses without Gemini credentials. The frontend's Bundler/noEmit checks and Vitest transforms previously missed this deployment failure.
+- Verified typecheck, lint, all 40 unit/API tests, five runtime smoke assertions, and production build. Existing MapLibre chunk-size warning remains. Chromium/WebKit suite: 28 passed, 10 failed at GPS-dependent assertions with location unavailable (including the complete gameplay test before its battle/cleanup stages). Those browser failures remain unresolved; this run does not establish complete end-to-end acceptance.
+- Vercel CLI and generated function artifacts were unavailable locally. No deployment was performed. Redeploy, inspect the actual function bundle, verify a cold start and malformed requests, and test a consented live Gemini scan before declaring hosted acceptance.
+
 ## Mobile overworld redesign — October 24, 2026
 
 - Replaced launch marketing/navigation chrome with persistent full-viewport Willow Cove: original Canvas terrain, human avatar, equipped crab, collision, virtual joystick/keyboard movement, trail following, pan and recenter.
