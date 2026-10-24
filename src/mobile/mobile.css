@@ -1,0 +1,132 @@
+.geographic-map,
+.location-backdrop {
+  position: absolute;
+  inset: 0;
+  background: #b8d7cf;
+}
+.location-backdrop {
+  background:
+    radial-gradient(ellipse at 70% 25%, #d9e6ca, transparent 65%), #a3c9c7;
+}
+.location-message {
+  position: absolute;
+  z-index: 3;
+  top: 27%;
+  left: 20px;
+  right: 20px;
+  max-height: 48%;
+  overflow: auto;
+  padding: 22px !important;
+}
+.location-message h1 {
+  font-size: 25px;
+}
+.location-message p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.gps-avatar {
+  width: 40px;
+  height: 56px;
+  image-rendering: pixelated;
+}
+.gps-crab {
+  width: 42px;
+  height: 42px;
+  image-rendering: pixelated;
+  margin-left: 25px;
+}
+.maplibregl-ctrl-bottom-right,
+.maplibregl-ctrl-bottom-left {
+  bottom: calc(155px + env(safe-area-inset-bottom)) !important;
+}
+.map-error {
+  position: absolute;
+  z-index: 4;
+  top: 170px;
+  left: 16px;
+  right: 16px;
+  background: #fff3d9;
+  padding: 12px;
+  font-size: 12px;
+}
+.camera-live {
+  width: 100%;
+  max-height: 42dvh;
+  object-fit: contain;
+  background: #173e43;
+  border-radius: 12px;
+}
+.overworld .location-tag {
+  pointer-events: none;
+}
+.camera-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+@media (max-height: 500px) {
+  .location-message {
+    top: 100px;
+    max-height: 40%;
+    left: 100px;
+    right: 100px;
+  }
+  .location-message h1 {
+    font-size: 18px;
+  }
+}
+.offline-status {
+  position: absolute;
+  z-index: 50;
+  top: calc(env(safe-area-inset-top) + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: #173e43;
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.overworld .geographic-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pwa-update {
+  position: absolute;
+  z-index: 60;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  padding: 12px 16px;
+  background: #fff8e5;
+  border: 2px solid #315d4d;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #173e4333;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+.pwa-update .button {
+  min-height: 44px;
+}
+.install-guide ol {
+  list-style: decimal;
+  padding-left: 22px;
+  line-height: 1.7;
+}
+.install-guide li {
+  padding: 6px 0;
+}
+.install-guide h3 {
+  margin-top: 20px;
+}
+.install-guide a {
+  display: inline-block;
+  padding: 12px 0;
+  text-decoration: underline;
+}

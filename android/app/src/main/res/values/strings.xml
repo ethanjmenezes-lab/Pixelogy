@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pixelogy</string>
+    <string name="title_activity_main">Pixelogy</string>
+    <string name="package_name">com.pixelogy.dev</string>
+    <string name="custom_url_scheme">com.pixelogy.dev</string>
+</resources>
