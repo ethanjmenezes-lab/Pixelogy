@@ -21,6 +21,7 @@ export const defaultProfile: Profile = {
 };
 export function validProfile(p: Profile) {
   return (
+    typeof p.nickname === "string" &&
     p.nickname.trim().length > 0 &&
     p.nickname.length <= 24 &&
     [p.skin, p.hair, p.clothing].every(

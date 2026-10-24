@@ -50,9 +50,9 @@ Android/desktop users can use their browser's Install app or Add to Home screen 
 
 ## Offline and privacy boundaries
 
-The worker precaches only the build's explicit static list: HTML shell, manifest, icons, JavaScript (including the map worker), CSS and bundled fonts. No API response, uploaded/captured photo, profile response or third-party map request is placed in Cache Storage. Query-bearing assets bypass the cache. Network navigation falls back to the shell only for known application routes.
+The worker precaches only the build's explicit static list: HTML shell, manifest, icons, JavaScript (including the map worker), CSS, bundled fonts and the explicit catalog SVG list. No API response, uploaded/captured photo, profile response or third-party map request is placed in Cache Storage. Query-bearing assets bypass the cache. Network navigation falls back to the shell only for known application routes.
 
-IndexedDB remains intentional local game storage for collectibles, generated artwork, loadouts, cleanup claims, profile and consent. It is separate from service-worker caching. Existing saves are preserved. Clearing website data, removing the installed app, storage eviction or switching origins can affect saves; no cloud backup is claimed. Browser/native/install contexts may have distinct storage behavior, so verify continuity on the target iPhone.
+IndexedDB remains intentional local game storage for collectibles, generated artwork, loadouts, cleanup claims, profile and consent. It is separate from service-worker caching. Existing saves are preserved. Clearing website data, removing the installed app, storage eviction or switching origins can affect saves; legacy saves are not uploaded automatically. Account saves and their pending backend setup are documented in SHOREDEX_CLOUD.md. Browser/native/install contexts may have distinct storage behavior, so verify continuity on the target iPhone.
 
 After an initial successful online load, local inventory, equipment and CPU battles work offline. New discoveries cannot be saved offline: they require successful safe Gemini identification and review. Captures remain memory-only and are not queued for background upload. Gemini and uncached geographic map data require connectivity. The app never invents locations when GPS or maps are unavailable.
 

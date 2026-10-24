@@ -1,9 +1,11 @@
+import { catalogById } from "../catalog";
 import { useEffect, useState } from "react";
 import { catalog, categoryLabels, type Collectible } from "../lib/gear";
 import { readArtwork } from "../lib/storage";
 export function ItemArt({ item }: { item: Collectible }) {
   const [url, setUrl] = useState("");
   useEffect(() => {
+    if (item.catalogId) return;
     let active = true;
     let objectUrl = "";
     void readArtwork(item.sprite.thumbnailBlobKey)
@@ -18,7 +20,15 @@ export function ItemArt({ item }: { item: Collectible }) {
       active = false;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [item.sprite.thumbnailBlobKey]);
+  }, [item.sprite.thumbnailBlobKey, item.catalogId]);
+  if (item.catalogId && catalogById[item.catalogId])
+    return (
+      <img
+        className="item-art"
+        src={catalogById[item.catalogId].sprite}
+        alt={item.label}
+      />
+    );
   return url ? (
     <img className="item-art" src={url} alt={`Pixel art of ${item.label}`} />
   ) : (

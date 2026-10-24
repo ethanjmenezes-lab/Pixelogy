@@ -661,3 +661,33 @@ body {
 .game-loading {
   background: linear-gradient(150deg, #b5e5b4, #25c6b2);
 }
+
+/* ShoreDex: small numbered species slots, not photo cards. */
+.dex-filters {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.dex-filters label {display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;min-width:0}
+.dex-filters input,.dex-filters select {min-height:44px;min-width:0;width:100%;background:#fff8df;color:#282044;border:2px solid #594793;padding:8px;border-radius:6px}
+.dex-filters label:first-child {grid-column:1/-1}
+.dex-filters .consent {flex-direction:row;align-items:center}
+.dex-filters input[type=checkbox] {width:22px;min-height:22px}
+.dex-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding-bottom:20px}
+.dex-entry {position:relative;display:flex;flex-direction:column;align-items:center;min-height:108px;min-width:0;border:2px solid #594793;background:#fff8df;color:#282044;border-radius:6px;box-shadow:0 3px #594793;padding:5px 3px}
+.dex-entry:focus-visible {outline:3px solid #f58a08;outline-offset:2px}
+.dex-entry img {width:58px;height:58px;image-rendering:pixelated;object-fit:contain}
+.dex-entry.locked {background:#d3ecce;color:#594793}
+.dex-entry.locked img,.silhouette {filter:brightness(0);opacity:.24}
+.dex-number {font:700 10px monospace;align-self:flex-start}
+.dex-name {font-size:10px;line-height:1.25;overflow-wrap:anywhere}
+.dex-count {position:absolute;right:3px;top:4px;font:700 10px monospace}
+.dex-detail-art,.catalog-reveal {display:block;width:160px;height:160px;object-fit:contain;image-rendering:pixelated;margin:12px auto}
+.legacy-dex {margin-top:24px}
+.scan-source {width:100%;max-height:200px;object-fit:contain;border-radius:8px}
+.candidate-list {display:flex;flex-wrap:wrap;gap:8px}
+.catalog-candidate {display:flex;align-items:center;gap:10px;background:#fff8df;border:2px solid #594793;min-height:64px;color:#282044;text-align:left;padding:8px;width:100%}
+.catalog-candidate.selected {background:#a9ddab;box-shadow:inset 0 0 0 2px #594793}
+.catalog-candidate img {width:56px;height:56px;image-rendering:pixelated}
+.catalog-reveal {animation:catalog-discover .8s steps(5,end) both}
+@keyframes catalog-discover {0%,25%{filter:brightness(0);transform:scale(.8)}70%{filter:brightness(1.6);transform:scale(1.08)}100%{filter:none;transform:scale(1)}}
+.account-panel input {width:100%;min-height:44px;margin:6px 0}
+@media(min-width:420px){.dex-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.catalog-reveal{animation:none}}
+[data-reduced-motion=true] .catalog-reveal {animation:none}

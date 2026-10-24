@@ -1,3 +1,5 @@
+> Current ShoreDex change: predefined 200-species catalog and authenticated Supabase account saves replace photo pixelization for new discoveries. See [cloud architecture and pending setup](docs/SHOREDEX_CLOUD.md). The prepared migrations are not yet applied; older local-only/crop descriptions below are historical. Existing local saves are preserved.
+
 > Current release update: AI-only identification is required for new discoveries; manual identification and safety/category overrides are removed. Online analysis must succeed before saving. Real geography uses the authored tropical pixel-art MapLibre style; older manual-fallback and Liberty-style descriptions below are historical. Existing saves remain intact.
 
 > Primary release: mobile-first PWA on Vercel HTTPS. Follow [PWA setup](docs/PWA_SETUP.md). Native projects and store submission are optional future work, not release prerequisites. Keep browser camera/GPS, existing local saves and gameplay. Do not cache private/API/photo responses.

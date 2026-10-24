@@ -1,3 +1,4 @@
+import { cloudSession, rpc } from "../cloud/client";
 import {
   normalizeProgression,
   ownedBlueprints,
@@ -176,6 +177,23 @@ export async function claimCleanup(
   collectibleId: string,
   eventId: string,
 ): Promise<CleanupClaim> {
+  if (await cloudSession()) {
+    const c = await rpc<{
+      id: string;
+      discovery_id: string;
+      category: Category;
+      claimed_at: string;
+      xp: 10 | 15;
+    }>("claim_cleanup", { discovery: collectibleId });
+    return {
+      eventId: c.id,
+      collectibleId: c.discovery_id,
+      category: c.category,
+      confirmedAtIso: c.claimed_at,
+      xpAwarded: c.xp,
+      selfReported: true,
+    };
+  }
   const db = await dbPromise;
   const tx = db.transaction(["collectibles", "cleanupEvents"], "readwrite");
   const store = tx.objectStore("cleanupEvents");
@@ -218,6 +236,10 @@ export async function saveEquipment(
   slot: Parameters<typeof equip>[2],
   id: string | null,
 ) {
+  if (await cloudSession()) {
+    await rpc("equip_discovery", { slot_name: slot, discovery: id });
+    return;
+  }
   const db = await dbPromise;
   const tx = db.transaction(
     ["collectibles", "loadouts", "battleProgression"],
@@ -254,6 +276,11 @@ export async function readProfile() {
   return (await (await dbPromise).get("profiles", "local")) ?? defaultProfile;
 }
 export async function saveProfile(profile: Profile) {
+  if (await cloudSession()) {
+    if (!validProfile(profile)) throw new Error("Invalid profile");
+    await rpc("save_appearance", { appearance: profile });
+    return;
+  }
   if (!validProfile(profile))
     throw new Error("Please choose a valid explorer name and appearance.");
   await (
@@ -280,6 +307,10 @@ export async function saveConsent(analysisConsent: boolean) {
 }
 
 export async function saveMoveSelection(slot: "main" | "special", id: MoveId) {
+  if (await cloudSession()) {
+    await rpc("choose_move", { slot_name: slot, move_id: id });
+    return;
+  }
   const db = await dbPromise;
   const tx = db.transaction(
     ["collectibles", "loadouts", "battleProgression"],

@@ -108,18 +108,32 @@ export async function takePhoto(page: Page) {
 }
 
 export const safeRecognition = {
-  label: "Plastic bag",
-  category: "plastic_bag",
-  subtype: null,
-  safety: "allowed",
-  bbox: [100, 100, 900, 900],
+  status: "matched",
+  candidates: ["grocery-bag"],
+  payload: "fixture",
+  signature: "fixture",
+  recognition: {
+    objectName: "Plastic bag",
+    material: "plastic",
+    category: "bag",
+    attributes: [],
+    confidence: 0.95,
+    ambiguous: false,
+    safety: "allowed",
+  },
 };
 export async function mockRecognition(
   page: Page,
   result: unknown = safeRecognition,
 ) {
+  let count = 0;
   await page.route("**/api/analyze", (route) =>
-    route.fulfill({ json: result }),
+    route.fulfill({
+      json:
+        result === safeRecognition
+          ? { ...safeRecognition, payload: "fixture-" + ++count }
+          : result,
+    }),
   );
 }
 export async function identify(page: Page) {

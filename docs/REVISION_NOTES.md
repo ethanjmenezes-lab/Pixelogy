@@ -1,5 +1,15 @@
 # Revision history and key decisions
 
+## Predefined ShoreDex and account integration — October 24, 2026
+
+- Added 200 stable catalog entries, original code-generated pixel SVGs (40 finished starter variants, 160 explicit drafts), deterministic recognition matching, a dense 4–5 column gallery, filtered locked/unlocked entries, quantities/history, equipment details and sprite reveals. New discoveries no longer use pixelated photographs. Existing local discoveries and equipment remain intact and separate from account inventory.
+- Inspected the existing connected Supabase project and found an empty public schema/migration history. Prepared versioned schema and reproducible catalog/gear/move seed. Added email/password account UI, owner-scoped cloud snapshots, signed authenticated discovery awards, transactional cleanup and server-resolved practice. Cloud activation is incomplete: automatic approval review rejected applying persistent schema/RLS changes; explicit approval is pending. No live tables, signing secret or Vercel environment was configured by this task.
+- Prepared rollback-only RLS/replay/ownership SQL tests at supabase/tests/rls.sql. They have NOT run: the cloud schema is unapplied, and no local PostgreSQL/Docker runtime is available. Live signup, email confirmation, cross-device saves, actual database rewards and hosted Gemini remain unverified.
+- Passed typecheck, lint, 67 unit/API/configuration tests and production build. Both compiled API entries load in plain Node without a TypeScript loader; five analyze rejection checks pass. The existing large-chunk build warning remains.
+- Browser verification: full Chromium/WebKit run passed 59/60 checks; the remaining PWA test queried caches during its intentional reload. Added an explicit navigation wait, then all four PWA checks passed. After the final cleanup-ID/offline fix, all four targeted checks passed (full scan → catalog save → equip → CPU battle → reload → optional cleanup and offline account practice in both engines). Duplicate species keep completion at 1/200 while quantity becomes 2; both engine tests passed. Gallery layout and keyboard checks passed at 375, 390 and 430px; inspected the 390px screenshot. Existing GPS, camera-denial, consent, late-response, legacy battle, landscape, reduced-motion and cache-exclusion regressions passed.
+- No deployment or physical-device test was performed. See SHOREDEX_CLOUD.md for exact setup, trust boundaries and remaining limitations.
+
+
 ## Automatic scanner and brighter tropical theme — October 24, 2026
 
 - Removed crop sliders and the separate Gemini/discovery-kit panel. One-time consent moves before camera entry; after that, capture automatically identifies and frames the object. Review/save stays explicit, and crop adjustment is an optional touch/keyboard control. Profile revocation, retry/retake, safety blocking and existing saves remain intact.

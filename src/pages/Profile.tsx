@@ -1,3 +1,4 @@
+import { AccountPanel } from "../cloud/AccountPanel";
 import { InstallGuide } from "../pwa/InstallGuide";
 import { readConsent, saveConsent } from "../lib/storage";
 import { useEffect, useState } from "react";
@@ -12,6 +13,10 @@ import {
 import { PlayerAvatar } from "../world/PlayerAvatar";
 import { levelFor } from "../world/model";
 export function Profile() {
+  const { userId } = useGame();
+  return <ProfileSession key={userId ?? "local"} />;
+}
+function ProfileSession() {
   const { profile, refresh, items, claims } = useGame();
   const [consent, setConsent] = useState(false);
   useEffect(() => {
@@ -20,6 +25,12 @@ export function Profile() {
       .catch(() => {});
   }, []);
   const [draft, setDraft] = useState<ProfileType>(profile);
+  const [loadedProfile, setLoadedProfile] = useState(profile);
+  if (loadedProfile !== profile) {
+    setLoadedProfile(profile);
+    setDraft(profile);
+  }
+
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const xp = claims.reduce((s, c) => s + c.xpAwarded, 0);
@@ -37,6 +48,7 @@ export function Profile() {
   }
   return (
     <div className="profile-page">
+      <AccountPanel />
       <div className="profile-preview">
         <PlayerAvatar profile={draft} />
         <div>

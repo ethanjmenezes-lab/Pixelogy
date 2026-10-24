@@ -63,9 +63,11 @@ export function InstallGuide() {
       </p>
       <p>
         Allow camera access when you scan. If access is blocked, enable it in
-        your browser or device settings and retry. Your saves stay in local
-        device storage; clearing website data or removing the app may erase
-        them.
+        your browser or device settings and retry. Legacy saves stay on this
+        device. Signed-in account saves use Supabase when configured; cached
+        account inventory can be viewed offline, but account changes need
+        connectivity and offline account practice earns no XP. Clearing site
+        data removes local saves and cached snapshots.
       </p>
     </section>
   );

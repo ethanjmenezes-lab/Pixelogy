@@ -9,12 +9,23 @@ vi.mock("@google/genai", () => ({
     models = { generateContent };
   },
 }));
+const authorize = vi.hoisted(() => vi.fn());
+const beginScan = vi.hoisted(() => vi.fn());
+vi.mock("../server/cloud.js", () => ({
+  authorized: authorize,
+  receipt: (data: unknown) => ({
+    payload: JSON.stringify(data),
+    signature: "test-signature",
+  }),
+}));
 const valid = {
-  label: "Plastic bag",
-  category: "plastic_bag",
-  subtype: null,
+  objectName: "Plastic bag",
+  material: "plastic",
+  category: "bag",
+  attributes: [],
+  confidence: 0.95,
+  ambiguous: false,
   safety: "allowed",
-  bbox: [100, 100, 900, 900],
 };
 async function call(
   body: unknown,
@@ -39,6 +50,11 @@ async function call(
 beforeEach(() => {
   vi.stubEnv("GEMINI_API_KEY", "test-only");
   generateContent.mockReset();
+  beginScan.mockResolvedValue({ data: "scan-id", error: null });
+  authorize.mockResolvedValue({
+    userId: "user-id",
+    client: { rpc: beginScan },
+  });
 });
 it("requires POST, JSON and explicit consent before invoking the provider", async () => {
   expect((await call({}, "GET")).code).toBe(405);
@@ -63,13 +79,20 @@ it("rejects oversized requests and absent credentials", async () => {
   ).toBe(503);
   expect(generateContent).not.toHaveBeenCalled();
 });
-it("returns validated provider output and rejects malformed bounds", async () => {
+it("returns catalog candidates from validated recognition and rejects malformed data", async () => {
   generateContent.mockResolvedValueOnce({ text: JSON.stringify(valid) });
   expect(
     await call({ consent: true, image: "data:image/jpeg;base64,YQ==" }),
-  ).toEqual({ code: 200, data: valid });
+  ).toMatchObject({
+    code: 200,
+    data: {
+      status: "matched",
+      candidates: ["grocery-bag"],
+      recognition: valid,
+    },
+  });
   generateContent.mockResolvedValueOnce({
-    text: JSON.stringify({ ...valid, bbox: [900, 900, 100, 100] }),
+    text: JSON.stringify({ ...valid, confidence: 2 }),
   });
   expect(
     (await call({ consent: true, image: "data:image/jpeg;base64,YQ==" })).code,
@@ -93,4 +116,37 @@ it("allows native preflight only for explicitly configured origins", async () =>
     (await call({}, "OPTIONS", { origin: "https://untrusted.example" })).code,
   ).toBe(403);
   expect(generateContent).not.toHaveBeenCalled();
+});
+
+it("rejects unauthenticated scans before contacting Gemini", async () => {
+  authorize.mockRejectedValueOnce(new Error("AUTH"));
+  expect(
+    (await call({ consent: true, image: "data:image/jpeg;base64,YQ==" })).code,
+  ).toBe(401);
+  expect(generateContent).not.toHaveBeenCalled();
+});
+it("rate limits before invoking Gemini and does not issue unsafe receipts", async () => {
+  beginScan.mockResolvedValueOnce({
+    data: null,
+    error: { message: "Scan limit reached" },
+  });
+  expect(
+    (await call({ consent: true, image: "data:image/jpeg;base64,YQ==" })).code,
+  ).toBe(429);
+  expect(generateContent).not.toHaveBeenCalled();
+  generateContent.mockResolvedValueOnce({
+    text: JSON.stringify({ ...valid, safety: "hazardous" }),
+  });
+  const result = await call({
+    consent: true,
+    image: "data:image/jpeg;base64,YQ==",
+  });
+  expect(result).toEqual({
+    code: 200,
+    data: {
+      status: "blocked",
+      candidates: [],
+      recognition: { ...valid, safety: "hazardous" },
+    },
+  });
 });

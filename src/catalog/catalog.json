@@ -1,0 +1,3410 @@
+[
+  {
+    "id": "water-bottle",
+    "number": 1,
+    "name": "Water bottle",
+    "category": "bottles",
+    "subtype": "water-bottle",
+    "material": "plastic",
+    "aliases": [
+      "water bottle",
+      "plastic water bottle",
+      "pet water bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable water bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/water-bottle.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "soda-bottle",
+    "number": 2,
+    "name": "Soda bottle",
+    "category": "bottles",
+    "subtype": "soda-bottle",
+    "material": "plastic",
+    "aliases": [
+      "soda bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable soda bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/soda-bottle.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "sports-drink-bottle",
+    "number": 3,
+    "name": "Sports drink bottle",
+    "category": "bottles",
+    "subtype": "sports-drink-bottle",
+    "material": "plastic",
+    "aliases": [
+      "sports drink bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sports drink bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/sports-drink-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "juice-bottle",
+    "number": 4,
+    "name": "Juice bottle",
+    "category": "bottles",
+    "subtype": "juice-bottle",
+    "material": "plastic",
+    "aliases": [
+      "juice bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable juice bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/juice-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "iced-tea-bottle",
+    "number": 5,
+    "name": "Iced tea bottle",
+    "category": "bottles",
+    "subtype": "iced-tea-bottle",
+    "material": "plastic",
+    "aliases": [
+      "iced tea bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable iced tea bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/iced-tea-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "sparkling-water-bottle",
+    "number": 6,
+    "name": "Sparkling water bottle",
+    "category": "bottles",
+    "subtype": "sparkling-water-bottle",
+    "material": "plastic",
+    "aliases": [
+      "sparkling water bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sparkling water bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/sparkling-water-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "smoothie-bottle",
+    "number": 7,
+    "name": "Smoothie bottle",
+    "category": "bottles",
+    "subtype": "smoothie-bottle",
+    "material": "plastic",
+    "aliases": [
+      "smoothie bottle"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable smoothie bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/smoothie-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "kefir-bottle",
+    "number": 8,
+    "name": "Kefir bottle",
+    "category": "bottles",
+    "subtype": "kefir-bottle",
+    "material": "plastic",
+    "aliases": [
+      "kefir bottle"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable kefir bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/kefir-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "drinkable-yogurt-bottle",
+    "number": 9,
+    "name": "Drinkable yogurt bottle",
+    "category": "bottles",
+    "subtype": "drinkable-yogurt-bottle",
+    "material": "plastic",
+    "aliases": [
+      "drinkable yogurt bottle"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable drinkable yogurt bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/drinkable-yogurt-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-drink-bottle",
+    "number": 10,
+    "name": "Coffee drink bottle",
+    "category": "bottles",
+    "subtype": "coffee-drink-bottle",
+    "material": "plastic",
+    "aliases": [
+      "coffee drink bottle"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable coffee drink bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bottle",
+    "gearId": "bottle_blade",
+    "sprite": "/shoredex/coffee-drink-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "milk-jug",
+    "number": 11,
+    "name": "Milk jug",
+    "category": "jugs",
+    "subtype": "milk-jug",
+    "material": "plastic",
+    "aliases": [
+      "milk jug"
+    ],
+    "rarity": "common",
+    "description": "A recognizable milk jug. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/milk-jug.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "water-jug",
+    "number": 12,
+    "name": "Water jug",
+    "category": "jugs",
+    "subtype": "water-jug",
+    "material": "plastic",
+    "aliases": [
+      "water jug"
+    ],
+    "rarity": "common",
+    "description": "A recognizable water jug. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/water-jug.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "juice-jug",
+    "number": 13,
+    "name": "Juice jug",
+    "category": "jugs",
+    "subtype": "juice-jug",
+    "material": "plastic",
+    "aliases": [
+      "juice jug"
+    ],
+    "rarity": "common",
+    "description": "A recognizable juice jug. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/juice-jug.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-dish-soap-bottle",
+    "number": 14,
+    "name": "Empty dish soap bottle",
+    "category": "jugs",
+    "subtype": "empty-dish-soap-bottle",
+    "material": "plastic",
+    "aliases": [
+      "empty dish soap bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable empty dish soap bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-dish-soap-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-shampoo-bottle",
+    "number": 15,
+    "name": "Empty shampoo bottle",
+    "category": "jugs",
+    "subtype": "empty-shampoo-bottle",
+    "material": "plastic",
+    "aliases": [
+      "empty shampoo bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable empty shampoo bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-shampoo-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-conditioner-bottle",
+    "number": 16,
+    "name": "Empty conditioner bottle",
+    "category": "jugs",
+    "subtype": "empty-conditioner-bottle",
+    "material": "plastic",
+    "aliases": [
+      "empty conditioner bottle"
+    ],
+    "rarity": "common",
+    "description": "A recognizable empty conditioner bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-conditioner-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-hand-soap-bottle",
+    "number": 17,
+    "name": "Empty hand soap bottle",
+    "category": "jugs",
+    "subtype": "empty-hand-soap-bottle",
+    "material": "plastic",
+    "aliases": [
+      "empty hand soap bottle"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable empty hand soap bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-hand-soap-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-laundry-detergent-jug",
+    "number": 18,
+    "name": "Empty laundry detergent jug",
+    "category": "jugs",
+    "subtype": "empty-laundry-detergent-jug",
+    "material": "plastic",
+    "aliases": [
+      "empty laundry detergent jug"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable empty laundry detergent jug. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-laundry-detergent-jug.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-body-wash-bottle",
+    "number": 19,
+    "name": "Empty body wash bottle",
+    "category": "jugs",
+    "subtype": "empty-body-wash-bottle",
+    "material": "plastic",
+    "aliases": [
+      "empty body wash bottle"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable empty body wash bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-body-wash-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "empty-lotion-bottle",
+    "number": 20,
+    "name": "Empty lotion bottle",
+    "category": "jugs",
+    "subtype": "empty-lotion-bottle",
+    "material": "plastic",
+    "aliases": [
+      "empty lotion bottle"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable empty lotion bottle. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/empty-lotion-bottle.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "water-bottle-cap",
+    "number": 21,
+    "name": "Water bottle cap",
+    "category": "caps",
+    "subtype": "water-bottle-cap",
+    "material": "plastic",
+    "aliases": [
+      "water bottle cap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable water bottle cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/water-bottle-cap.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "sports-spout-cap",
+    "number": 22,
+    "name": "Sports spout cap",
+    "category": "caps",
+    "subtype": "sports-spout-cap",
+    "material": "plastic",
+    "aliases": [
+      "sports spout cap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sports spout cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/sports-spout-cap.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "milk-jug-cap",
+    "number": 23,
+    "name": "Milk jug cap",
+    "category": "caps",
+    "subtype": "milk-jug-cap",
+    "material": "plastic",
+    "aliases": [
+      "milk jug cap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable milk jug cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/milk-jug-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "juice-bottle-cap",
+    "number": 24,
+    "name": "Juice bottle cap",
+    "category": "caps",
+    "subtype": "juice-bottle-cap",
+    "material": "plastic",
+    "aliases": [
+      "juice bottle cap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable juice bottle cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/juice-bottle-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "flip-top-drink-cap",
+    "number": 25,
+    "name": "Flip top drink cap",
+    "category": "caps",
+    "subtype": "flip-top-drink-cap",
+    "material": "plastic",
+    "aliases": [
+      "flip top drink cap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable flip top drink cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/flip-top-drink-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "wide-mouth-jar-cap",
+    "number": 26,
+    "name": "Wide mouth jar cap",
+    "category": "caps",
+    "subtype": "wide-mouth-jar-cap",
+    "material": "plastic",
+    "aliases": [
+      "wide mouth jar cap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable wide mouth jar cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/wide-mouth-jar-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "soda-bottle-cap",
+    "number": 27,
+    "name": "Soda bottle cap",
+    "category": "caps",
+    "subtype": "soda-bottle-cap",
+    "material": "plastic",
+    "aliases": [
+      "soda bottle cap"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable soda bottle cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/soda-bottle-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-bottle-cap",
+    "number": 28,
+    "name": "Coffee bottle cap",
+    "category": "caps",
+    "subtype": "coffee-bottle-cap",
+    "material": "plastic",
+    "aliases": [
+      "coffee bottle cap"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable coffee bottle cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/coffee-bottle-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "smoothie-bottle-cap",
+    "number": 29,
+    "name": "Smoothie bottle cap",
+    "category": "caps",
+    "subtype": "smoothie-bottle-cap",
+    "material": "plastic",
+    "aliases": [
+      "smoothie bottle cap"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable smoothie bottle cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/smoothie-bottle-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "dispensing-pump-cap",
+    "number": 30,
+    "name": "Dispensing pump cap",
+    "category": "caps",
+    "subtype": "dispensing-pump-cap",
+    "material": "plastic",
+    "aliases": [
+      "dispensing pump cap"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable dispensing pump cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "bottle_cap",
+    "gearId": "cap_boots",
+    "sprite": "/shoredex/dispensing-pump-cap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "clear-drink-cup",
+    "number": 31,
+    "name": "Clear drink cup",
+    "category": "cups",
+    "subtype": "clear-drink-cup",
+    "material": "plastic",
+    "aliases": [
+      "clear drink cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable clear drink cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/clear-drink-cup.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "cold-coffee-cup",
+    "number": 32,
+    "name": "Cold coffee cup",
+    "category": "cups",
+    "subtype": "cold-coffee-cup",
+    "material": "plastic",
+    "aliases": [
+      "cold coffee cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cold coffee cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/cold-coffee-cup.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "smoothie-cup",
+    "number": 33,
+    "name": "Smoothie cup",
+    "category": "cups",
+    "subtype": "smoothie-cup",
+    "material": "plastic",
+    "aliases": [
+      "smoothie cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable smoothie cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/smoothie-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "bubble-tea-cup",
+    "number": 34,
+    "name": "Bubble tea cup",
+    "category": "cups",
+    "subtype": "bubble-tea-cup",
+    "material": "plastic",
+    "aliases": [
+      "bubble tea cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable bubble tea cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/bubble-tea-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "slush-cup",
+    "number": 35,
+    "name": "Slush cup",
+    "category": "cups",
+    "subtype": "slush-cup",
+    "material": "plastic",
+    "aliases": [
+      "slush cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable slush cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/slush-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "water-cooler-cup",
+    "number": 36,
+    "name": "Water cooler cup",
+    "category": "cups",
+    "subtype": "water-cooler-cup",
+    "material": "plastic",
+    "aliases": [
+      "water cooler cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable water cooler cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/water-cooler-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "sample-cup",
+    "number": 37,
+    "name": "Sample cup",
+    "category": "cups",
+    "subtype": "sample-cup",
+    "material": "plastic",
+    "aliases": [
+      "sample cup"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable sample cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/sample-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "ice-cream-cup",
+    "number": 38,
+    "name": "Ice cream cup",
+    "category": "cups",
+    "subtype": "ice-cream-cup",
+    "material": "plastic",
+    "aliases": [
+      "ice cream cup"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable ice cream cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/ice-cream-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "dessert-cup",
+    "number": 39,
+    "name": "Dessert cup",
+    "category": "cups",
+    "subtype": "dessert-cup",
+    "material": "plastic",
+    "aliases": [
+      "dessert cup"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable dessert cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/dessert-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "fruit-cup",
+    "number": 40,
+    "name": "Fruit cup",
+    "category": "cups",
+    "subtype": "fruit-cup",
+    "material": "plastic",
+    "aliases": [
+      "fruit cup"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable fruit cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "disposable_cup",
+    "gearId": "cup_crown",
+    "sprite": "/shoredex/fruit-cup.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "yogurt-tub",
+    "number": 41,
+    "name": "Yogurt tub",
+    "category": "tubs",
+    "subtype": "yogurt-tub",
+    "material": "plastic",
+    "aliases": [
+      "yogurt tub"
+    ],
+    "rarity": "common",
+    "description": "A recognizable yogurt tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/yogurt-tub.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "margarine-tub",
+    "number": 42,
+    "name": "Margarine tub",
+    "category": "tubs",
+    "subtype": "margarine-tub",
+    "material": "plastic",
+    "aliases": [
+      "margarine tub"
+    ],
+    "rarity": "common",
+    "description": "A recognizable margarine tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/margarine-tub.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "hummus-tub",
+    "number": 43,
+    "name": "Hummus tub",
+    "category": "tubs",
+    "subtype": "hummus-tub",
+    "material": "plastic",
+    "aliases": [
+      "hummus tub"
+    ],
+    "rarity": "common",
+    "description": "A recognizable hummus tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/hummus-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cream-cheese-tub",
+    "number": 44,
+    "name": "Cream cheese tub",
+    "category": "tubs",
+    "subtype": "cream-cheese-tub",
+    "material": "plastic",
+    "aliases": [
+      "cream cheese tub"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cream cheese tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/cream-cheese-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "dip-tub",
+    "number": 45,
+    "name": "Dip tub",
+    "category": "tubs",
+    "subtype": "dip-tub",
+    "material": "plastic",
+    "aliases": [
+      "dip tub"
+    ],
+    "rarity": "common",
+    "description": "A recognizable dip tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/dip-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "ice-cream-tub",
+    "number": 46,
+    "name": "Ice cream tub",
+    "category": "tubs",
+    "subtype": "ice-cream-tub",
+    "material": "plastic",
+    "aliases": [
+      "ice cream tub"
+    ],
+    "rarity": "common",
+    "description": "A recognizable ice cream tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/ice-cream-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "deli-salad-tub",
+    "number": 47,
+    "name": "Deli salad tub",
+    "category": "tubs",
+    "subtype": "deli-salad-tub",
+    "material": "plastic",
+    "aliases": [
+      "deli salad tub"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable deli salad tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/deli-salad-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "soup-tub",
+    "number": 48,
+    "name": "Soup tub",
+    "category": "tubs",
+    "subtype": "soup-tub",
+    "material": "plastic",
+    "aliases": [
+      "soup tub"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable soup tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/soup-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "nut-butter-tub",
+    "number": 49,
+    "name": "Nut butter tub",
+    "category": "tubs",
+    "subtype": "nut-butter-tub",
+    "material": "plastic",
+    "aliases": [
+      "nut butter tub"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable nut butter tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/nut-butter-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "sour-cream-tub",
+    "number": 50,
+    "name": "Sour cream tub",
+    "category": "tubs",
+    "subtype": "sour-cream-tub",
+    "material": "plastic",
+    "aliases": [
+      "sour cream tub"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable sour cream tub. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/sour-cream-tub.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "berry-punnet",
+    "number": 51,
+    "name": "Berry punnet",
+    "category": "trays",
+    "subtype": "berry-punnet",
+    "material": "plastic",
+    "aliases": [
+      "berry punnet"
+    ],
+    "rarity": "common",
+    "description": "A recognizable berry punnet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/berry-punnet.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "salad-clamshell",
+    "number": 52,
+    "name": "Salad clamshell",
+    "category": "trays",
+    "subtype": "salad-clamshell",
+    "material": "plastic",
+    "aliases": [
+      "salad clamshell"
+    ],
+    "rarity": "common",
+    "description": "A recognizable salad clamshell. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/salad-clamshell.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "sandwich-clamshell",
+    "number": 53,
+    "name": "Sandwich clamshell",
+    "category": "trays",
+    "subtype": "sandwich-clamshell",
+    "material": "plastic",
+    "aliases": [
+      "sandwich clamshell"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sandwich clamshell. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/sandwich-clamshell.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cookie-tray",
+    "number": 54,
+    "name": "Cookie tray",
+    "category": "trays",
+    "subtype": "cookie-tray",
+    "material": "plastic",
+    "aliases": [
+      "cookie tray"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cookie tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/cookie-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cake-slice-tray",
+    "number": 55,
+    "name": "Cake slice tray",
+    "category": "trays",
+    "subtype": "cake-slice-tray",
+    "material": "plastic",
+    "aliases": [
+      "cake slice tray"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cake slice tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/cake-slice-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "sushi-tray",
+    "number": 56,
+    "name": "Sushi tray",
+    "category": "trays",
+    "subtype": "sushi-tray",
+    "material": "plastic",
+    "aliases": [
+      "sushi tray"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sushi tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/sushi-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "biscuit-insert-tray",
+    "number": 57,
+    "name": "Biscuit insert tray",
+    "category": "trays",
+    "subtype": "biscuit-insert-tray",
+    "material": "plastic",
+    "aliases": [
+      "biscuit insert tray"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable biscuit insert tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/biscuit-insert-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "produce-tray",
+    "number": 58,
+    "name": "Produce tray",
+    "category": "trays",
+    "subtype": "produce-tray",
+    "material": "plastic",
+    "aliases": [
+      "produce tray"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable produce tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/produce-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "chocolate-insert-tray",
+    "number": 59,
+    "name": "Chocolate insert tray",
+    "category": "trays",
+    "subtype": "chocolate-insert-tray",
+    "material": "plastic",
+    "aliases": [
+      "chocolate insert tray"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable chocolate insert tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/chocolate-insert-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "pastry-clamshell",
+    "number": 60,
+    "name": "Pastry clamshell",
+    "category": "trays",
+    "subtype": "pastry-clamshell",
+    "material": "plastic",
+    "aliases": [
+      "pastry clamshell"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable pastry clamshell. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/pastry-clamshell.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "grocery-bag",
+    "number": 61,
+    "name": "Grocery bag",
+    "category": "bags",
+    "subtype": "grocery-bag",
+    "material": "plastic",
+    "aliases": [
+      "grocery bag",
+      "plastic bag",
+      "shopping bag",
+      "carrier bag"
+    ],
+    "rarity": "common",
+    "description": "A recognizable grocery bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/grocery-bag.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "produce-bag",
+    "number": 62,
+    "name": "Produce bag",
+    "category": "bags",
+    "subtype": "produce-bag",
+    "material": "plastic",
+    "aliases": [
+      "produce bag"
+    ],
+    "rarity": "common",
+    "description": "A recognizable produce bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/produce-bag.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "bread-bag",
+    "number": 63,
+    "name": "Bread bag",
+    "category": "bags",
+    "subtype": "bread-bag",
+    "material": "plastic",
+    "aliases": [
+      "bread bag"
+    ],
+    "rarity": "common",
+    "description": "A recognizable bread bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/bread-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "bagel-bag",
+    "number": 64,
+    "name": "Bagel bag",
+    "category": "bags",
+    "subtype": "bagel-bag",
+    "material": "plastic",
+    "aliases": [
+      "bagel bag"
+    ],
+    "rarity": "common",
+    "description": "A recognizable bagel bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/bagel-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "sandwich-bag",
+    "number": 65,
+    "name": "Sandwich bag",
+    "category": "bags",
+    "subtype": "sandwich-bag",
+    "material": "plastic",
+    "aliases": [
+      "sandwich bag"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sandwich bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/sandwich-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "freezer-bag",
+    "number": 66,
+    "name": "Freezer bag",
+    "category": "bags",
+    "subtype": "freezer-bag",
+    "material": "plastic",
+    "aliases": [
+      "freezer bag"
+    ],
+    "rarity": "common",
+    "description": "A recognizable freezer bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/freezer-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cereal-liner-bag",
+    "number": 67,
+    "name": "Cereal liner bag",
+    "category": "bags",
+    "subtype": "cereal-liner-bag",
+    "material": "plastic",
+    "aliases": [
+      "cereal liner bag"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable cereal liner bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/cereal-liner-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rice-bag",
+    "number": 68,
+    "name": "Rice bag",
+    "category": "bags",
+    "subtype": "rice-bag",
+    "material": "plastic",
+    "aliases": [
+      "rice bag"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable rice bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/rice-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "pasta-bag",
+    "number": 69,
+    "name": "Pasta bag",
+    "category": "bags",
+    "subtype": "pasta-bag",
+    "material": "plastic",
+    "aliases": [
+      "pasta bag"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable pasta bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/pasta-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "ice-bag",
+    "number": 70,
+    "name": "Ice bag",
+    "category": "bags",
+    "subtype": "ice-bag",
+    "material": "plastic",
+    "aliases": [
+      "ice bag"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable ice bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "plastic_bag",
+    "gearId": "bag_helm",
+    "sprite": "/shoredex/ice-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cling-film",
+    "number": 71,
+    "name": "Cling film",
+    "category": "films",
+    "subtype": "cling-film",
+    "material": "plastic",
+    "aliases": [
+      "cling film"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cling film. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/cling-film.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "shrink-wrap-sleeve",
+    "number": 72,
+    "name": "Shrink wrap sleeve",
+    "category": "films",
+    "subtype": "shrink-wrap-sleeve",
+    "material": "plastic",
+    "aliases": [
+      "shrink wrap sleeve"
+    ],
+    "rarity": "common",
+    "description": "A recognizable shrink wrap sleeve. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/shrink-wrap-sleeve.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "bottle-multipack-wrap",
+    "number": 73,
+    "name": "Bottle multipack wrap",
+    "category": "films",
+    "subtype": "bottle-multipack-wrap",
+    "material": "plastic",
+    "aliases": [
+      "bottle multipack wrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable bottle multipack wrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/bottle-multipack-wrap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "magazine-mailing-wrap",
+    "number": 74,
+    "name": "Magazine mailing wrap",
+    "category": "films",
+    "subtype": "magazine-mailing-wrap",
+    "material": "plastic",
+    "aliases": [
+      "magazine mailing wrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable magazine mailing wrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/magazine-mailing-wrap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "stretch-packing-film",
+    "number": 75,
+    "name": "Stretch packing film",
+    "category": "films",
+    "subtype": "stretch-packing-film",
+    "material": "plastic",
+    "aliases": [
+      "stretch packing film"
+    ],
+    "rarity": "common",
+    "description": "A recognizable stretch packing film. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/stretch-packing-film.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cup-sealing-film",
+    "number": 76,
+    "name": "Cup sealing film",
+    "category": "films",
+    "subtype": "cup-sealing-film",
+    "material": "plastic",
+    "aliases": [
+      "cup sealing film"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cup sealing film. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/cup-sealing-film.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cheese-film",
+    "number": 77,
+    "name": "Cheese film",
+    "category": "films",
+    "subtype": "cheese-film",
+    "material": "plastic",
+    "aliases": [
+      "cheese film"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable cheese film. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/cheese-film.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "snack-pack-film",
+    "number": 78,
+    "name": "Snack pack film",
+    "category": "films",
+    "subtype": "snack-pack-film",
+    "material": "plastic",
+    "aliases": [
+      "snack pack film"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable snack pack film. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/snack-pack-film.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "bakery-window-film",
+    "number": 79,
+    "name": "Bakery window film",
+    "category": "films",
+    "subtype": "bakery-window-film",
+    "material": "plastic",
+    "aliases": [
+      "bakery window film"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable bakery window film. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/bakery-window-film.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "protective-shipping-sleeve",
+    "number": 80,
+    "name": "Protective shipping sleeve",
+    "category": "films",
+    "subtype": "protective-shipping-sleeve",
+    "material": "plastic",
+    "aliases": [
+      "protective shipping sleeve"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable protective shipping sleeve. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/protective-shipping-sleeve.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "crisp-packet",
+    "number": 81,
+    "name": "Crisp packet",
+    "category": "wrappers",
+    "subtype": "crisp-packet",
+    "material": "plastic",
+    "aliases": [
+      "crisp packet"
+    ],
+    "rarity": "common",
+    "description": "A recognizable crisp packet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/crisp-packet.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "candy-wrapper",
+    "number": 82,
+    "name": "Candy wrapper",
+    "category": "wrappers",
+    "subtype": "candy-wrapper",
+    "material": "plastic",
+    "aliases": [
+      "candy wrapper"
+    ],
+    "rarity": "common",
+    "description": "A recognizable candy wrapper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/candy-wrapper.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "chocolate-wrapper",
+    "number": 83,
+    "name": "Chocolate wrapper",
+    "category": "wrappers",
+    "subtype": "chocolate-wrapper",
+    "material": "plastic",
+    "aliases": [
+      "chocolate wrapper"
+    ],
+    "rarity": "common",
+    "description": "A recognizable chocolate wrapper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/chocolate-wrapper.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "granola-bar-wrapper",
+    "number": 84,
+    "name": "Granola bar wrapper",
+    "category": "wrappers",
+    "subtype": "granola-bar-wrapper",
+    "material": "plastic",
+    "aliases": [
+      "granola bar wrapper"
+    ],
+    "rarity": "common",
+    "description": "A recognizable granola bar wrapper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/granola-bar-wrapper.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "biscuit-wrapper",
+    "number": 85,
+    "name": "Biscuit wrapper",
+    "category": "wrappers",
+    "subtype": "biscuit-wrapper",
+    "material": "plastic",
+    "aliases": [
+      "biscuit wrapper"
+    ],
+    "rarity": "common",
+    "description": "A recognizable biscuit wrapper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/biscuit-wrapper.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cracker-wrapper",
+    "number": 86,
+    "name": "Cracker wrapper",
+    "category": "wrappers",
+    "subtype": "cracker-wrapper",
+    "material": "plastic",
+    "aliases": [
+      "cracker wrapper"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cracker wrapper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/cracker-wrapper.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "instant-noodle-packet",
+    "number": 87,
+    "name": "Instant noodle packet",
+    "category": "wrappers",
+    "subtype": "instant-noodle-packet",
+    "material": "plastic",
+    "aliases": [
+      "instant noodle packet"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable instant noodle packet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/instant-noodle-packet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "fruit-snack-pouch",
+    "number": 88,
+    "name": "Fruit snack pouch",
+    "category": "wrappers",
+    "subtype": "fruit-snack-pouch",
+    "material": "plastic",
+    "aliases": [
+      "fruit snack pouch"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable fruit snack pouch. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/fruit-snack-pouch.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "trail-mix-pouch",
+    "number": 89,
+    "name": "Trail mix pouch",
+    "category": "wrappers",
+    "subtype": "trail-mix-pouch",
+    "material": "plastic",
+    "aliases": [
+      "trail mix pouch"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable trail mix pouch. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/trail-mix-pouch.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-sachet",
+    "number": 90,
+    "name": "Coffee sachet",
+    "category": "wrappers",
+    "subtype": "coffee-sachet",
+    "material": "plastic",
+    "aliases": [
+      "coffee sachet"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable coffee sachet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "food_wrapper",
+    "gearId": "wrapper_vest",
+    "sprite": "/shoredex/coffee-sachet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "soda-can",
+    "number": 91,
+    "name": "Soda can",
+    "category": "cans",
+    "subtype": "soda-can",
+    "material": "aluminum",
+    "aliases": [
+      "soda can",
+      "aluminum beverage can",
+      "soft drink can"
+    ],
+    "rarity": "common",
+    "description": "A recognizable soda can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/soda-can.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "sparkling-water-can",
+    "number": 92,
+    "name": "Sparkling water can",
+    "category": "cans",
+    "subtype": "sparkling-water-can",
+    "material": "aluminum",
+    "aliases": [
+      "sparkling water can"
+    ],
+    "rarity": "common",
+    "description": "A recognizable sparkling water can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/sparkling-water-can.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "energy-drink-can",
+    "number": 93,
+    "name": "Energy drink can",
+    "category": "cans",
+    "subtype": "energy-drink-can",
+    "material": "aluminum",
+    "aliases": [
+      "energy drink can"
+    ],
+    "rarity": "common",
+    "description": "A recognizable energy drink can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/energy-drink-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "iced-tea-can",
+    "number": 94,
+    "name": "Iced tea can",
+    "category": "cans",
+    "subtype": "iced-tea-can",
+    "material": "aluminum",
+    "aliases": [
+      "iced tea can"
+    ],
+    "rarity": "common",
+    "description": "A recognizable iced tea can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/iced-tea-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "juice-can",
+    "number": 95,
+    "name": "Juice can",
+    "category": "cans",
+    "subtype": "juice-can",
+    "material": "aluminum",
+    "aliases": [
+      "juice can"
+    ],
+    "rarity": "common",
+    "description": "A recognizable juice can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/juice-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-can",
+    "number": 96,
+    "name": "Coffee can",
+    "category": "cans",
+    "subtype": "coffee-can",
+    "material": "aluminum",
+    "aliases": [
+      "coffee can"
+    ],
+    "rarity": "common",
+    "description": "A recognizable coffee can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/coffee-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "sports-drink-can",
+    "number": 97,
+    "name": "Sports drink can",
+    "category": "cans",
+    "subtype": "sports-drink-can",
+    "material": "aluminum",
+    "aliases": [
+      "sports drink can"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable sports drink can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/sports-drink-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "lemonade-can",
+    "number": 98,
+    "name": "Lemonade can",
+    "category": "cans",
+    "subtype": "lemonade-can",
+    "material": "aluminum",
+    "aliases": [
+      "lemonade can"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable lemonade can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/lemonade-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coconut-water-can",
+    "number": 99,
+    "name": "Coconut water can",
+    "category": "cans",
+    "subtype": "coconut-water-can",
+    "material": "aluminum",
+    "aliases": [
+      "coconut water can"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable coconut water can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/coconut-water-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "mini-beverage-can",
+    "number": 100,
+    "name": "Mini beverage can",
+    "category": "cans",
+    "subtype": "mini-beverage-can",
+    "material": "aluminum",
+    "aliases": [
+      "mini beverage can"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable mini beverage can. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "aluminum_can",
+    "gearId": "can_shield",
+    "sprite": "/shoredex/mini-beverage-can.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rounded-mint-tin",
+    "number": 101,
+    "name": "Rounded mint tin",
+    "category": "metal_packaging",
+    "subtype": "rounded-mint-tin",
+    "material": "steel",
+    "aliases": [
+      "rounded mint tin"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rounded mint tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rounded-mint-tin.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "rounded-tea-tin",
+    "number": 102,
+    "name": "Rounded tea tin",
+    "category": "metal_packaging",
+    "subtype": "rounded-tea-tin",
+    "material": "steel",
+    "aliases": [
+      "rounded tea tin"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rounded tea tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rounded-tea-tin.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "biscuit-tin",
+    "number": 103,
+    "name": "Biscuit tin",
+    "category": "metal_packaging",
+    "subtype": "biscuit-tin",
+    "material": "steel",
+    "aliases": [
+      "biscuit tin"
+    ],
+    "rarity": "common",
+    "description": "A recognizable biscuit tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/biscuit-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "chocolate-tin",
+    "number": 104,
+    "name": "Chocolate tin",
+    "category": "metal_packaging",
+    "subtype": "chocolate-tin",
+    "material": "steel",
+    "aliases": [
+      "chocolate tin"
+    ],
+    "rarity": "common",
+    "description": "A recognizable chocolate tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/chocolate-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "candy-tin",
+    "number": 105,
+    "name": "Candy tin",
+    "category": "metal_packaging",
+    "subtype": "candy-tin",
+    "material": "steel",
+    "aliases": [
+      "candy tin"
+    ],
+    "rarity": "common",
+    "description": "A recognizable candy tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/candy-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-storage-tin",
+    "number": 106,
+    "name": "Coffee storage tin",
+    "category": "metal_packaging",
+    "subtype": "coffee-storage-tin",
+    "material": "steel",
+    "aliases": [
+      "coffee storage tin"
+    ],
+    "rarity": "common",
+    "description": "A recognizable coffee storage tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/coffee-storage-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "spice-tin",
+    "number": 107,
+    "name": "Spice tin",
+    "category": "metal_packaging",
+    "subtype": "spice-tin",
+    "material": "steel",
+    "aliases": [
+      "spice tin"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable spice tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/spice-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "gift-tin",
+    "number": 108,
+    "name": "Gift tin",
+    "category": "metal_packaging",
+    "subtype": "gift-tin",
+    "material": "steel",
+    "aliases": [
+      "gift tin"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable gift tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/gift-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "metal-balm-tin",
+    "number": 109,
+    "name": "Metal balm tin",
+    "category": "metal_packaging",
+    "subtype": "metal-balm-tin",
+    "material": "steel",
+    "aliases": [
+      "metal balm tin"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable metal balm tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/metal-balm-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rounded-pencil-tin",
+    "number": 110,
+    "name": "Rounded pencil tin",
+    "category": "metal_packaging",
+    "subtype": "rounded-pencil-tin",
+    "material": "steel",
+    "aliases": [
+      "rounded pencil tin"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable rounded pencil tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rounded-pencil-tin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "newspaper-sheet",
+    "number": 111,
+    "name": "Newspaper sheet",
+    "category": "paper",
+    "subtype": "newspaper-sheet",
+    "material": "paper",
+    "aliases": [
+      "newspaper sheet"
+    ],
+    "rarity": "common",
+    "description": "A recognizable newspaper sheet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/newspaper-sheet.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "receipt",
+    "number": 112,
+    "name": "Receipt",
+    "category": "paper",
+    "subtype": "receipt",
+    "material": "paper",
+    "aliases": [
+      "receipt"
+    ],
+    "rarity": "common",
+    "description": "A recognizable receipt. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/receipt.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "paper-flyer",
+    "number": 113,
+    "name": "Paper flyer",
+    "category": "paper",
+    "subtype": "paper-flyer",
+    "material": "paper",
+    "aliases": [
+      "paper flyer"
+    ],
+    "rarity": "common",
+    "description": "A recognizable paper flyer. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/paper-flyer.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "notebook-sheet",
+    "number": 114,
+    "name": "Notebook sheet",
+    "category": "paper",
+    "subtype": "notebook-sheet",
+    "material": "paper",
+    "aliases": [
+      "notebook sheet"
+    ],
+    "rarity": "common",
+    "description": "A recognizable notebook sheet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/notebook-sheet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "envelope",
+    "number": 115,
+    "name": "Envelope",
+    "category": "paper",
+    "subtype": "envelope",
+    "material": "paper",
+    "aliases": [
+      "envelope"
+    ],
+    "rarity": "common",
+    "description": "A recognizable envelope. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/envelope.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "paper-ticket",
+    "number": 116,
+    "name": "Paper ticket",
+    "category": "paper",
+    "subtype": "paper-ticket",
+    "material": "paper",
+    "aliases": [
+      "paper ticket"
+    ],
+    "rarity": "common",
+    "description": "A recognizable paper ticket. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/paper-ticket.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "paper-napkin",
+    "number": 117,
+    "name": "Paper napkin",
+    "category": "paper",
+    "subtype": "paper-napkin",
+    "material": "paper",
+    "aliases": [
+      "paper napkin"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable paper napkin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/paper-napkin.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "paper-shopping-bag",
+    "number": 118,
+    "name": "Paper shopping bag",
+    "category": "paper",
+    "subtype": "paper-shopping-bag",
+    "material": "paper",
+    "aliases": [
+      "paper shopping bag"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable paper shopping bag. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/paper-shopping-bag.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "paper-sleeve",
+    "number": 119,
+    "name": "Paper sleeve",
+    "category": "paper",
+    "subtype": "paper-sleeve",
+    "material": "paper",
+    "aliases": [
+      "paper sleeve"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable paper sleeve. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/paper-sleeve.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "paper-straw-wrapper",
+    "number": 120,
+    "name": "Paper straw wrapper",
+    "category": "paper",
+    "subtype": "paper-straw-wrapper",
+    "material": "paper",
+    "aliases": [
+      "paper straw wrapper"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable paper straw wrapper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/paper-straw-wrapper.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "magazine",
+    "number": 121,
+    "name": "Magazine",
+    "category": "magazines",
+    "subtype": "magazine",
+    "material": "paper",
+    "aliases": [
+      "magazine",
+      "glossy magazine"
+    ],
+    "rarity": "common",
+    "description": "A recognizable magazine. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/magazine.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "brochure",
+    "number": 122,
+    "name": "Brochure",
+    "category": "magazines",
+    "subtype": "brochure",
+    "material": "paper",
+    "aliases": [
+      "brochure"
+    ],
+    "rarity": "common",
+    "description": "A recognizable brochure. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/brochure.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "travel-brochure",
+    "number": 123,
+    "name": "Travel brochure",
+    "category": "magazines",
+    "subtype": "travel-brochure",
+    "material": "paper",
+    "aliases": [
+      "travel brochure"
+    ],
+    "rarity": "common",
+    "description": "A recognizable travel brochure. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/travel-brochure.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "product-booklet",
+    "number": 124,
+    "name": "Product booklet",
+    "category": "magazines",
+    "subtype": "product-booklet",
+    "material": "paper",
+    "aliases": [
+      "product booklet"
+    ],
+    "rarity": "common",
+    "description": "A recognizable product booklet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/product-booklet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "event-program",
+    "number": 125,
+    "name": "Event program",
+    "category": "magazines",
+    "subtype": "event-program",
+    "material": "paper",
+    "aliases": [
+      "event program"
+    ],
+    "rarity": "common",
+    "description": "A recognizable event program. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/event-program.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coupon-booklet",
+    "number": 126,
+    "name": "Coupon booklet",
+    "category": "magazines",
+    "subtype": "coupon-booklet",
+    "material": "paper",
+    "aliases": [
+      "coupon booklet"
+    ],
+    "rarity": "common",
+    "description": "A recognizable coupon booklet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/coupon-booklet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "store-catalog",
+    "number": 127,
+    "name": "Store catalog",
+    "category": "magazines",
+    "subtype": "store-catalog",
+    "material": "paper",
+    "aliases": [
+      "store catalog"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable store catalog. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/store-catalog.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "recipe-booklet",
+    "number": 128,
+    "name": "Recipe booklet",
+    "category": "magazines",
+    "subtype": "recipe-booklet",
+    "material": "paper",
+    "aliases": [
+      "recipe booklet"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable recipe booklet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/recipe-booklet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "community-newsletter",
+    "number": 129,
+    "name": "Community newsletter",
+    "category": "magazines",
+    "subtype": "community-newsletter",
+    "material": "paper",
+    "aliases": [
+      "community newsletter"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable community newsletter. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/community-newsletter.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "folded-leaflet",
+    "number": 130,
+    "name": "Folded leaflet",
+    "category": "magazines",
+    "subtype": "folded-leaflet",
+    "material": "paper",
+    "aliases": [
+      "folded leaflet"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable folded leaflet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "magazine_mail",
+    "sprite": "/shoredex/folded-leaflet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "shipping-box",
+    "number": 131,
+    "name": "Shipping box",
+    "category": "cardboard",
+    "subtype": "shipping-box",
+    "material": "cardboard",
+    "aliases": [
+      "shipping box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable shipping box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/shipping-box.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "cereal-box",
+    "number": 132,
+    "name": "Cereal box",
+    "category": "cardboard",
+    "subtype": "cereal-box",
+    "material": "cardboard",
+    "aliases": [
+      "cereal box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cereal box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/cereal-box.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "shoe-box",
+    "number": 133,
+    "name": "Shoe box",
+    "category": "cardboard",
+    "subtype": "shoe-box",
+    "material": "cardboard",
+    "aliases": [
+      "shoe box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable shoe box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/shoe-box.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "tissue-box",
+    "number": 134,
+    "name": "Tissue box",
+    "category": "cardboard",
+    "subtype": "tissue-box",
+    "material": "cardboard",
+    "aliases": [
+      "tissue box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable tissue box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/tissue-box.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "toothpaste-box",
+    "number": 135,
+    "name": "Toothpaste box",
+    "category": "cardboard",
+    "subtype": "toothpaste-box",
+    "material": "cardboard",
+    "aliases": [
+      "toothpaste box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable toothpaste box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/toothpaste-box.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cracker-box",
+    "number": 136,
+    "name": "Cracker box",
+    "category": "cardboard",
+    "subtype": "cracker-box",
+    "material": "cardboard",
+    "aliases": [
+      "cracker box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cracker box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/cracker-box.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cardboard-tube",
+    "number": 137,
+    "name": "Cardboard tube",
+    "category": "cardboard",
+    "subtype": "cardboard-tube",
+    "material": "cardboard",
+    "aliases": [
+      "cardboard tube"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable cardboard tube. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/cardboard-tube.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "egg-carton",
+    "number": 138,
+    "name": "Egg carton",
+    "category": "cardboard",
+    "subtype": "egg-carton",
+    "material": "cardboard",
+    "aliases": [
+      "egg carton"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable egg carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/egg-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "pizza-box",
+    "number": 139,
+    "name": "Pizza box",
+    "category": "cardboard",
+    "subtype": "pizza-box",
+    "material": "cardboard",
+    "aliases": [
+      "pizza box"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable pizza box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/pizza-box.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cardboard-cup-carrier",
+    "number": 140,
+    "name": "Cardboard cup carrier",
+    "category": "cardboard",
+    "subtype": "cardboard-cup-carrier",
+    "material": "cardboard",
+    "aliases": [
+      "cardboard cup carrier"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable cardboard cup carrier. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/cardboard-cup-carrier.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "milk-carton",
+    "number": 141,
+    "name": "Milk carton",
+    "category": "cartons",
+    "subtype": "milk-carton",
+    "material": "carton",
+    "aliases": [
+      "milk carton"
+    ],
+    "rarity": "common",
+    "description": "A recognizable milk carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/milk-carton.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "juice-carton",
+    "number": 142,
+    "name": "Juice carton",
+    "category": "cartons",
+    "subtype": "juice-carton",
+    "material": "carton",
+    "aliases": [
+      "juice carton"
+    ],
+    "rarity": "common",
+    "description": "A recognizable juice carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/juice-carton.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "small-juice-box",
+    "number": 143,
+    "name": "Small juice box",
+    "category": "cartons",
+    "subtype": "small-juice-box",
+    "material": "carton",
+    "aliases": [
+      "small juice box"
+    ],
+    "rarity": "common",
+    "description": "A recognizable small juice box. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/small-juice-box.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cream-carton",
+    "number": 144,
+    "name": "Cream carton",
+    "category": "cartons",
+    "subtype": "cream-carton",
+    "material": "carton",
+    "aliases": [
+      "cream carton"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cream carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/cream-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "oat-drink-carton",
+    "number": 145,
+    "name": "Oat drink carton",
+    "category": "cartons",
+    "subtype": "oat-drink-carton",
+    "material": "carton",
+    "aliases": [
+      "oat drink carton"
+    ],
+    "rarity": "common",
+    "description": "A recognizable oat drink carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/oat-drink-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "soy-drink-carton",
+    "number": 146,
+    "name": "Soy drink carton",
+    "category": "cartons",
+    "subtype": "soy-drink-carton",
+    "material": "carton",
+    "aliases": [
+      "soy drink carton"
+    ],
+    "rarity": "common",
+    "description": "A recognizable soy drink carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/soy-drink-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coconut-drink-carton",
+    "number": 147,
+    "name": "Coconut drink carton",
+    "category": "cartons",
+    "subtype": "coconut-drink-carton",
+    "material": "carton",
+    "aliases": [
+      "coconut drink carton"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable coconut drink carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/coconut-drink-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "soup-carton",
+    "number": 148,
+    "name": "Soup carton",
+    "category": "cartons",
+    "subtype": "soup-carton",
+    "material": "carton",
+    "aliases": [
+      "soup carton"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable soup carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/soup-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "broth-carton",
+    "number": 149,
+    "name": "Broth carton",
+    "category": "cartons",
+    "subtype": "broth-carton",
+    "material": "carton",
+    "aliases": [
+      "broth carton"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable broth carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/broth-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "water-carton",
+    "number": 150,
+    "name": "Water carton",
+    "category": "cartons",
+    "subtype": "water-carton",
+    "material": "carton",
+    "aliases": [
+      "water carton"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable water carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "paper_cardboard",
+    "gearId": "cardboard_shell",
+    "sprite": "/shoredex/water-carton.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "straight-straw",
+    "number": 151,
+    "name": "Straight straw",
+    "category": "straws",
+    "subtype": "straight-straw",
+    "material": "plastic",
+    "aliases": [
+      "straight straw"
+    ],
+    "rarity": "common",
+    "description": "A recognizable straight straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/straight-straw.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "bendy-straw",
+    "number": 152,
+    "name": "Bendy straw",
+    "category": "straws",
+    "subtype": "bendy-straw",
+    "material": "plastic",
+    "aliases": [
+      "bendy straw"
+    ],
+    "rarity": "common",
+    "description": "A recognizable bendy straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/bendy-straw.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "wide-smoothie-straw",
+    "number": 153,
+    "name": "Wide smoothie straw",
+    "category": "straws",
+    "subtype": "wide-smoothie-straw",
+    "material": "plastic",
+    "aliases": [
+      "wide smoothie straw"
+    ],
+    "rarity": "common",
+    "description": "A recognizable wide smoothie straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/wide-smoothie-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "bubble-tea-straw",
+    "number": 154,
+    "name": "Bubble tea straw",
+    "category": "straws",
+    "subtype": "bubble-tea-straw",
+    "material": "plastic",
+    "aliases": [
+      "bubble tea straw"
+    ],
+    "rarity": "common",
+    "description": "A recognizable bubble tea straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/bubble-tea-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "short-drink-straw",
+    "number": 155,
+    "name": "Short drink straw",
+    "category": "straws",
+    "subtype": "short-drink-straw",
+    "material": "plastic",
+    "aliases": [
+      "short drink straw"
+    ],
+    "rarity": "common",
+    "description": "A recognizable short drink straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/short-drink-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "juice-box-straw",
+    "number": 156,
+    "name": "Juice box straw",
+    "category": "straws",
+    "subtype": "juice-box-straw",
+    "material": "plastic",
+    "aliases": [
+      "juice box straw"
+    ],
+    "rarity": "common",
+    "description": "A recognizable juice box straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/juice-box-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "spiral-straw",
+    "number": 157,
+    "name": "Spiral straw",
+    "category": "straws",
+    "subtype": "spiral-straw",
+    "material": "plastic",
+    "aliases": [
+      "spiral straw"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable spiral straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/spiral-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "spoon-straw",
+    "number": 158,
+    "name": "Spoon straw",
+    "category": "straws",
+    "subtype": "spoon-straw",
+    "material": "plastic",
+    "aliases": [
+      "spoon straw"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable spoon straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/spoon-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "reusable-plastic-straw",
+    "number": 159,
+    "name": "Reusable plastic straw",
+    "category": "straws",
+    "subtype": "reusable-plastic-straw",
+    "material": "plastic",
+    "aliases": [
+      "reusable plastic straw"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable reusable plastic straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/reusable-plastic-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-stirrer-straw",
+    "number": 160,
+    "name": "Coffee stirrer straw",
+    "category": "straws",
+    "subtype": "coffee-stirrer-straw",
+    "material": "plastic",
+    "aliases": [
+      "coffee stirrer straw"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable coffee stirrer straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "straw",
+    "gearId": "straw_spear",
+    "sprite": "/shoredex/coffee-stirrer-straw.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "plastic-fork",
+    "number": 161,
+    "name": "Plastic fork",
+    "category": "utensils",
+    "subtype": "plastic-fork",
+    "material": "plastic",
+    "aliases": [
+      "plastic fork"
+    ],
+    "rarity": "common",
+    "description": "A recognizable plastic fork. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/plastic-fork.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "plastic-spoon",
+    "number": 162,
+    "name": "Plastic spoon",
+    "category": "utensils",
+    "subtype": "plastic-spoon",
+    "material": "plastic",
+    "aliases": [
+      "plastic spoon"
+    ],
+    "rarity": "common",
+    "description": "A recognizable plastic spoon. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/plastic-spoon.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "plastic-spork",
+    "number": 163,
+    "name": "Plastic spork",
+    "category": "utensils",
+    "subtype": "plastic-spork",
+    "material": "plastic",
+    "aliases": [
+      "plastic spork"
+    ],
+    "rarity": "common",
+    "description": "A recognizable plastic spork. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/plastic-spork.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "plastic-chopstick",
+    "number": 164,
+    "name": "Plastic chopstick",
+    "category": "utensils",
+    "subtype": "plastic-chopstick",
+    "material": "plastic",
+    "aliases": [
+      "plastic chopstick"
+    ],
+    "rarity": "common",
+    "description": "A recognizable plastic chopstick. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/plastic-chopstick.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "coffee-stirrer",
+    "number": 165,
+    "name": "Coffee stirrer",
+    "category": "utensils",
+    "subtype": "coffee-stirrer",
+    "material": "plastic",
+    "aliases": [
+      "coffee stirrer"
+    ],
+    "rarity": "common",
+    "description": "A recognizable coffee stirrer. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/coffee-stirrer.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "ice-cream-spoon",
+    "number": 166,
+    "name": "Ice cream spoon",
+    "category": "utensils",
+    "subtype": "ice-cream-spoon",
+    "material": "plastic",
+    "aliases": [
+      "ice cream spoon"
+    ],
+    "rarity": "common",
+    "description": "A recognizable ice cream spoon. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/ice-cream-spoon.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "tasting-spoon",
+    "number": 167,
+    "name": "Tasting spoon",
+    "category": "utensils",
+    "subtype": "tasting-spoon",
+    "material": "plastic",
+    "aliases": [
+      "tasting spoon"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable tasting spoon. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/tasting-spoon.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "salad-server",
+    "number": 168,
+    "name": "Salad server",
+    "category": "utensils",
+    "subtype": "salad-server",
+    "material": "plastic",
+    "aliases": [
+      "salad server"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable salad server. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/salad-server.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "measuring-scoop",
+    "number": 169,
+    "name": "Measuring scoop",
+    "category": "utensils",
+    "subtype": "measuring-scoop",
+    "material": "plastic",
+    "aliases": [
+      "measuring scoop"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable measuring scoop. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/measuring-scoop.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rounded-spreader",
+    "number": 170,
+    "name": "Rounded spreader",
+    "category": "utensils",
+    "subtype": "rounded-spreader",
+    "material": "plastic",
+    "aliases": [
+      "rounded spreader"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable rounded spreader. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rounded-spreader.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-cup",
+    "number": 171,
+    "name": "Foam cup",
+    "category": "foam",
+    "subtype": "foam-cup",
+    "material": "foam",
+    "aliases": [
+      "foam cup"
+    ],
+    "rarity": "common",
+    "description": "A recognizable foam cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-cup.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "foam-clamshell",
+    "number": 172,
+    "name": "Foam clamshell",
+    "category": "foam",
+    "subtype": "foam-clamshell",
+    "material": "foam",
+    "aliases": [
+      "foam clamshell"
+    ],
+    "rarity": "common",
+    "description": "A recognizable foam clamshell. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-clamshell.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "foam-tray",
+    "number": 173,
+    "name": "Foam tray",
+    "category": "foam",
+    "subtype": "foam-tray",
+    "material": "foam",
+    "aliases": [
+      "foam tray"
+    ],
+    "rarity": "common",
+    "description": "A recognizable foam tray. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-tray.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-bowl",
+    "number": 174,
+    "name": "Foam bowl",
+    "category": "foam",
+    "subtype": "foam-bowl",
+    "material": "foam",
+    "aliases": [
+      "foam bowl"
+    ],
+    "rarity": "common",
+    "description": "A recognizable foam bowl. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-bowl.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-packing-peanut",
+    "number": 175,
+    "name": "Foam packing peanut",
+    "category": "foam",
+    "subtype": "foam-packing-peanut",
+    "material": "foam",
+    "aliases": [
+      "foam packing peanut"
+    ],
+    "rarity": "common",
+    "description": "A recognizable foam packing peanut. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-packing-peanut.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-packing-corner",
+    "number": 176,
+    "name": "Foam packing corner",
+    "category": "foam",
+    "subtype": "foam-packing-corner",
+    "material": "foam",
+    "aliases": [
+      "foam packing corner"
+    ],
+    "rarity": "common",
+    "description": "A recognizable foam packing corner. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-packing-corner.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-sheet",
+    "number": 177,
+    "name": "Foam sheet",
+    "category": "foam",
+    "subtype": "foam-sheet",
+    "material": "foam",
+    "aliases": [
+      "foam sheet"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable foam sheet. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-sheet.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-fruit-sleeve",
+    "number": 178,
+    "name": "Foam fruit sleeve",
+    "category": "foam",
+    "subtype": "foam-fruit-sleeve",
+    "material": "foam",
+    "aliases": [
+      "foam fruit sleeve"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable foam fruit sleeve. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-fruit-sleeve.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-drink-holder",
+    "number": 179,
+    "name": "Foam drink holder",
+    "category": "foam",
+    "subtype": "foam-drink-holder",
+    "material": "foam",
+    "aliases": [
+      "foam drink holder"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable foam drink holder. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-drink-holder.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "foam-packing-ring",
+    "number": 180,
+    "name": "Foam packing ring",
+    "category": "foam",
+    "subtype": "foam-packing-ring",
+    "material": "foam",
+    "aliases": [
+      "foam packing ring"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable foam packing ring. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/foam-packing-ring.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "cotton-fabric-scrap",
+    "number": 181,
+    "name": "Cotton fabric scrap",
+    "category": "textiles",
+    "subtype": "cotton-fabric-scrap",
+    "material": "fabric",
+    "aliases": [
+      "cotton fabric scrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable cotton fabric scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/cotton-fabric-scrap.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "denim-scrap",
+    "number": 182,
+    "name": "Denim scrap",
+    "category": "textiles",
+    "subtype": "denim-scrap",
+    "material": "fabric",
+    "aliases": [
+      "denim scrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable denim scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/denim-scrap.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "felt-scrap",
+    "number": 183,
+    "name": "Felt scrap",
+    "category": "textiles",
+    "subtype": "felt-scrap",
+    "material": "fabric",
+    "aliases": [
+      "felt scrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable felt scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/felt-scrap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "ribbon-scrap",
+    "number": 184,
+    "name": "Ribbon scrap",
+    "category": "textiles",
+    "subtype": "ribbon-scrap",
+    "material": "fabric",
+    "aliases": [
+      "ribbon scrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable ribbon scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/ribbon-scrap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "loose-shoelace",
+    "number": 185,
+    "name": "Loose shoelace",
+    "category": "textiles",
+    "subtype": "loose-shoelace",
+    "material": "fabric",
+    "aliases": [
+      "loose shoelace"
+    ],
+    "rarity": "common",
+    "description": "A recognizable loose shoelace. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/loose-shoelace.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "fabric-label",
+    "number": 186,
+    "name": "Fabric label",
+    "category": "textiles",
+    "subtype": "fabric-label",
+    "material": "fabric",
+    "aliases": [
+      "fabric label"
+    ],
+    "rarity": "common",
+    "description": "A recognizable fabric label. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/fabric-label.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "elastic-fabric-band",
+    "number": 187,
+    "name": "Elastic fabric band",
+    "category": "textiles",
+    "subtype": "elastic-fabric-band",
+    "material": "fabric",
+    "aliases": [
+      "elastic fabric band"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable elastic fabric band. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/elastic-fabric-band.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "canvas-scrap",
+    "number": 188,
+    "name": "Canvas scrap",
+    "category": "textiles",
+    "subtype": "canvas-scrap",
+    "material": "fabric",
+    "aliases": [
+      "canvas scrap"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable canvas scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/canvas-scrap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "thread-spool",
+    "number": 189,
+    "name": "Thread spool",
+    "category": "textiles",
+    "subtype": "thread-spool",
+    "material": "fabric",
+    "aliases": [
+      "thread spool"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable thread spool. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/thread-spool.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "yarn-offcut",
+    "number": 190,
+    "name": "Yarn offcut",
+    "category": "textiles",
+    "subtype": "yarn-offcut",
+    "material": "fabric",
+    "aliases": [
+      "yarn offcut"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable yarn offcut. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/yarn-offcut.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-band",
+    "number": 191,
+    "name": "Rubber band",
+    "category": "rubber",
+    "subtype": "rubber-band",
+    "material": "rubber",
+    "aliases": [
+      "rubber band"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rubber band. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-band.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "wide-rubber-band",
+    "number": 192,
+    "name": "Wide rubber band",
+    "category": "rubber",
+    "subtype": "wide-rubber-band",
+    "material": "rubber",
+    "aliases": [
+      "wide rubber band"
+    ],
+    "rarity": "common",
+    "description": "A recognizable wide rubber band. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/wide-rubber-band.svg",
+    "spriteStatus": "finished"
+  },
+  {
+    "id": "rubber-washer",
+    "number": 193,
+    "name": "Rubber washer",
+    "category": "rubber",
+    "subtype": "rubber-washer",
+    "material": "rubber",
+    "aliases": [
+      "rubber washer"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rubber washer. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-washer.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-jar-ring",
+    "number": 194,
+    "name": "Rubber jar ring",
+    "category": "rubber",
+    "subtype": "rubber-jar-ring",
+    "material": "rubber",
+    "aliases": [
+      "rubber jar ring"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rubber jar ring. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-jar-ring.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-eraser",
+    "number": 195,
+    "name": "Rubber eraser",
+    "category": "rubber",
+    "subtype": "rubber-eraser",
+    "material": "rubber",
+    "aliases": [
+      "rubber eraser"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rubber eraser. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-eraser.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-shoe-sole-scrap",
+    "number": 196,
+    "name": "Rubber shoe sole scrap",
+    "category": "rubber",
+    "subtype": "rubber-shoe-sole-scrap",
+    "material": "rubber",
+    "aliases": [
+      "rubber shoe sole scrap"
+    ],
+    "rarity": "common",
+    "description": "A recognizable rubber shoe sole scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-shoe-sole-scrap.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-grip-sleeve",
+    "number": 197,
+    "name": "Rubber grip sleeve",
+    "category": "rubber",
+    "subtype": "rubber-grip-sleeve",
+    "material": "rubber",
+    "aliases": [
+      "rubber grip sleeve"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable rubber grip sleeve. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-grip-sleeve.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-furniture-foot",
+    "number": 198,
+    "name": "Rubber furniture foot",
+    "category": "rubber",
+    "subtype": "rubber-furniture-foot",
+    "material": "rubber",
+    "aliases": [
+      "rubber furniture foot"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable rubber furniture foot. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-furniture-foot.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-stopper",
+    "number": 199,
+    "name": "Rubber stopper",
+    "category": "rubber",
+    "subtype": "rubber-stopper",
+    "material": "rubber",
+    "aliases": [
+      "rubber stopper"
+    ],
+    "rarity": "uncommon",
+    "description": "A recognizable rubber stopper. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-stopper.svg",
+    "spriteStatus": "draft"
+  },
+  {
+    "id": "rubber-mat-scrap",
+    "number": 200,
+    "name": "Rubber mat scrap",
+    "category": "rubber",
+    "subtype": "rubber-mat-scrap",
+    "material": "rubber",
+    "aliases": [
+      "rubber mat scrap"
+    ],
+    "rarity": "rare",
+    "description": "A recognizable rubber mat scrap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "gearCategory": "other_litter",
+    "gearId": null,
+    "sprite": "/shoredex/rubber-mat-scrap.svg",
+    "spriteStatus": "draft"
+  }
+]

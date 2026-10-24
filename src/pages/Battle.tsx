@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { authHeaders } from "../cloud/client";
+import { analyzeUrl } from "../mobile/platform";
 import { useGame } from "../components/GameContext";
 import { statsFor } from "../lib/gear";
 import { equippedBlueprints, recordBattleResult } from "../lib/storage";
@@ -13,9 +15,29 @@ import {
 import type { Profile } from "../world/profile";
 import { BattleIntroScreen, BattleArenaScreen } from "../battle/BattleScreens";
 
-type Session = { battle: BattleState; gear: string[]; trainer: Profile };
+type Session = {
+  battle: BattleState;
+  gear: string[];
+  trainer: Profile;
+  remote?: boolean;
+  offline?: boolean;
+};
 export function Battle() {
-  const { items, loadout, profile, progression, refresh } = useGame();
+  const { userId } = useGame();
+  return <BattleSession key={userId ?? "local"} />;
+}
+function BattleSession() {
+  const {
+    items,
+    loadout,
+    profile,
+    progression,
+    refresh,
+    userId,
+    cloudOffline,
+  } = useGame();
+  const requestLock = useRef(false);
+  const [networkError, setNetworkError] = useState("");
   const [reward, setReward] = useState<{
     id: string;
     text: string;
@@ -34,6 +56,7 @@ export function Battle() {
   const selected = normalizeProgression(progression, blueprints);
   useEffect(() => {
     if (battle?.status !== "completed") return;
+    if (session?.remote || session?.offline) return;
     let active = true;
     void recordBattleResult(battle)
       .then(async (result) => {
@@ -56,9 +79,10 @@ export function Battle() {
     return () => {
       active = false;
     };
-  }, [battle, rewardAttempt, refresh]);
+  }, [battle, rewardAttempt, refresh, session?.remote, session?.offline]);
   useEffect(() => {
     if (
+      session?.remote ||
       !visible ||
       battle?.currentActorId !== "cpu" ||
       battle.status !== "active"
@@ -89,13 +113,64 @@ export function Battle() {
     );
     return () => clearTimeout(timer);
   }, [
+    session?.remote,
     visible,
     battle?.id,
     battle?.currentActorId,
     battle?.status,
     battle?.version,
   ]);
+  async function remoteRequest(body: object) {
+    const response = await fetch(analyzeUrl().replace(/analyze$/, "battle"), {
+      method: "POST",
+      headers: await authHeaders(),
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Battle unavailable");
+    return data as BattleState;
+  }
+  async function remoteAction(action: "turn" | "quit", move?: BattleAction) {
+    if (requestLock.current || !session) return;
+    requestLock.current = true;
+    setNetworkError("");
+    try {
+      const next = await remoteRequest({
+        action,
+        matchId: session.battle.id,
+        version: session.battle.version,
+        move,
+      });
+      setSession((current) =>
+        current?.battle.id === next.id ? { ...current, battle: next } : current,
+      );
+      if (next.status === "completed") await refresh();
+    } catch (e) {
+      setNetworkError((e as Error).message);
+    } finally {
+      requestLock.current = false;
+    }
+  }
   function start() {
+    if (userId && !cloudOffline && navigator.onLine) {
+      if (requestLock.current || session?.battle.status === "active") return;
+      requestLock.current = true;
+      setNetworkError("");
+      void remoteRequest({ action: "start", requestId: crypto.randomUUID() })
+        .then((battle) =>
+          setSession({
+            battle,
+            gear: battle.fighters[0].snapshotBlueprints,
+            trainer: { ...profile },
+            remote: true,
+          }),
+        )
+        .catch((e) => setNetworkError(e.message))
+        .finally(() => {
+          requestLock.current = false;
+        });
+      return;
+    }
     setSession((current) =>
       current?.battle.status === "active"
         ? current
@@ -111,10 +186,15 @@ export function Battle() {
             ),
             gear: equippedBlueprints(loadout, items),
             trainer: { ...profile },
+            offline: !!userId,
           },
     );
   }
   function act(action: BattleAction) {
+    if (session?.remote) {
+      void remoteAction("turn", action);
+      return;
+    }
     setSession((current) => {
       if (
         !current ||
@@ -132,52 +212,76 @@ export function Battle() {
   }
   if (!session)
     return (
-      <BattleIntroScreen
-        stats={statsFor(loadout, items)}
-        gear={equippedBlueprints(loadout, items)}
-        level={crabLevel(selected.xp)}
-        selectedMoves={[selected.main, "guard", selected.special]}
-        start={start}
-      />
+      <>
+        {networkError && (
+          <p role="alert" className="notice error">
+            {networkError}
+          </p>
+        )}
+        <BattleIntroScreen
+          stats={statsFor(loadout, items)}
+          gear={equippedBlueprints(loadout, items)}
+          level={crabLevel(selected.xp)}
+          selectedMoves={[selected.main, "guard", selected.special]}
+          start={start}
+        />
+      </>
     );
   return (
-    <BattleArenaScreen
-      {...session}
-      rewardText={
-        battle?.status === "completed"
-          ? reward?.id === battle.id
-            ? reward.text
-            : "Saving battle XP…"
-          : "Exit grants no battle XP."
-      }
-      rewardReady={
-        battle?.status !== "completed" ||
-        (reward?.id === battle.id && reward.saved)
-      }
-      rewardFailed={
-        battle?.status === "completed" &&
-        reward?.id === battle.id &&
-        !reward.saved
-      }
-      retryReward={() => setRewardAttempt((n) => n + 1)}
-      currentLevel={crabLevel(progression.xp)}
-      act={act}
-      replay={start}
-      intro={() => setSession(null)}
-      quit={() =>
-        setSession((current) =>
-          current
-            ? {
-                ...current,
-                battle: {
-                  ...current.battle,
-                  status: "forfeited",
-                  currentActorId: null,
-                },
-              }
-            : null,
-        )
-      }
-    />
+    <>
+      {networkError && (
+        <p role="alert" className="notice error">
+          {networkError}
+        </p>
+      )}
+      <BattleArenaScreen
+        {...session}
+        rewardText={
+          session.remote
+            ? battle?.status === "completed"
+              ? "Battle XP saved to your account."
+              : "Account practice · server-validated turns."
+            : session.offline
+              ? "Offline practice · no battle XP awarded."
+              : battle?.status === "completed"
+                ? reward?.id === battle.id
+                  ? reward.text
+                  : "Saving battle XP…"
+                : "Exit grants no battle XP."
+        }
+        rewardReady={
+          !!session.remote ||
+          !!session.offline ||
+          battle?.status !== "completed" ||
+          (reward?.id === battle.id && reward.saved)
+        }
+        rewardFailed={
+          battle?.status === "completed" &&
+          reward?.id === battle.id &&
+          !reward.saved
+        }
+        retryReward={() => setRewardAttempt((n) => n + 1)}
+        currentLevel={crabLevel(progression.xp)}
+        act={act}
+        replay={start}
+        intro={() => setSession(null)}
+        quit={() =>
+          session.remote
+            ? void remoteAction("quit")
+            : setSession((current) =>
+                current
+                  ? {
+                      ...current,
+                      battle: {
+                        ...current.battle,
+                        status: "forfeited",
+                        currentActorId: null,
+                      },
+                    }
+                  : null,
+              )
+        }
+      />
+    </>
   );
 }

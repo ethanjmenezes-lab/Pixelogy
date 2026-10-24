@@ -8,7 +8,8 @@ function localApi(): Plugin {
   return {
     name: "pixelogy-local-api",
     configureServer(server) {
-      server.middlewares.use("/api/analyze", async (req, res) => {
+      server.middlewares.use("/api", async (req, res, next) => {
+        if(!["/analyze","/battle"].includes(req.url??"")){next();return;}
         const respond = (status: number, body: unknown) => {
           res.statusCode = status;
           res.setHeader("Content-Type", "application/json");
@@ -33,7 +34,7 @@ function localApi(): Plugin {
             respond(400, { error: "Invalid JSON." });
             return;
           }
-          const { default: handler } = await import("./api/analyze.ts");
+          const { default: handler } = req.url === "/battle" ? await import("./api/battle.ts") : await import("./api/analyze.ts");
           const response = {
             setHeader: (name: string, value: string) =>
               res.setHeader(name, value),
@@ -60,8 +61,8 @@ function localApi(): Plugin {
 }
 export default defineConfig(({ mode }) => {
   if (mode === "api") {
-    const env = loadEnv(mode, process.cwd(), ["GEMINI_", "ALLOWED_ORIGINS"]);
-    for (const key of ["GEMINI_API_KEY", "GEMINI_MODEL", "ALLOWED_ORIGINS"])
+    const env = loadEnv(mode, process.cwd(), ["GEMINI_", "ALLOWED_ORIGINS", "SUPABASE_", "VITE_SUPABASE_", "SCAN_SIGNING_SECRET"]);
+    for (const key of Object.keys(env))
       if (env[key]) process.env[key] = env[key];
   }
   return {

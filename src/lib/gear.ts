@@ -94,6 +94,7 @@ export function gearFor(
   return mapping[category] ? catalog[mapping[category]!] : null;
 }
 export type Collectible = {
+  catalogId?: string;
   id: string;
   createdAtIso: string;
   category: Category;

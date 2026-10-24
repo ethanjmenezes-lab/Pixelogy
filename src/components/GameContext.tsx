@@ -1,3 +1,5 @@
+import { cloud, cloudSession } from "../cloud/client";
+import { fetchCloudGame } from "../cloud/game";
 import { initialProgression, type BattleProgression } from "../lib/moves";
 import { defaultProfile, type Profile } from "../world/profile";
 import {
@@ -6,11 +8,14 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
   type ReactNode,
 } from "react";
 import { readGame, readProfile, type CleanupClaim } from "../lib/storage";
 import type { Collectible, Equipment } from "../lib/gear";
 type Game = {
+  userId: string | null;
+  cloudOffline: boolean;
   progression: BattleProgression;
   profile: Profile;
   items: Collectible[];
@@ -30,32 +35,90 @@ export function GameProvider({ children }: { children: ReactNode }) {
     claims: [],
     loadout: {},
   });
+  const [userId, setUserId] = useState<string | null>(null);
+  const [cloudOffline, setCloudOffline] = useState(false);
   const [profile, setProfile] = useState<Profile>(defaultProfile);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const generation = useRef(0),
+    identity = useRef<string | null>(null);
   const refresh = useCallback(async () => {
+    const version = ++generation.current;
     try {
-      const next = await readGame();
+      const session = await cloudSession();
+      if (version !== generation.current) return;
+      const id = session?.user.id ?? null;
+      if (identity.current !== id) {
+        identity.current = id;
+        setData({
+          items: [],
+          claims: [],
+          loadout: {},
+          progression: initialProgression(),
+        });
+        setProfile(defaultProfile);
+        setLoading(true);
+      }
+      setUserId(id);
+      const remote = session ? await fetchCloudGame() : null;
+      const next = remote ?? (await readGame());
+      const appearance = remote?.profile ?? (await readProfile());
+      if (version !== generation.current) return;
+      setCloudOffline(remote?.offline ?? false);
       setData(next);
-      setProfile(await readProfile());
+      setProfile(appearance);
       setError(
         next.repaired
           ? "Some missing equipment was removed from your loadout."
           : "",
       );
-    } catch {
-      setError(
-        "Your ShoreDex could not be opened. Check that browser storage is available, then retry.",
-      );
+    } catch (error) {
+      if (version === generation.current)
+        setError(
+          identity.current
+            ? "Your account save could not be loaded. Check connectivity and Supabase setup. " +
+                (error instanceof Error ? error.message : "")
+            : "Your ShoreDex could not be opened. Check browser storage, then retry.",
+        );
     } finally {
-      setLoading(false);
+      if (version === generation.current) setLoading(false);
     }
   }, []);
+  useEffect(() => {
+    const listener = cloud?.auth.onAuthStateChange((_event, session) => {
+      const id = session?.user.id ?? null;
+      if (identity.current !== id) {
+        generation.current++;
+        identity.current = id;
+        setUserId(id);
+        setData({
+          items: [],
+          claims: [],
+          loadout: {},
+          progression: initialProgression(),
+        });
+        setProfile(defaultProfile);
+        setLoading(true);
+      }
+      setTimeout(() => void refresh(), 0);
+    });
+    return () => listener?.data.subscription.unsubscribe();
+  }, [refresh]);
   useEffect(() => {
     void refresh();
   }, [refresh]);
   return (
-    <Context.Provider value={{ ...data, profile, loading, error, refresh }}>
+    <Context.Provider
+      value={{
+        ...data,
+        userId,
+        cloudOffline,
+        profile,
+        loading,
+        error,
+        refresh,
+      }}
+    >
       {children}
     </Context.Provider>
   );

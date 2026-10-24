@@ -4,9 +4,285 @@ import { ArrowUpRight, Shell, Check, X } from "lucide-react";
 import { useGame } from "../components/GameContext";
 import { ItemCard, ItemArt } from "../components/ItemCard";
 import { catalog, slots, slotLabels, type Collectible } from "../lib/gear";
+import { shoreCatalog, type CatalogEntry } from "../catalog";
+import { moves } from "../lib/moves";
 import { claimCleanup } from "../lib/storage";
+
 export function Collection() {
-  const { items, claims, refresh } = useGame();
+  const { items, claims, refresh, userId, cloudOffline } = useGame();
+  const [category, setCategory] = useState("all"),
+    [rarity, setRarity] = useState("all"),
+    [slot, setSlot] = useState("all"),
+    [owned, setOwned] = useState(false),
+    [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<CatalogEntry | null>(null),
+    [message, setMessage] = useState(""),
+    [busy, setBusy] = useState(false);
+  const byCatalog = new Map<string, Collectible[]>();
+  for (const item of items)
+    if (item.catalogId)
+      byCatalog.set(item.catalogId, [
+        ...(byCatalog.get(item.catalogId) ?? []),
+        item,
+      ]);
+  const filtered = shoreCatalog.filter(
+    (c) =>
+      (category === "all" || c.category === category) &&
+      (rarity === "all" || c.rarity === rarity) &&
+      (!owned || byCatalog.has(c.id)) &&
+      (slot === "all" || (c.gearId && catalog[c.gearId].slot === slot)) &&
+      [c.name, ...c.aliases].some((n) =>
+        n.toLowerCase().includes(search.toLowerCase()),
+      ),
+  );
+  const discoveries = selected ? (byCatalog.get(selected.id) ?? []) : [];
+  const unclaimed = discoveries.find(
+    (d) => !claims.some((c) => c.collectibleId === d.id),
+  );
+  const gear = selected?.gearId ? catalog[selected.gearId] : null;
+  const special = Object.values(moves).find((m) => m.gear === selected?.gearId);
+  return (
+    <>
+      <div className="page-title">
+        <span className="eyebrow">YOUR COASTAL FIELD GUIDE</span>
+        <h1>The ShoreDex.</h1>
+        <p>
+          <strong>
+            {byCatalog.size} / {shoreCatalog.length}
+          </strong>{" "}
+          species discovered · {items.filter((i) => i.catalogId).length} finds
+        </p>
+        <Link className="button primary" to="/scan">
+          Discover a collectible
+        </Link>
+      </div>
+      {!userId && (
+        <p className="notice">
+          Sign in in Profile to collect across devices. Previous local
+          discoveries remain below.
+        </p>
+      )}
+      {cloudOffline && (
+        <p className="notice">
+          Offline account snapshot. Connect to save new discoveries or change
+          equipment.
+        </p>
+      )}
+      <div className="dex-filters">
+        <label>
+          Search
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Bottle, paper, can…"
+          />
+        </label>
+        <label>
+          Category
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="all">All categories</option>
+            {[...new Set(shoreCatalog.map((c) => c.category))].map((c) => (
+              <option key={c} value={c}>
+                {c.replaceAll("_", " ")}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Rarity
+          <select value={rarity} onChange={(e) => setRarity(e.target.value)}>
+            <option value="all">All rarities</option>
+            {["common", "uncommon", "rare", "legendary"].map((r) => (
+              <option key={r}>{r}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Equipment
+          <select value={slot} onChange={(e) => setSlot(e.target.value)}>
+            <option value="all">All slots</option>
+            {slots.map((s) => (
+              <option key={s} value={s}>
+                {slotLabels[s]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="consent">
+          <input
+            type="checkbox"
+            checked={owned}
+            onChange={(e) => setOwned(e.target.checked)}
+          />
+          Owned only
+        </label>
+      </div>
+      <p className="field-help">
+        {filtered.length} entries · Draft artwork is marked in details.
+      </p>
+      <div className="dex-grid">
+        {filtered.map((c) => {
+          const found = byCatalog.has(c.id);
+          return (
+            <button
+              key={c.id}
+              className={`dex-entry ${found ? "unlocked" : "locked"}`}
+              aria-label={`#${c.number} ${found ? c.name : "Undiscovered"}`}
+              onClick={() => {
+                setSelected(c);
+                setMessage("");
+              }}
+            >
+              <span className="dex-number">
+                #{String(c.number).padStart(3, "0")}
+              </span>
+              <img src={c.sprite} alt="" loading="lazy" />
+              <span className="dex-name">{found ? c.name : "???"}</span>
+              {found && (
+                <span className="dex-count">
+                  ×{byCatalog.get(c.id)!.length}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      {!filtered.length && <p role="status">No entries match these filters.</p>}
+      {items.some((i) => !i.catalogId) && (
+        <details className="legacy-dex">
+          <summary>Previous local discoveries · preserved</summary>
+          <LegacyCollection />
+        </details>
+      )}
+      {selected && (
+        <ItemDialog onClose={() => setSelected(null)}>
+          <div className="dialog-top">
+            <span className={`rarity ${selected.rarity}`}>
+              {discoveries.length ? selected.rarity : "UNDISCOVERED"}
+            </span>
+            <button
+              autoFocus
+              className="icon-button"
+              aria-label="Close item details"
+              onClick={() => setSelected(null)}
+            >
+              <X />
+            </button>
+          </div>
+          <img
+            className={`dex-detail-art ${discoveries.length ? "" : "silhouette"}`}
+            src={selected.sprite}
+            alt=""
+          />
+          <h2 id="item-title">
+            #{String(selected.number).padStart(3, "0")}{" "}
+            {discoveries.length ? selected.name : "A discovery waiting for you"}
+          </h2>
+          {discoveries.length ? (
+            <>
+              <p>{selected.description}</p>
+              <p>
+                {selected.material} · {selected.category.replaceAll("_", " ")} ·
+                Owned ×{discoveries.length}
+              </p>
+              <p className="field-help">
+                {selected.spriteStatus === "draft"
+                  ? "Draft sprite · final illustration in progress."
+                  : "Original finished sprite."}{" "}
+                Rarity is cosmetic.
+              </p>
+              {gear ? (
+                <>
+                  <h3>
+                    {gear.label} · {slotLabels[gear.slot]}
+                  </h3>
+                  <p>
+                    {Object.entries(gear.statBonus)
+                      .map(([k, v]) => `${k.toUpperCase()} +${v}`)
+                      .join(" · ")}
+                  </p>
+                  {special && (
+                    <p>
+                      Equipped special: <strong>{special.name}</strong> —{" "}
+                      {special.description}
+                    </p>
+                  )}
+                  <Link
+                    className="button primary"
+                    to={`/workshop?item=${discoveries[0].id}`}
+                  >
+                    Equip on your crab
+                  </Link>
+                </>
+              ) : (
+                <p>Collection only · no combat bonus.</p>
+              )}
+              <details>
+                <summary>Discovery history ({discoveries.length})</summary>
+                <ul>
+                  {discoveries.map((d) => (
+                    <li key={d.id}>
+                      {new Date(d.createdAtIso).toLocaleString()} ·{" "}
+                      {claims.some((c) => c.collectibleId === d.id)
+                        ? "Cleanup reported"
+                        : "Discovery only"}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+              {unclaimed ? (
+                <>
+                  <p>
+                    Optional self-report for the earliest unclaimed find.
+                    Discovery alone earns no cleanup XP.
+                  </p>
+                  <button
+                    className="button secondary"
+                    disabled={busy || cloudOffline}
+                    onClick={() => {
+                      setBusy(true);
+                      void claimCleanup(unclaimed.id, crypto.randomUUID())
+                        .then(async (c) => {
+                          setMessage(`+${c.xpAwarded} cleanup XP saved.`);
+                          await refresh();
+                        })
+                        .catch((e) => setMessage(e.message))
+                        .finally(() => setBusy(false));
+                    }}
+                  >
+                    I safely disposed of this litter
+                  </button>
+                </>
+              ) : (
+                <p>All owned finds have cleanup self-reports.</p>
+              )}
+            </>
+          ) : (
+            <p>
+              Photograph safe litter to discover an approved catalog match.
+              Never handle unsafe objects for rewards.
+            </p>
+          )}
+          <p role="status">{message}</p>
+          <button
+            className="button text full"
+            onClick={() => setSelected(null)}
+          >
+            Back to collection
+          </button>
+        </ItemDialog>
+      )}
+    </>
+  );
+}
+
+function LegacyCollection() {
+  const { items: allItems, claims, refresh } = useGame();
+  const items = allItems.filter((i) => !i.catalogId);
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState<Collectible | null>(null);
   const [message, setMessage] = useState("");

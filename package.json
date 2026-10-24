@@ -16,7 +16,9 @@
     "format": "prettier --write src api tests *.ts *.js *.json",
     "native:sync": "npm run build && cap sync",
     "native:ios": "cap open ios",
-    "native:android": "cap open android"
+    "native:android": "cap open android",
+    "catalog:build": "node scripts/build-catalog.mjs",
+    "catalog:seed": "node --import tsx scripts/seed-catalog.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
@@ -29,6 +31,7 @@
     "@capacitor/splash-screen": "^8.0.2",
     "@capacitor/status-bar": "^8.0.4",
     "@google/genai": "2.31.0",
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/vite": "4.3.3",
     "idb": "8.0.4",
     "lucide-react": "1.61.0",
@@ -52,6 +55,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "fake-indexeddb": "6.2.6",
     "prettier": "3.9.10",
+    "tsx": "^4.23.15",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0",
     "vite": "8.3.5",

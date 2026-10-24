@@ -31,7 +31,7 @@ export function BattleIntroScreen({
       <section className="battle-arena panel">
         <div className="arena-heading">
           <span className="eyebrow">THE TIDAL TRAINING GROUNDS</span>
-          <span className="pill">LOCAL PRACTICE</span>
+          <span className="pill">CPU PRACTICE</span>
         </div>
         <div className="fighters">
           {[
@@ -273,7 +273,11 @@ export function BattleArenaScreen({
   }, [battle.id, ended]);
   const latest = battle.log.at(-1);
   return (
-    <div className="battle-scene" data-battle-id={battle.id}>
+    <div
+      className="battle-scene"
+      data-battle-id={battle.id}
+      data-version={battle.version}
+    >
       <h1 className="battle-scene-title" ref={heading} tabIndex={-1}>
         {ended
           ? battle.status === "forfeited"

@@ -1,3 +1,4 @@
+import catalogEntries from "./src/catalog/catalog.json" with { type: "json" };
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -8,6 +9,7 @@ export const publicShell = [
   "icon-512.png",
   "icon-maskable-512.png",
   "apple-touch-icon.png",
+  ...catalogEntries.map((entry) => entry.sprite.slice(1)),
 ];
 export function shellVersion(entries: Array<[string, string | Uint8Array]>) {
   const hash = createHash("sha256");

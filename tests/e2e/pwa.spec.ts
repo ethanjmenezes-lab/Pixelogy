@@ -131,7 +131,10 @@ test("production worker waits for explicit update and never caches private or AP
       page.getByRole("button", { name: "Reload to update" }),
     ).toBeVisible();
     await expect(page.locator(".combat-log")).toContainText("You used Pinch");
-    await page.getByRole("button", { name: "Reload to update" }).click();
+    await Promise.all([
+      page.waitForEvent("load"),
+      page.getByRole("button", { name: "Reload to update" }).click(),
+    ]);
     await expect(
       page.getByRole("button", { name: "Reload to update" }),
     ).toHaveCount(0);
@@ -148,7 +151,10 @@ test("production worker waits for explicit update and never caches private or AP
     await expect(secondTab.locator(".combat-log")).toContainText(
       "You used Pinch",
     );
-    await secondTab.getByRole("button", { name: "Reload to update" }).click();
+    await Promise.all([
+      secondTab.waitForEvent("load"),
+      secondTab.getByRole("button", { name: "Reload to update" }).click(),
+    ]);
     await expect(
       secondTab.getByRole("button", { name: "Reload to update" }),
     ).toHaveCount(0);

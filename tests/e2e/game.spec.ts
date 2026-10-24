@@ -1,3 +1,4 @@
+import { mockAccount } from "./cloudFixture";
 import { test, expect } from "@playwright/test";
 import {
   mockCamera,
@@ -9,6 +10,7 @@ import {
   enableScanning,
 } from "./device";
 test.beforeEach(async ({ page }) => {
+  await mockAccount(page);
   await mockCamera(page);
   await mockLocation(page);
   await mockRecognition(page);
@@ -29,7 +31,9 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
   await takePhoto(page);
   await identify(page);
   await page
-    .getByRole("checkbox", { name: "I reviewed the object and crop." })
+    .getByRole("checkbox", {
+      name: "I reviewed the object. This catalog match is correct and the litter is safe.",
+    })
     .check();
   await page.getByRole("button", { name: "Save discovery" }).click();
   await expect(
@@ -71,11 +75,16 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
     });
     await expect(pinch).toBeEnabled();
     const slam = page.getByRole("button", { name: /Bag Snare/ });
-    if (await slam.isEnabled()) await slam.click();
-    else await pinch.click();
-    await expect(page.locator(".turn-banner")).not.toContainText(
-      "Pebble is choosing",
-      { timeout: 5000 },
+    const previous = await page
+      .locator(".battle-scene")
+      .getAttribute("data-version");
+    await Promise.all([
+      page.waitForResponse("**/api/battle"),
+      ((await slam.isEnabled()) ? slam : pinch).click(),
+    ]);
+    await expect(page.locator(".battle-scene")).not.toHaveAttribute(
+      "data-version",
+      previous!,
     );
   }
   await expect(
@@ -87,15 +96,19 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
   await page
     .getByRole("link", { name: /^ShoreDex Your little treasures/ })
     .click();
-  await page.locator(".item-card").click();
+  await page.locator(".dex-entry.unlocked").click();
   await page
     .getByRole("button", { name: "I safely disposed of this litter" })
     .click();
-  await expect(page.getByText("Cleanup self-report saved")).toBeVisible();
+  await expect(
+    page.getByText("All owned finds have cleanup self-reports."),
+  ).toBeVisible();
   await expect(page.locator(".hud-info > small")).toContainText("15");
   await page.reload();
-  await page.locator(".item-card").click();
-  await expect(page.getByText("Cleanup self-report saved")).toBeVisible();
+  await page.locator(".dex-entry.unlocked").click();
+  await expect(
+    page.getByText("All owned finds have cleanup self-reports."),
+  ).toBeVisible();
   await expect(page.locator(".hud-info > small")).toContainText("15");
 });
 test("unsafe results cannot save and declining first-time consent never uploads", async ({
@@ -117,7 +130,11 @@ test("unsafe results cannot save and declining first-time consent never uploads"
   ).toHaveCount(0);
   await page.getByRole("link", { name: "Not now / back to world" }).click();
   expect(requests).toBe(0);
-  await mockRecognition(page, { ...safeRecognition, safety: "hazardous" });
+  await mockRecognition(page, {
+    status: "blocked",
+    candidates: [],
+    recognition: { ...safeRecognition.recognition, safety: "hazardous" },
+  });
   await page.goto("/scan");
   await takePhoto(page);
   await expect(page.locator(".scan-flow")).toHaveAttribute(
@@ -133,7 +150,7 @@ test("failed AI request offers retry and never allows an unrecognized save", asy
   page,
 }) => {
   await page.route("**/api/analyze", (route) =>
-    route.fulfill({ status: 502, json: { error: "unavailable" } }),
+    route.fulfill({ status: 502, json: { error: "Gemini is unavailable" } }),
   );
   await page.goto("/scan");
   await takePhoto(page);
@@ -183,16 +200,16 @@ test("failed storage never show a saved discovery", async ({ page }) => {
   await takePhoto(page);
   await identify(page);
   await page
-    .getByRole("checkbox", { name: "I reviewed the object and crop." })
+    .getByRole("checkbox", {
+      name: "I reviewed the object. This catalog match is correct and the litter is safe.",
+    })
     .check();
-  await page.evaluate(() => {
-    IDBObjectStore.prototype.add = function () {
-      throw new DOMException("Test storage failure", "QuotaExceededError");
-    };
-  });
+  await page.route("**/rest/v1/rpc/award_discovery", (route) =>
+    route.fulfill({ status: 503, json: { message: "Database unavailable" } }),
+  );
   await page.getByRole("button", { name: "Save discovery" }).click();
   await expect(page.getByRole("alert")).toContainText(
-    "Could not save this discovery",
+    "Could not save discovery",
   );
   await expect(
     page.getByRole("heading", { name: "A little treasure, all yours." }),
@@ -224,13 +241,7 @@ test("remembered consent analyzes later captures and can be revoked", async ({
   await page.route("**/api/analyze", (route) => {
     requests++;
     return route.fulfill({
-      json: {
-        label: "Bag",
-        category: "plastic_bag",
-        subtype: null,
-        safety: "allowed",
-        bbox: [100, 100, 900, 900],
-      },
+      json: safeRecognition,
     });
   });
   await page.goto("/scan");
@@ -243,9 +254,9 @@ test("remembered consent analyzes later captures and can be revoked", async ({
   await page
     .getByRole("checkbox", { name: "Automatically send resized" })
     .uncheck();
-  await expect(page.getByRole("status")).toContainText(
-    "Privacy preference saved.",
-  );
+  await expect(
+    page.getByText("Privacy preference saved.", { exact: true }),
+  ).toBeVisible();
   await page.goto("/scan");
   await expect(
     page.getByRole("button", { name: "Enable automatic scanning" }),
@@ -322,7 +333,7 @@ test("offline and malformed analysis cannot create discoveries, retry recovers",
   await context.setOffline(false);
   await mockRecognition(page, {
     ...safeRecognition,
-    bbox: [900, 900, 100, 100],
+    recognition: { ...safeRecognition.recognition, confidence: 2 },
   });
   await page.getByRole("button", { name: "Retry identification" }).click();
   await expect(page.getByRole("alert")).toContainText("invalid result");
@@ -335,7 +346,9 @@ test("offline and malformed analysis cannot create discoveries, retry recovers",
     page.getByRole("button", { name: "Save discovery" }),
   ).toBeDisabled();
   await page
-    .getByRole("checkbox", { name: "I reviewed the object and crop." })
+    .getByRole("checkbox", {
+      name: "I reviewed the object. This catalog match is correct and the litter is safe.",
+    })
     .check();
   await expect(
     page.getByRole("button", { name: "Save discovery" }),
@@ -358,9 +371,9 @@ test("retake and consent revocation invalidate delayed recognition", async ({
   await page
     .getByRole("checkbox", { name: "Automatically send resized" })
     .uncheck();
-  await expect(page.getByRole("status")).toContainText(
-    "Privacy preference saved.",
-  );
+  await expect(
+    page.getByText("Privacy preference saved.", { exact: true }),
+  ).toBeVisible();
   await pending[0].fulfill({ json: safeRecognition }).catch(() => {});
   await page.goto("/scan");
   await expect(
@@ -385,7 +398,7 @@ test("retake and consent revocation invalidate delayed recognition", async ({
   ).toHaveCount(0);
 });
 
-test("automatic capture has no analysis button or sliders and optional crop supports keyboard", async ({
+test("automatic capture uses a predefined sprite and has no photo pixelization controls", async ({
   page,
 }) => {
   await page.goto("/scan");
@@ -401,16 +414,113 @@ test("automatic capture has no analysis button or sliders and optional crop supp
     animations: "disabled",
   });
   await page
-    .getByRole("checkbox", { name: "I reviewed the object and crop." })
+    .getByRole("checkbox", {
+      name: "I reviewed the object. This catalog match is correct and the litter is safe.",
+    })
     .check();
-  await page.getByRole("button", { name: "Adjust crop", exact: true }).click();
-  const crop = page.getByRole("group", { name: /Object crop/ });
-  const before = await crop.getAttribute("style");
-  await crop.focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(crop).not.toHaveAttribute("style", before!);
   await expect(
-    page.getByRole("checkbox", { name: "I reviewed the object and crop." }),
-  ).not.toBeChecked();
-  await expect(page.getByRole("slider")).toHaveCount(0);
+    page.getByRole("button", { name: "Adjust crop", exact: true }),
+  ).toHaveCount(0);
+  await expect(page.locator(".catalog-candidate img")).toHaveAttribute(
+    "src",
+    "/shoredex/grocery-bag.svg",
+  );
+  await expect(
+    page.getByRole("button", { name: "Save discovery" }),
+  ).toBeEnabled();
+});
+
+test("ShoreDex is dense, numbered and keyboard accessible at phone sizes", async ({
+  page,
+}) => {
+  await page.goto("/collection");
+  await expect(page.locator(".dex-entry")).toHaveCount(200);
+  await expect(page.getByText("0 / 200", { exact: true })).toBeVisible();
+  for (const width of [375, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    const grid = page.locator(".dex-grid");
+    const columns = await grid.evaluate(
+      (el) => getComputedStyle(el).gridTemplateColumns.split(" ").length,
+    );
+    expect(columns).toBe(width === 430 ? 5 : 4);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `test-results/shoredex-${width}-${test.info().project.name}.png`,
+      animations: "disabled",
+    });
+  }
+  await page.locator(".dex-entry").first().focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Close item details" }),
+  ).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.getByRole("searchbox").fill("grocery bag");
+  await expect(page.locator(".dex-entry")).toHaveCount(1);
+  await page.getByRole("checkbox", { name: "Owned only" }).check();
+  await expect(page.getByText("No entries match these filters.")).toBeVisible();
+});
+
+test("two validated discoveries of one species increase quantity, not completion", async ({
+  page,
+}) => {
+  await page.goto("/scan");
+  for (let i = 0; i < 2; i++) {
+    await takePhoto(page);
+    await identify(page);
+    await page
+      .getByRole("checkbox", {
+        name: "I reviewed the object. This catalog match is correct and the litter is safe.",
+      })
+      .check();
+    await page.getByRole("button", { name: "Save discovery" }).click();
+    await expect(
+      page.getByRole("heading", { name: "A little treasure, all yours." }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        i ? "DUPLICATE DISCOVERY · QUANTITY +1" : "NEW DISCOVERY",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    if (!i) await page.getByRole("button", { name: "Scan again" }).click();
+  }
+  await page.getByRole("link", { name: "Open ShoreDex" }).click();
+  await expect(page.getByText("1 / 200", { exact: true })).toBeVisible();
+  await expect(page.locator(".dex-entry.unlocked")).toHaveCount(1);
+  await expect(page.locator(".dex-entry.unlocked")).toContainText("×2");
+  await page.reload();
+  await expect(page.locator(".dex-entry.unlocked")).toContainText("×2");
+  await page.locator(".dex-entry.unlocked").click();
+  await expect(
+    page.getByText("Discovery history (2)", { exact: true }),
+  ).toBeVisible();
+});
+
+test("account practice remains available offline without awarding cloud XP", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/battle/practice");
+  await expect(
+    page.getByRole("button", { name: "Start Battle", exact: true }),
+  ).toBeVisible();
+  await context.setOffline(true);
+  await page.getByRole("button", { name: "Start Battle", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Beach battle", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Exit Practice", exact: true })
+    .click();
+  await expect(
+    page.getByText(/Offline practice · no battle XP awarded/),
+  ).toBeVisible();
+  await context.setOffline(false);
 });
