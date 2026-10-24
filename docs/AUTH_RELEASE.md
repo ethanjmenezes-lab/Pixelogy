@@ -1,5 +1,3 @@
-> Production configuration update: approved authentication destinations are saved and verified after reload. Site URL is https://pixelogy-three.vercel.app; six confirmation/recovery URL entries cover the scanner and profile return paths. The matching 256-bit receipt-signing secret is installed in Vercel Production and Supabase private.server_secrets, verified by equality without disclosing it. The older pending-approval notes below describe the preceding checkpoint. Deployment and real email/camera acceptance are still being verified.
-
 # Authentication repair — 2026-10-24
 
 ## Diagnosis and implemented repair
@@ -18,14 +16,17 @@ Changed implementation files: src/pages/Auth.tsx, src/cloud/authNavigation.ts, s
 - Added VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to Vercel Production. These are public client configuration, not server secrets. Existing GEMINI_API_KEY was neither revealed nor changed. New deployments must rebuild to include these variables; an existing immutable deployment URL does not gain them retroactively.
 - Supabase's security advisor reports seven intentional authenticated SECURITY DEFINER RPCs, with no missing-RLS finding. These enforce server receipts or ownership checks, use fixed empty search_path and per-user locks, and reject unauthenticated writes. Review guidance: https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable
 
-## Remaining release actions
+## Production deployment and remaining acceptance
 
-1. Dashboard access is now available. Verified Auth URL Configuration still has Site URL http://localhost:3000 and an empty redirect allowlist. Production URL changes are prepared but not saved, pending browser action-time confirmation. Use https://pixelogy-three.vercel.app as the production Site URL. Allow the exact production /auth/callback and /auth/update-password routes, including query parameters. Add localhost equivalents only for development; avoid broad production wildcard domains. Keep email confirmation enabled. Test delivery and any SMTP/rate-limit requirements.
-2. Provision matching cryptographically random SCAN_SIGNING_SECRET in Vercel's server environment and private.server_secrets(name='tickets') in Supabase. No secret is currently installed. Browser action-time approval has been requested for this credential setup. Never expose it via VITE_, source control, client code, screenshots, or logs.
-3. Publish the source changes and deploy a new production build. Production variable changes alone do not deploy local code. Preview environments need separate public Supabase variables if used for testing.
-4. Complete a real registration + email confirmation + login + camera + consented Gemini + saved collectible + equipment + battle + reload test. Test password recovery using a real email link. Then verify the same account on a second device. Automated mocked browser checks do not establish those outcomes.
+The production Site URL is https://pixelogy-three.vercel.app. Six saved redirect entries cover /auth/callback and /auth/update-password, with no query and with next=%2Fscan or next=%2Fprofile. These values were verified after reloading the Supabase dashboard. Email confirmation remains enabled.
 
-The supplied deployment remains unverified after these local changes. No real confirmation email was sent, no personal password was changed, and no physical-phone camera/GPS acceptance is claimed. The dashboard is now accessible; saving the prepared authentication destinations and provisioning the receipt secret require action-time approval. Later major features are deferred until this auth/scan loop can be accepted: the opt-in weekly leaderboard is still unavailable; 160 catalog sprites remain explicitly draft; account deletion/import of unverified legacy rewards is not implemented. Existing local saves are intact.
+A matching random 256-bit receipt secret is installed as SCAN_SIGNING_SECRET in Vercel Production and in Supabase private.server_secrets(name='tickets'). Equality was verified without returning the value. The temporary local copy was removed. No secret entered source control or the frontend.
+
+Application commit 33b72c2 was pushed to main and Vercel deployment 8Boziv76HvVQffKWogZb7RBc6H17 reached Ready (25-second build). The stable production alias now serves the repaired auth routes. Live /scan redirects to /auth/login?next=%2Fscan; Sign Up opens an enabled registration form. Both API functions cold-started and returned 401 with Cache-Control: no-store to unauthenticated requests; malformed analyze requests returned 400. These checks do not call Gemini.
+
+Remaining acceptance requires the user to create an account, confirm the actual email, log in, capture a photo, complete a consented Gemini discovery, equip gear, battle, and reload. Password-reset email delivery and cross-device persistence also need a real-account check. No real confirmation email was sent by the agent, no personal password was changed, and no physical-phone success is claimed. Use the stable production alias rather than the old immutable deployment link.
+
+The opt-in weekly leaderboard remains unavailable and 160 catalog sprites remain draft. Existing local saves are intact. Preview environments require their own configuration if used.
 
 ## Verification
 

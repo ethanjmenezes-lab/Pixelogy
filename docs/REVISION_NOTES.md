@@ -1,3 +1,7 @@
+# Production authentication activation — 2026-10-24
+
+Saved and reloaded the production Supabase Site URL and six confirmation/recovery redirect entries. Installed matching private signing material in Supabase and Vercel Production, verified equality, and removed the temporary local copy. Published commit 33b72c2; Vercel reports Ready. Live Scan redirects to Login, signup is accessible, and both APIs return no-store 401 responses for unauthenticated calls. Real email confirmation, password recovery delivery, Gemini scanning and physical-device acceptance remain unverified.
+
 # Authentication repair — 2026-10-24
 
 - Reproduced the production account blocker: missing public Supabase build configuration hid the old Profile form. Added dedicated signup/login/reset/confirmation/recovery routes, safe scan-return navigation, error handling, persistent SDK sessions, and account links/logout.
