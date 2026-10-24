@@ -1,5 +1,5 @@
 import { mapTile } from "./mapFixture";
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 // Test fixtures replace browser APIs only. No mock provider is shipped in the application.
 export async function mockCamera(page: Page) {
   await page.addInitScript(() => {
@@ -92,9 +92,19 @@ export async function mockLocation(page: Page) {
     return route.abort();
   });
 }
+export async function enableScanning(page: Page) {
+  const enable = page.getByRole("button", {
+    name: "Enable automatic scanning",
+  });
+  await expect(
+    enable.or(page.getByRole("button", { name: "Take photo", exact: true })),
+  ).toBeVisible();
+  if (await enable.isVisible()) await enable.click();
+}
 export async function takePhoto(page: Page) {
+  await enableScanning(page);
   await page.getByRole("button", { name: "Take photo", exact: true }).click();
-  await page.getByRole("checkbox", { name: "I agree to send" }).waitFor();
+  await page.getByRole("button", { name: "Retake photo" }).waitFor();
 }
 
 export const safeRecognition = {
@@ -113,8 +123,7 @@ export async function mockRecognition(
   );
 }
 export async function identify(page: Page) {
-  await page.getByRole("checkbox", { name: "I agree to send" }).check();
   await page
-    .getByText("Gemini identification · review required", { exact: true })
+    .getByText("Identified automatically · review your find", { exact: true })
     .waitFor();
 }

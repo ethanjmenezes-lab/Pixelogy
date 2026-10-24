@@ -10,7 +10,7 @@ Location watches stop while covered/backgrounded. Inaccurate (>50 m), stale or i
 
 ## Discovery behavior
 
-Capture → explicit remembered consent → online Gemini analysis → safe result → crop/review → save. Categories, subtypes and safety results cannot be overridden. The crop can be adjusted, but the player must still confirm the object is safe. Unsafe or uncertain results cannot create a card. Users can reject a result by retaking.
+One-time remembered permission → capture → automatic online Gemini analysis → safe result → review → save. There is no separate analysis button or recurring Gemini panel. AI supplies the crop; optional “Adjust crop” reveals direct drag/resize controls with keyboard support, without sliders. Categories, subtypes and safety results cannot be overridden. The crop can be adjusted, but the player must still confirm the object is safe. Unsafe or uncertain results cannot create a card. Users can reject a result by retaking.
 
 Offline, unconfigured backend, provider failure or invalid JSON/schema responses offer retry/retake with no save action. New captures are not persisted or queued. Revocation, retake and navigation cancel/invalidate obsolete requests; original photos remain memory-only. Previously saved manual discoveries remain valid inventory: no migration or reset occurs. Cleanup remains optional and independent of discovery/battle rewards.
 

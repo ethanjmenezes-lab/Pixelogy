@@ -18,7 +18,7 @@ Browser capture uses getUserMedia with environment-facing preference and a live 
 
 Captures pass through existing bounded JPEG normalization (Canvas redraw strips EXIF), editable crop, recognition validation, safety review and pixel-art generation. The app does not persist original photos; native camera temporary files may exist in OS cache. Only processed PNG artwork and collectible metadata are persisted.
 
-The first capture asks for consent before transmission to Google Gemini. Opt-in is stored in IndexedDB; future captures analyze automatically. Profile can revoke future uploads. Offline, missing endpoint and malformed/server errors block new saves and offer retry/retake. Categories, subtypes and safety are read-only Gemini results. Hazardous/uncertain results cannot be overridden. Revoking consent or retaking aborts and invalidates pending analysis. Consent is not proof of disposal; cleanup awards remain separate and idempotent.
+Before the first capture, “Enable automatic scanning” explains and requests consent for automatic Google Gemini transmission. Opt-in is stored in IndexedDB; all subsequent captures analyze automatically without a separate analysis button. The live camera enables capture only after its first decoded video frame. Profile can revoke future uploads. Offline, missing endpoint and malformed/server errors block new saves and offer retry/retake. Categories, subtypes and safety are read-only Gemini results. Hazardous/uncertain results cannot be overridden. Revoking consent or retaking aborts and invalidates pending analysis. Consent is not proof of disposal; cleanup awards remain separate and idempotent.
 
 ## Test boundaries
 

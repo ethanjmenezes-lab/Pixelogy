@@ -1,4 +1,4 @@
-import { useRef, type PointerEvent } from "react";
+import { useRef, type KeyboardEvent, type PointerEvent } from "react";
 import type { Crop } from "../lib/pixel";
 export function CropEditor({
   source,
@@ -41,6 +41,35 @@ export function CropEditor({
         y: Math.max(0, Math.min(100 - s.crop.height, s.crop.y + dy)),
       });
   }
+  function keyboard(e: KeyboardEvent<HTMLDivElement>, resize = false) {
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key))
+      return;
+    e.preventDefault();
+    e.stopPropagation();
+    const horizontal = e.key === "ArrowLeft" || e.key === "ArrowRight";
+    const delta = e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1;
+    const key =
+      resize || e.shiftKey
+        ? horizontal
+          ? "width"
+          : "height"
+        : horizontal
+          ? "x"
+          : "y";
+    const min = key === "x" || key === "y" ? 0 : 5;
+    const max =
+      key === "x"
+        ? 100 - crop.width
+        : key === "y"
+          ? 100 - crop.height
+          : key === "width"
+            ? 100 - crop.x
+            : 100 - crop.y;
+    onChange({
+      ...crop,
+      [key]: Math.max(min, Math.min(max, crop[key] + delta)),
+    });
+  }
   return (
     <>
       <div className="crop-editor" ref={ref}>
@@ -51,6 +80,10 @@ export function CropEditor({
         />
         <div
           className="crop-box"
+          tabIndex={0}
+          role="group"
+          aria-label="Object crop. Arrow keys move; Shift and arrow keys resize."
+          onKeyDown={(e) => keyboard(e)}
           style={{
             left: `${crop.x}%`,
             top: `${crop.y}%`,
@@ -61,10 +94,17 @@ export function CropEditor({
           onPointerMove={move}
           onPointerUp={() => (start.current = null)}
           onPointerCancel={() => (start.current = null)}
+          onLostPointerCapture={() => (start.current = null)}
         >
           <span>OBJECT CROP</span>
           <div
             className="crop-handle"
+            tabIndex={0}
+            role="button"
+            aria-label="Resize crop with arrow keys"
+            onKeyDown={(e) => keyboard(e, true)}
+            onPointerCancel={() => (start.current = null)}
+            onLostPointerCapture={() => (start.current = null)}
             onPointerDown={(e) => begin(e, true)}
             onPointerMove={move}
             onPointerUp={() => (start.current = null)}
@@ -72,41 +112,9 @@ export function CropEditor({
         </div>
       </div>
       <p className="field-help">
-        Drag the box and its bottom-right corner to focus on the object. You can
-        also use the sliders below. Cropping keeps some background.
+        Drag the box or its corner to adjust. With a keyboard, use arrow keys to
+        move and Shift + arrows to resize. Cropping keeps some background.
       </p>
-      <div className="crop-controls">
-        {(["x", "y", "width", "height"] as const).map((key) => (
-          <label key={key}>
-            {
-              {
-                x: "Horizontal position",
-                y: "Vertical position",
-                width: "Crop width",
-                height: "Crop height",
-              }[key]
-            }
-            <input
-              type="range"
-              aria-label={key}
-              min={key === "width" || key === "height" ? 5 : 0}
-              max={
-                key === "x"
-                  ? 100 - crop.width
-                  : key === "y"
-                    ? 100 - crop.height
-                    : key === "width"
-                      ? 100 - crop.x
-                      : 100 - crop.y
-              }
-              value={crop[key]}
-              onChange={(e) =>
-                onChange({ ...crop, [key]: Number(e.target.value) })
-              }
-            />
-          </label>
-        ))}
-      </div>
     </>
   );
 }

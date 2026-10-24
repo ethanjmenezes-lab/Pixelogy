@@ -51,7 +51,6 @@ export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
             video.current.srcObject = media;
             void video.current.play().catch(() => {});
           }
-          setReady(true);
         })
         .catch(() => {
           if (active)
@@ -114,6 +113,10 @@ export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
           playsInline
           muted
           aria-label="Live rear camera preview"
+          onLoadedData={() => {
+            if (stream.current && !document.hidden && video.current?.videoWidth)
+              setReady(true);
+          }}
         />
       )}
       {error && <p role="alert">{error}</p>}

@@ -6,6 +6,7 @@ import {
   mockRecognition,
   safeRecognition,
   identify,
+  enableScanning,
 } from "./device";
 test.beforeEach(async ({ page }) => {
   await mockCamera(page);
@@ -92,26 +93,36 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
   await expect(page.getByText("Cleanup self-report saved")).toBeVisible();
   await expect(page.locator(".hud-info > small")).toContainText("15");
 });
-test("unsafe review blocks saving; denied consent does not upload", async ({
+test("unsafe results cannot save and declining first-time consent never uploads", async ({
   page,
 }) => {
+  let requests = 0;
+  page.on("request", (req) => {
+    if (req.url().includes("/api/analyze")) requests++;
+  });
   await page.goto("/scan");
-  await takePhoto(page);
+  await expect(
+    page.getByRole("button", { name: "Enable automatic scanning" }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Identify with Gemini" }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Choose item manually" }),
   ).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "Save discovery" }),
-  ).toHaveCount(0);
+  await page.getByRole("link", { name: "Not now / back to world" }).click();
+  expect(requests).toBe(0);
   await mockRecognition(page, { ...safeRecognition, safety: "hazardous" });
-  await identify(page);
+  await page.goto("/scan");
+  await takePhoto(page);
+  await expect(page.locator(".scan-flow")).toHaveAttribute(
+    "data-scan-state",
+    "blocked",
+  );
   await expect(page.getByRole("combobox")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Save discovery" }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
 });
 test("failed AI request offers retry and never allows an unrecognized save", async ({
   page,
@@ -121,7 +132,6 @@ test("failed AI request offers retry and never allows an unrecognized save", asy
   );
   await page.goto("/scan");
   await takePhoto(page);
-  await page.getByRole("checkbox", { name: "I agree to send" }).check();
 
   await expect(
     page.getByRole("button", { name: "Retry identification" }),
@@ -220,7 +230,6 @@ test("remembered consent analyzes later captures and can be revoked", async ({
   });
   await page.goto("/scan");
   await takePhoto(page);
-  await page.getByRole("checkbox", { name: "I agree to send" }).check();
   await expect.poll(() => requests).toBe(1);
   await page.goto("/scan");
   await takePhoto(page);
@@ -233,10 +242,9 @@ test("remembered consent analyzes later captures and can be revoked", async ({
     "Privacy preference saved.",
   );
   await page.goto("/scan");
-  await takePhoto(page);
   await expect(
-    page.getByRole("button", { name: "Identify with Gemini" }),
-  ).toBeDisabled();
+    page.getByRole("button", { name: "Enable automatic scanning" }),
+  ).toBeVisible();
   expect(requests).toBe(2);
 });
 test("camera denial shows retry and preserves world navigation", async ({
@@ -255,6 +263,7 @@ test("camera denial shows retry and preserves world navigation", async ({
     ),
   );
   await page.goto("/scan");
+  await enableScanning(page);
   await expect(page.getByRole("alert")).toContainText("Camera unavailable");
   await expect(
     page.getByRole("button", { name: "Retry camera" }),
@@ -268,6 +277,7 @@ test("leaving the scanner stops its browser camera tracks", async ({
   page,
 }) => {
   await page.goto("/scan");
+  await enableScanning(page);
   await expect(
     page.getByRole("button", { name: "Take photo", exact: true }),
   ).toBeVisible();
@@ -294,9 +304,12 @@ test("offline and malformed analysis cannot create discoveries, retry recovers",
   context,
 }) => {
   await page.goto("/scan");
-  await takePhoto(page);
+  await enableScanning(page);
+  await expect(
+    page.getByRole("button", { name: "Take photo", exact: true }),
+  ).toBeVisible();
   await context.setOffline(true);
-  await page.getByRole("checkbox", { name: "I agree to send" }).check();
+  await takePhoto(page);
   await expect(page.getByRole("alert")).toContainText("offline");
   await expect(
     page.getByRole("button", { name: "Save discovery" }),
@@ -333,29 +346,66 @@ test("retake and consent revocation invalidate delayed recognition", async ({
   });
   await page.goto("/scan");
   await takePhoto(page);
-  await page.getByRole("checkbox", { name: "I agree to send" }).check();
   await expect.poll(() => pending.length).toBe(1);
-  await page.getByRole("checkbox", { name: "I agree to send" }).uncheck();
-  await pending[0].fulfill({ json: safeRecognition }).catch(() => {});
-  await expect(page.locator(".scan-sidebar")).toHaveAttribute(
-    "data-scan-state",
-    "consent",
+  await page
+    .getByRole("link", { name: "Automatic photo analysis is on" })
+    .click();
+  await page
+    .getByRole("checkbox", { name: "Automatically send resized" })
+    .uncheck();
+  await expect(page.getByRole("status")).toContainText(
+    "Privacy preference saved.",
   );
+  await pending[0].fulfill({ json: safeRecognition }).catch(() => {});
+  await page.goto("/scan");
+  await expect(
+    page.getByRole("button", { name: "Enable automatic scanning" }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Save discovery" }),
   ).toHaveCount(0);
-  await page.getByRole("checkbox", { name: "I agree to send" }).check();
+  await takePhoto(page);
   await expect.poll(() => pending.length).toBe(2);
   await page.getByRole("button", { name: "Retake photo" }).click();
   await pending[1].fulfill({ json: safeRecognition }).catch(() => {});
   await expect(
     page.getByRole("button", { name: "Take photo", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".scan-sidebar")).toHaveAttribute(
+  await expect(page.locator(".scan-flow")).toHaveAttribute(
     "data-scan-state",
     "capture",
   );
   await expect(
     page.getByRole("button", { name: "Save discovery" }),
   ).toHaveCount(0);
+});
+
+test("automatic capture has no analysis button or sliders and optional crop supports keyboard", async ({
+  page,
+}) => {
+  await page.goto("/scan");
+  await takePhoto(page);
+  await identify(page);
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Identify with Gemini" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("group", { name: /Object crop/ })).toHaveCount(0);
+  await page.screenshot({
+    path: `test-results/automatic-scan-${test.info().project.name}.png`,
+    animations: "disabled",
+  });
+  await page
+    .getByRole("checkbox", { name: "I reviewed the object and crop." })
+    .check();
+  await page.getByRole("button", { name: "Adjust crop", exact: true }).click();
+  const crop = page.getByRole("group", { name: /Object crop/ });
+  const before = await crop.getAttribute("style");
+  await crop.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(crop).not.toHaveAttribute("style", before!);
+  await expect(
+    page.getByRole("checkbox", { name: "I reviewed the object and crop." }),
+  ).not.toBeChecked();
+  await expect(page.getByRole("slider")).toHaveCount(0);
 });

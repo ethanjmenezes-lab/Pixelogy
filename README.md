@@ -2,7 +2,7 @@
 
 A mobile-first Progressive Web App with an original tropical pixel-art map of real geography, original human explorer and equipped red crab. Install the React/Vite app from your browser; no App Store download or native SDK is required. Capacitor projects remain optional future work.
 
-Tap Scan to open the browser live camera. After explicit remembered consent, resized photos can be analyzed by server-side Gemini. A successful safe Gemini result is required; review the crop before saving. Manual identification and safety overrides are unavailable. Save safe pixel collectibles, equip five crab slots, play deterministic Practice vs CPU, and optionally self-report cleanup for XP. Level is cosmetic; movement earns nothing.
+Enable automatic scanning once to consent to sending resized photos to Gemini. After that, Tap Scan opens the browser camera and every captured photo is analyzed automatically. A successful safe Gemini result is required; review the crop before saving. Manual identification and safety overrides are unavailable. Save safe pixel collectibles, equip five crab slots, play deterministic Practice vs CPU, and optionally self-report cleanup for XP. Level is cosmetic; movement earns nothing.
 
 ## Run
 
@@ -41,4 +41,4 @@ npm run test:e2e
 
 Browser tests use explicit synthetic camera/location fixtures; they do not establish native hardware behavior. See revision notes for actual latest results. No connected Figma file was used; original code/art follows the written design specification.
 
-Latest verified results: **43 unit/API/configuration tests and 44 Chromium/WebKit browser checks passed**, with TypeScript, lint, five plain-Node API smoke assertions and production build. Live OpenFreeMap tiles loaded in production preview at a synthetic test coordinate with no page errors. Real Vercel deployment and physical iPhone installation/camera acceptance remain pending. No deployment URL was supplied.
+Latest verified results: **43 unit/API/configuration tests and 46 Chromium/WebKit browser checks passed**, with TypeScript, lint, five plain-Node API smoke assertions and production build. Live OpenFreeMap tiles loaded in production preview at a synthetic test coordinate with no page errors. Real Vercel deployment and physical iPhone installation/camera acceptance remain pending. No deployment URL was supplied.

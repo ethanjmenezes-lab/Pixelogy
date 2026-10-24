@@ -4,7 +4,6 @@ import { readConsent, saveConsent } from "../lib/storage";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Camera,
   ArrowRight,
   Check,
   ShieldCheck,
@@ -21,6 +20,7 @@ import { ItemArt } from "../components/ItemCard";
 export function Scan() {
   const { refresh } = useGame();
   const [source, setSource] = useState("");
+  const [adjusting, setAdjusting] = useState(false);
   type Recognition = ReturnType<typeof recognitionSchema.parse>;
   const [result, setResult] = useState<Recognition | null>(null);
   const category = result?.category ?? "plastic_bag";
@@ -114,6 +114,7 @@ export function Scan() {
     lock.current = false;
     setBusy(false);
     setResult(null);
+    setAdjusting(false);
     setSafe(false);
   }
   function retake() {
@@ -124,6 +125,20 @@ export function Scan() {
     setSaved(null);
     setError("");
     setMode("capture");
+  }
+  async function enableAutoScan() {
+    if (consentSaving) return;
+    setConsentSaving(true);
+    setError("");
+    try {
+      await saveConsent(true);
+      if (mounted.current) setConsent(true);
+    } catch {
+      if (mounted.current)
+        setError("Your preference could not be saved. Please try again.");
+    } finally {
+      if (mounted.current) setConsentSaving(false);
+    }
   }
   async function selectPhoto(file?: File) {
     if (!file) return;
@@ -258,9 +273,6 @@ export function Scan() {
           <h1>Discover something good.</h1>
           <p>Give a safe shore find a second life in pixels.</p>
         </div>
-        <span className="pill">
-          <Camera size={15} /> FIELD NOTES / 01
-        </span>
       </div>
       <div className="scan-steps">
         <span className={!source ? "active" : ""}>
@@ -268,7 +280,7 @@ export function Scan() {
         </span>
         <i />
         <span className={source && !saved ? "active" : ""}>
-          02 <b>Focus</b>
+          02 <b>Identify</b>
         </span>
         <i />
         <span className={saved ? "active" : ""}>
@@ -335,179 +347,181 @@ export function Scan() {
           </div>
         </section>
       ) : (
-        <div className="scan-layout">
-          <section className="panel">
-            <div className="panel-heading">
-              <h2>
-                {source ? "Focus on your find" : "Every find has a story."}
-              </h2>
-              {source && (
-                <button
-                  className="icon-button"
-                  aria-label="Retake photo"
-                  disabled={busy && mode !== "analyzing"}
-                  onClick={retake}
-                >
-                  <RotateCcw size={18} />
-                </button>
-              )}
-            </div>
-            {source ? (
-              <CropEditor
-                source={source}
-                crop={crop}
-                onChange={(value) => {
-                  setCrop(value);
-                  setSafe(false);
-                }}
-              />
-            ) : (
-              <CameraCapture onPhoto={(file) => void selectPhoto(file)} />
-            )}
-            <div className="safety-note">
-              <ShieldCheck size={21} />
+        <section className="scan-flow panel" data-scan-state={mode}>
+          {!consentLoaded ? (
+            <p role="status">Getting your camera ready…</p>
+          ) : !consent ? (
+            <div className="scan-welcome">
+              <span className="scan-sun" aria-hidden="true">
+                <Sparkles size={32} />
+              </span>
+              <h2>Snap. Discover. Collect.</h2>
               <p>
-                <strong>Curiosity, with care.</strong> Avoid glass, sharps,
-                batteries, chemicals and unknown waste. Never handle anything
-                unsafe for a reward.
+                Each photo will be resized and sent to Google Gemini
+                automatically to identify your find. Only the finished pixel art
+                is saved here.
               </p>
+              <button
+                className="button primary full"
+                disabled={consentSaving}
+                onClick={() => void enableAutoScan()}
+              >
+                {consentSaving
+                  ? "Saving your choice…"
+                  : "Enable automatic scanning"}
+              </button>
+              <p className="field-help">
+                One-time permission, remembered on this device. Turn it off
+                anytime in Profile → Privacy.
+              </p>
+              <Link className="button text full" to="/">
+                Not now / back to world
+              </Link>
             </div>
-          </section>
-          <aside className="scan-sidebar panel" data-scan-state={mode}>
-            <span className="eyebrow">YOUR DISCOVERY KIT</span>
-            <h2>{source ? "Make it yours." : "From shore to ShoreDex."}</h2>
-            {!source ? (
-              <>
-                <div className="empty-preview">
-                  <Sparkles size={40} />
-                </div>
-                <p>
-                  Take a photo, identify the safe object and adjust the crop.
-                  We’ll turn your find into a one-of-a-kind pixel card.
-                </p>
-                <p className="field-help">
-                  Photos stay on this device unless you choose to send one to
-                  Gemini. Only the processed pixel art is saved.
-                </p>
-              </>
-            ) : (
-              <>
-                <label className="check-label">
-                  <input
-                    type="checkbox"
-                    checked={consent}
-                    onChange={(e) => {
-                      const value = e.target.checked;
-                      if (!value) {
-                        invalidate();
-                        setMode("consent");
-                      }
-                      analyzed.current = "";
-                      setConsent(value);
-                      setConsentSaving(true);
-                      void saveConsent(value)
-                        .catch(() => {
-                          setConsent(false);
-                          invalidate();
-                          setMode("consent");
-                          setError(
-                            "Consent could not be remembered on this device. Please retry.",
-                          );
-                        })
-                        .finally(() => setConsentSaving(false));
-                    }}
-                    disabled={consentSaving || (busy && mode !== "analyzing")}
-                  />{" "}
-                  I agree to send resized photos to Google Gemini for
-                  identification. Remember my choice; revoke it in Profile.
-                </label>
-                <button
-                  className="button secondary full"
-                  onClick={() => void analyze()}
-                  disabled={!consent || busy || consentSaving}
-                >
-                  <Sparkles size={17} />
-                  {mode === "analyzing"
-                    ? "Identifying…"
-                    : mode === "error"
-                      ? "Retry identification"
-                      : "Identify with Gemini"}
-                </button>
-                {!consent && (
-                  <p className="field-help">
-                    Identification requires your permission. You can return to
-                    the world without sending a photo.
-                  </p>
+          ) : (
+            <>
+              <div className="panel-heading">
+                <h2>
+                  {!source
+                    ? "Find a little treasure."
+                    : mode === "analyzing"
+                      ? "Discovering your find…"
+                      : mode === "review"
+                        ? "Look what you found!"
+                        : "Your shore find"}
+                </h2>
+                {source && (
+                  <button
+                    className="icon-button"
+                    aria-label="Retake photo"
+                    disabled={busy && mode !== "analyzing"}
+                    onClick={retake}
+                  >
+                    <RotateCcw size={18} />
+                  </button>
                 )}
-                <p className="field-help">
-                  New discoveries require online AI identification. If the
-                  result is wrong, retake your photo.
-                </p>
-                {(mode === "review" || mode === "blocked") && result && (
-                  <>
-                    <div className="divider" />
-                    <span className="mode-badge">
-                      Gemini identification · review required
-                    </span>
-                    <h3>
-                      {result.subtype === "magazine"
-                        ? "Magazine"
-                        : categoryLabels[result.category]}
-                    </h3>
-                    <p>{result.label}</p>
-                    <div className="gear-preview">
-                      {preview && (
-                        <img
-                          src={preview}
-                          alt="Preview of your cropped pixel collectible"
-                        />
-                      )}
+              </div>
+              {!source ? (
+                <>
+                  <CameraCapture onPhoto={(file) => void selectPhoto(file)} />
+                  <p className="field-help">
+                    Take a photo. We’ll identify and frame your find
+                    automatically.
+                  </p>
+                </>
+              ) : (
+                <>
+                  {adjusting && mode === "review" ? (
+                    <CropEditor
+                      source={source}
+                      crop={crop}
+                      onChange={(value) => {
+                        setCrop(value);
+                        setSafe(false);
+                      }}
+                    />
+                  ) : (
+                    <img
+                      className="scan-photo"
+                      src={source}
+                      alt="Your captured shore find"
+                    />
+                  )}
+                  {mode === "analyzing" && (
+                    <div className="scan-progress" role="status">
+                      <Sparkles size={22} />
                       <div>
-                        <small>{gear ? "TURNS INTO" : "SHOREDEX ONLY"}</small>
-                        <strong>{gear?.label ?? "A pixel collectible"}</strong>
-                        <span>
-                          {gear
-                            ? gear.slot.replaceAll("_", " ")
-                            : "No equipment bonus"}
-                        </span>
+                        <strong>Finding the treasure in your photo</strong>
+                        <p>Identifying the object and choosing its crop…</p>
                       </div>
                     </div>
-                    <p className="field-help">
-                      Safety result: <strong>{safety}</strong>. This result
-                      cannot be overridden.
-                    </p>
-                    {safety !== "allowed" && (
-                      <p className="field-help">
-                        Uncertain or hazardous objects cannot unlock cards, gear
-                        or XP.
-                      </p>
-                    )}
-                    <label className="check-label">
-                      <input
-                        type="checkbox"
-                        checked={safe}
-                        disabled={safety !== "allowed" || busy}
-                        onChange={(e) => setSafe(e.target.checked)}
-                      />{" "}
-                      I reviewed the object and crop. It is safe litter, not
-                      glass or hazardous waste.
-                    </label>
+                  )}
+                  {mode === "error" && (
                     <button
-                      className="button primary full"
-                      onClick={save}
-                      disabled={!safe || safety !== "allowed" || busy}
+                      className="button secondary full"
+                      onClick={() => void analyze()}
+                      disabled={busy}
                     >
-                      Save discovery <ArrowRight size={17} />
+                      Retry identification
                     </button>
-                    <small className="field-help">
-                      No disposal claim required. Rarity is cosmetic.
-                    </small>
-                  </>
-                )}
-              </>
-            )}
-          </aside>
-        </div>
+                  )}
+                  {mode === "blocked" && (
+                    <p className="field-help">
+                      This find cannot be collected. Retake a different safe
+                      object.
+                    </p>
+                  )}
+                  {mode === "review" && result && (
+                    <div className="scan-review">
+                      <span className="mode-badge">
+                        Identified automatically · review your find
+                      </span>
+                      <h3>
+                        {result.subtype === "magazine"
+                          ? "Magazine"
+                          : categoryLabels[result.category]}
+                      </h3>
+                      <div className="gear-preview">
+                        {preview && (
+                          <img
+                            src={preview}
+                            alt="Preview of your cropped pixel collectible"
+                          />
+                        )}
+                        <div>
+                          <small>
+                            {gear ? "YOUR NEW GEAR" : "SHOREDEX FIND"}
+                          </small>
+                          <strong>
+                            {gear?.label ?? "A pixel collectible"}
+                          </strong>
+                          <span>{result.label}</span>
+                        </div>
+                      </div>
+                      <button
+                        className="button text"
+                        aria-expanded={adjusting}
+                        onClick={() => setAdjusting((value) => !value)}
+                      >
+                        {adjusting ? "Done adjusting" : "Adjust crop"}
+                      </button>
+                      <label className="check-label">
+                        <input
+                          type="checkbox"
+                          checked={safe}
+                          disabled={busy}
+                          onChange={(e) => setSafe(e.target.checked)}
+                        />{" "}
+                        I reviewed the object and crop. It is safe litter, not
+                        glass or hazardous waste.
+                      </label>
+                      <button
+                        className="button primary full"
+                        onClick={save}
+                        disabled={!safe || busy}
+                      >
+                        Save discovery <ArrowRight size={17} />
+                      </button>
+                      <small className="field-help">
+                        No disposal claim required. Rarity is cosmetic.
+                      </small>
+                    </div>
+                  )}
+                </>
+              )}
+              <div className="safety-note">
+                <ShieldCheck size={21} />
+                <p>
+                  <strong>Curiosity, with care.</strong> Avoid glass, sharps,
+                  batteries, chemicals and unknown waste.
+                </p>
+              </div>
+              <Link className="scan-privacy" to="/profile">
+                Automatic photo analysis is on · Privacy settings
+              </Link>
+            </>
+          )}
+        </section>
       )}
     </>
   );

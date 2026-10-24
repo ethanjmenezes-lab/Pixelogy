@@ -1,5 +1,12 @@
 # Revision history and key decisions
 
+## Automatic scanner and brighter tropical theme — October 24, 2026
+
+- Removed crop sliders and the separate Gemini/discovery-kit panel. One-time consent moves before camera entry; after that, capture automatically identifies and frames the object. Review/save stays explicit, and crop adjustment is an optional touch/keyboard control. Profile revocation, retry/retake, safety blocking and existing saves remain intact.
+- Increased turquoise gradient coverage, added orange actions and angled orange/purple accents, and restyled menus and world controls around the supplied tropical reference. Original artwork and readable cream panels remain.
+- Fixed a WebKit first-frame race: capture is offered after loaded video data, rather than immediately after acquiring the stream.
+- Verified typecheck, lint, all 43 unit/API/configuration tests, five plain-Node API checks, production build and all 46 Chromium/WebKit browser tests. New tests cover the absent sliders/analysis button and keyboard crop adjustment, with updated automatic capture/consent regressions. Mobile scanner screenshot inspected at 390px. Physical iPhone camera testing and hosted Gemini remain unverified; no Vercel deployment was performed.
+
 ## Tropical pixel world and AI-only scanning — October 24, 2026
 
 - Replaced the stock Liberty basemap/recoloring with an authored MapLibre style over live OpenFreeMap vector data: original pixel grass/water/path/roof textures, geographic building footprints, road hierarchy, bridges and rail. Terrain uses a one-third-resolution backing canvas; UI, sparse street labels and original avatar/crab sprites stay sharp. The crab has a visible side offset and movement-only animation. Added honest map loading/timeout/error states.
