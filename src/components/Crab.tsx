@@ -35,6 +35,9 @@ export function Crab({
       <g fill="#ff8b61">
         <path d="M5 23h4v9H5zm9-7h3v8h-3zm33 0h3v8h-3zm8 7h4v9h-4z" />
       </g>
+      <g className="snap-jaws" fill="#dd513e" aria-hidden="true">
+        <path d="M9 19h6v5H9zM49 19h6v5h-6z" />
+      </g>
       {has("magazine_mail") && (
         <g>
           <path d="M22 34h20v14H22z" fill="#709d8c" />

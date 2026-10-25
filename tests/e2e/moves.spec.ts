@@ -54,7 +54,8 @@ test("workshop separates main unlocks from equipped specials and persists select
     });
     db.close();
   });
-  await page.reload();
+  await page.goto("/battle/practice");
+  await page.getByRole("link", { name: "Change Attacks", exact: true }).click();
   await expect(section).toContainText("Pinch Attack · Equipped");
   await page
     .getByRole("button", { name: "Equip Shell Slam", exact: true })
@@ -62,6 +63,7 @@ test("workshop separates main unlocks from equipped specials and persists select
   await page
     .getByRole("button", { name: "Equip Can Counter", exact: true })
     .click();
+  await expect(section).toContainText("Can Counter · Equipped");
   await page.reload();
   await expect(section).toContainText("Shell Slam · Equipped");
   await expect(section).toContainText("Can Counter · Equipped");
@@ -73,10 +75,12 @@ test("workshop separates main unlocks from equipped specials and persists select
     .getByRole("heading", { name: "Slot 3 · Equipment Special", exact: true })
     .scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath("workshop-specials.png") });
-  await page.getByRole("link", { name: "Let’s battle" }).click();
-  await expect(page.getByText("Your moves:", { exact: false })).toContainText(
-    "Shell Slam · Defend · Can Counter",
-  );
+  await page
+    .getByRole("link", { name: "Return to Matchup", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "Equipped attacks" }).locator("strong"),
+  ).toHaveText(["Shell Slam", "Defend", "Can Counter"]);
   await page.getByRole("button", { name: "Start Battle", exact: true }).click();
   await expect(page.locator(".arena-moves button")).toHaveCount(3);
   await page.getByRole("button", { name: /^Can Counter/ }).click();

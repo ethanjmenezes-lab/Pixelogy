@@ -13,81 +13,123 @@ export function BattleIntroScreen({
   gear,
   level,
   selectedMoves,
+  offline = false,
   start,
 }: {
   stats: Stats;
   gear: string[];
   level: number;
   selectedMoves: MoveLoadout;
+  offline?: boolean;
   start: () => void;
 }) {
+  const cpu = cpuSetup(level);
   return (
-    <div className="battle-intro">
-      <div className="page-title">
-        <span className="eyebrow">A FRIENDLY CLASH ON THE COAST</span>
+    <div className="battle-intro prep-screen">
+      <header className="prep-title">
+        <span className="eyebrow">TIDAL TRAINING GROUNDS</span>
         <h1>Practice vs CPU.</h1>
-        <p>Small claws. A little strategy. Your next great adventure.</p>
-      </div>
-      <section className="battle-arena panel">
-        <div className="arena-heading">
-          <span className="eyebrow">THE TIDAL TRAINING GROUNDS</span>
-          <span className="pill">CPU PRACTICE</span>
-        </div>
-        <div className="fighters">
-          {[
-            { name: "Your crab", stats, gear },
-            {
-              name: "Pebble · CPU",
-              stats: cpuSetup(level).stats,
-              gear: ["can_shield"],
-            },
-          ].map((f) => (
-            <div className="fighter" key={f.name}>
-              <div className="fighter-info">
-                <strong>{f.name}</strong>
-                <span>{f.stats.hp} HP</span>
-              </div>
-              <div className="fighter-sprite">
-                <Crab gear={f.gear} label={f.name} />
-              </div>
-              <p className="preview-stats">
-                ATK {f.stats.atk} · DEF {f.stats.def} · SPD {f.stats.spd}
-              </p>
+      </header>
+      <section className="prep-matchup" aria-label="Crab matchup">
+        <BattleBackground />
+        <span className="prep-versus" aria-hidden="true">
+          VS
+        </span>
+        {[
+          { name: "Your crab", stats, gear, level },
+          {
+            name: "Pebble · CPU",
+            stats: cpu.stats,
+            gear: ["can_shield"],
+            level: cpu.level,
+          },
+        ].map((fighter, i) => (
+          <div
+            className={`prep-fighter ${i ? "rival" : "ally"}`}
+            key={fighter.name}
+          >
+            <div className="prep-name">
+              <strong>{fighter.name}</strong>
+              <span>
+                Crab Lv. {fighter.level} · {fighter.stats.hp} HP
+              </span>
             </div>
-          ))}
+            <div className="prep-sprite" data-gear={fighter.gear.join(",")}>
+              <Crab gear={fighter.gear} label={fighter.name} />
+            </div>
+            <small>
+              ATK {fighter.stats.atk} · DEF {fighter.stats.def} · SPD{" "}
+              {fighter.stats.spd}
+            </small>
+          </div>
+        ))}
+      </section>
+      <section className="prep-moves" aria-label="Equipped attacks">
+        {selectedMoves.map((id, i) => (
+          <article className={`prep-move slot-${i}`} key={id} data-move={id}>
+            <span className="prep-move-icon" aria-hidden="true">
+              {["✦", "◇", "≈"][i]}
+            </span>
+            <small>{["MAIN ATTACK", "PERMANENT", "GEAR SPECIAL"][i]}</small>
+            <strong>{moves[id].name}</strong>
+            <span>
+              {id === "guard"
+                ? "Halves next hit"
+                : moves[id].effect === "counter"
+                  ? `Block + ${moves[id].effectValue} counter`
+                  : `Power ${moves[id].power}${moves[id].hits > 1 ? ` × ${moves[id].hits}` : ""}`}
+            </span>
+            <small>
+              {moves[id].cooldown
+                ? `${moves[id].cooldown}-turn cooldown`
+                : "Always ready"}
+            </small>
+          </article>
+        ))}
+      </section>
+      {offline ? (
+        <div className="prep-rewards">Offline practice · No battle XP</div>
+      ) : (
+        <div className="prep-rewards" aria-label="Battle rewards">
+          <span>
+            ✦ <strong>Victory +40</strong> Battle XP
+          </span>
+          <span>
+            ◇ <strong>Defeat +15</strong> Battle XP
+          </span>
         </div>
+      )}
+      <details className="prep-help">
+        <summary>Battle tips & equipped gear</summary>
         <p>
-          Pebble guards the shore. Bring your discovered gear and practice a
-          little strategy.
+          Faster crab goes first; ties go to you. Pebble trains stronger main
+          attacks as you level up. Exiting grants 0 XP. Battle rewards never
+          grant cleanup XP.
         </p>
         <p className="preview-loadout">
-          <strong>Your loadout: </strong>
+          Your loadout:{" "}
           {gear.length
             ? gear.map((id) => catalog[id]?.label ?? id).join(" · ")
             : "Red crab · no equipped gear"}
         </p>
-      </section>
-      <section className="panel">
-        <p>
-          Crab level {level} · Pebble level {cpuSetup(level).level}
-        </p>
-        <p>
-          Your moves: {selectedMoves.map((id) => moves[id].name).join(" · ")}
-        </p>
-        <p>Pebble trains stronger main attacks as your crab levels up.</p>
-        <p>Win +40 battle XP · loss +15 · exit +0.</p>
-        <p>
-          Faster crab goes first; ties go to you. Battles award no cleanup XP.
-        </p>
-        <div className="button-row">
-          <button className="button primary" onClick={start}>
-            Start Battle
-          </button>
-          <Link className="button secondary" to="/workshop">
-            Change Gear
-          </Link>
-        </div>
-      </section>
+      </details>
+      <nav className="prep-actions" aria-label="Prepare for battle">
+        <button className="button primary" onClick={start}>
+          Start Battle
+        </button>
+        <Link
+          className="button secondary"
+          to="/workshop?section=moves&from=battle"
+        >
+          Change Attacks
+        </Link>
+        <Link
+          className="button secondary"
+          to="/workshop?section=gear&from=battle"
+        >
+          Change Gear
+        </Link>
+      </nav>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { LocationFix } from "../mobile/location";
 import type { Profile } from "./profile";
 import type { GearBlueprint } from "../lib/gear";
+import { CharacterReaction } from "./CharacterReaction";
 import { PlayerAvatar } from "./PlayerAvatar";
 import { Crab } from "../components/Crab";
 import {
@@ -239,19 +240,23 @@ export function GeographicMap({
         ))}
       </div>
       <div ref={player} className="gps-avatar">
-        <PlayerAvatar
-          profile={profile}
-          facing={facing}
-          walking={walking && active && !reduced}
-          frame={frame}
-        />
+        <CharacterReaction kind="player" active={active}>
+          <PlayerAvatar
+            profile={profile}
+            facing={facing}
+            walking={walking && active && !reduced}
+            frame={frame}
+          />
+        </CharacterReaction>
       </div>
       <div
         ref={crab}
         className={`gps-crab companion ${walking && active && !reduced ? "walking" : ""}`}
         data-gear={gear.join(",")}
       >
-        <Crab gear={gear} label="Your equipped red crab companion" />
+        <CharacterReaction kind="crab" active={active}>
+          <Crab gear={gear} label="Your equipped red crab companion" />
+        </CharacterReaction>
       </div>
       {loading && !error && (
         <div className="map-loading" role="status">

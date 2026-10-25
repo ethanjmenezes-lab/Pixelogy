@@ -223,6 +223,7 @@ function BattleSession() {
           gear={equippedBlueprints(loadout, items)}
           level={crabLevel(selected.xp)}
           selectedMoves={[selected.main, "guard", selected.special]}
+          offline={Boolean(userId && (cloudOffline || !navigator.onLine))}
           start={start}
         />
       </>
