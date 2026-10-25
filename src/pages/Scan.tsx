@@ -1,7 +1,6 @@
 import { CleanupButton } from "../cleanup/CleanupButton";
-import { saveGuestDiscovery } from "../guest/local";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { CameraCapture } from "../mobile/CameraCapture";
 import { analyzeUrl } from "../mobile/platform";
 import { normalizePhoto } from "../lib/pixel";
@@ -14,11 +13,13 @@ import { catalog as gear } from "../lib/gear";
 import { moves } from "../lib/moves";
 type Analysis = ReturnType<typeof catalogAnalysisSchema.parse>;
 export function Scan() {
-  const { userId } = useGame();
-  return <ScanSession key={userId ?? "guest"} />;
+  const { userId, loading } = useGame();
+  if (loading) return <p role="status">Checking your session…</p>;
+  if (!userId) return <Navigate to="/auth/login?next=%2Fscan" replace />;
+  return <ScanSession key={userId} />;
 }
 function ScanSession() {
-  const { userId, refresh } = useGame();
+  const { refresh } = useGame();
   const [consent, setConsent] = useState(false),
     [ready, setReady] = useState(false),
     [source, setSource] = useState(""),
@@ -87,7 +88,7 @@ function ScanSession() {
         );
       const response = await fetch(analyzeUrl(), {
         method: "POST",
-        headers: await authHeaders(),
+        headers: await authHeaders(true),
         body: JSON.stringify({ consent: true, image }),
         signal: abort.signal,
       });
@@ -162,17 +163,15 @@ function ScanSession() {
         throw new Error(
           "Photo analysis consent was revoked. Retake after enabling it again.",
         );
-      const result = !userId
-        ? await saveGuestDiscovery(selected, analysis.payload!)
-        : await rpc<{
-            id: string;
-            catalogId: string;
-            isNew: boolean;
-          }>("award_discovery", {
-            payload: analysis.payload,
-            signature: analysis.signature,
-            catalog_id: selected,
-          });
+      const result = await rpc<{
+        id: string;
+        catalogId: string;
+        isNew: boolean;
+      }>("award_discovery", {
+        payload: analysis.payload,
+        signature: analysis.signature,
+        catalog_id: selected,
+      });
       if (!mounted.current || version !== generation.current) return;
       setSaved(result);
       setSource("");

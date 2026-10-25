@@ -9,8 +9,6 @@ vi.mock("@google/genai", () => ({
     models = { generateContent };
   },
 }));
-const guestQuota = vi.hoisted(() => vi.fn());
-vi.mock("../server/guest.js", () => ({ reserveGuestScan: guestQuota }));
 const authorize = vi.hoisted(() => vi.fn());
 const beginScan = vi.hoisted(() => vi.fn());
 vi.mock("../server/cloud.js", () => ({
@@ -55,10 +53,7 @@ async function call(
 beforeEach(() => {
   vi.stubEnv("GEMINI_API_KEY", "test-only");
   generateContent.mockReset();
-  guestQuota
-    .mockReset()
-    .mockResolvedValue({ userId: "guest", scanId: "guest-id" });
-  beginScan.mockResolvedValue({ data: "scan-id", error: null });
+  beginScan.mockReset().mockResolvedValue({ data: "scan-id", error: null });
   authorize.mockResolvedValue({
     userId: "user-id",
     client: { rpc: beginScan },
@@ -159,30 +154,16 @@ it("rate limits before invoking Gemini and does not issue unsafe receipts", asyn
   });
 });
 
-it("accepts guests only after anonymous quota reservation and fails closed on quota errors", async () => {
-  generateContent.mockResolvedValue({ text: JSON.stringify(valid) });
+it("rejects anonymous scans before Gemini or database reservation", async () => {
   expect(
-    (
-      await call(
-        { consent: true, image: "data:image/jpeg;base64,YQ==" },
-        "POST",
-        { "content-type": "application/json" },
-      )
-    ).code,
-  ).toBe(200);
-  expect(guestQuota).toHaveBeenCalled();
-  generateContent.mockClear();
-  guestQuota.mockRejectedValueOnce(new Error("QUOTA"));
-  expect(
-    (
-      await call(
-        { consent: true, image: "data:image/jpeg;base64,YQ==" },
-        "POST",
-        { "content-type": "application/json" },
-      )
-    ).code,
-  ).toBe(429);
+    await call(
+      { consent: true, image: "data:image/jpeg;base64,YQ==" },
+      "POST",
+      { "content-type": "application/json" },
+    ),
+  ).toMatchObject({ code: 401, data: { code: "SCAN_LOGIN_REQUIRED" } });
   expect(generateContent).not.toHaveBeenCalled();
+  expect(beginScan).not.toHaveBeenCalled();
 });
 
 it("distinguishes a previously collected account photo from quota and configuration failures", async () => {

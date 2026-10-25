@@ -1,3 +1,5 @@
+> Current scan policy (2026-10-25): new trash scans and discoveries require Supabase login. Guest GPS, CPU/Story battles, XP, Workshop and existing local inventory remain available. The anonymous quota migration is no longer needed for scanning. Failed guest import must preserve local data and must not block account loading. See `docs/AUTHENTICATED_SCANNING.md`. This supersedes previous guest-scanning instructions.
+
 # Guest gameplay and U.S. cleanup map
 
 Current implementation, 2026-10-25. Accounts are optional for basic gameplay. This supersedes previous mandatory-scan-login, online-only Story Mode and account-only walking instructions.

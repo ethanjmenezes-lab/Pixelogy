@@ -18,6 +18,7 @@ try {
     "conspiracy.sql",
     "walking.sql",
     "guest.sql",
+    "authenticated_scan.sql",
   ]) {
     await db.exec(readFileSync("supabase/tests/" + file, "utf8"));
     process.stdout.write("Passed locally: " + file + "\n");

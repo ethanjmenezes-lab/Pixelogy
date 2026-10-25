@@ -67,7 +67,7 @@ if (process.argv[2] === "--smoke") {
       "POST",
       { "content-type": "application/json" },
       { consent: true, image: "data:image/jpeg;base64,YQ==" },
-      503,
+      401,
     ],
   ]) {
     let status;

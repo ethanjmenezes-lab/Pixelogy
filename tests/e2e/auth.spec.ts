@@ -33,19 +33,21 @@ async function authFixture(page: import("@playwright/test").Page) {
   );
 }
 test.beforeEach(async ({ page }) => authFixture(page));
-test("guest scan stays open, optional login persists and logout restores guest", async ({
+test("guest scan redirects to login, authentication launches camera and logout protects scanning", async ({
   page,
 }) => {
   await page.goto("/scan");
-  await expect(page).toHaveURL(/\/scan$/);
+  await expect(page).toHaveURL(/\/auth\/login\?next=%2Fscan$/);
   await expect(
     page.getByRole("button", { name: "Take photo", exact: true }),
-  ).toBeVisible();
-  await page.goto("/auth/login?next=%2Fscan");
+  ).toHaveCount(0);
   await page.getByLabel("Email", { exact: true }).fill(user.email);
   await page.getByLabel("Password", { exact: true }).fill("fixture-password");
   await page.getByRole("button", { name: "Log In", exact: true }).click();
   await expect(page).toHaveURL(/\/scan$/);
+  await expect(
+    page.getByRole("button", { name: "Take photo", exact: true }),
+  ).toBeVisible();
   await page.reload();
   await expect(page).toHaveURL(/\/scan$/);
   await expect(
@@ -54,7 +56,7 @@ test("guest scan stays open, optional login persists and logout restores guest",
   await page.goto("/profile");
   await page.getByRole("button", { name: /Log out/i }).click();
   await page.goto("/scan");
-  await expect(page).toHaveURL(/\/scan$/);
+  await expect(page).toHaveURL(/\/auth\/login\?next=%2Fscan$/);
 });
 test("signup confirmation and password reset preserve scan destination", async ({
   page,
@@ -162,9 +164,9 @@ test("account controls fit phone widths and remain keyboard accessible", async (
   page,
 }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/auth/login");
   for (const width of [375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
-    await page.goto("/auth/login");
     await expect(
       page.getByRole("heading", { name: "Welcome back." }),
     ).toBeVisible();

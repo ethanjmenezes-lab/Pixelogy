@@ -51,9 +51,10 @@ export async function rpc<T>(
   if (error) throw new Error(error.message);
   return data as T;
 }
-export async function authHeaders() {
+export async function authHeaders(required = false) {
   const session = await cloudSession();
-
+  if (required && !session)
+    throw new Error("Sign in to scan and collect trash.");
   return {
     "Content-Type": "application/json",
     ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),

@@ -65,12 +65,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setLoading(true);
       }
       setUserId(id);
+      let backupWarning = "";
       if (session)
-        await backupGuest().catch((e) => {
-          throw new Error(
-            "Guest backup needs a retry. Your device save is intact. " +
-              (e as Error).message,
-          );
+        await backupGuest().catch(() => {
+          backupWarning =
+            "Your existing guest save is still on this device. Cloud transfer is unavailable; retry later from Profile. Account scanning and saves remain available.";
         });
       const remote = session ? await fetchCloudGame() : null;
       const next = remote ?? (await readGame());
@@ -82,7 +81,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setError(
         next.repaired
           ? "Some missing equipment was removed from your loadout."
-          : "",
+          : backupWarning,
       );
     } catch (error) {
       if (version === generation.current)

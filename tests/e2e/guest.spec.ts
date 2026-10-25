@@ -1,41 +1,33 @@
 import { test, expect, type Page } from "@playwright/test";
-import { mockCamera, mockLocation, takePhoto, safeRecognition } from "./device";
-async function scan(page: Page) {
-  await page.goto("/scan");
-  await takePhoto(page);
-  await page
-    .getByRole("checkbox", {
-      name: "I reviewed the object. This catalog match is correct and the litter is safe.",
-    })
-    .check();
-  await page
-    .getByRole("button", { name: "Save discovery", exact: true })
-    .click();
-  await expect(page.locator(".discovery-result")).toBeVisible();
+import { mockCamera, mockLocation } from "./device";
+// Existing guest discoveries from the earlier release remain usable. New guest scans are forbidden.
+async function existingGuestFind(page: Page) {
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Open crab menu" }),
+  ).toBeVisible();
+  await page.evaluate(async () => {
+    const modulePath = "/src/guest/local.ts";
+    const { saveGuestDiscovery } = await import(modulePath);
+    await saveGuestDiscovery(
+      "grocery-bag",
+      JSON.stringify({
+        scanId: crypto.randomUUID(),
+        candidates: ["grocery-bag"],
+      }),
+    );
+  });
+  await page.goto("/collection");
 }
 test.beforeEach(async ({ page }) => {
   await mockCamera(page);
   await mockLocation(page);
-  await page.route("**/api/analyze", (route) =>
-    route.fulfill({
-      json: {
-        ...safeRecognition,
-        payload: JSON.stringify({
-          scanId: crypto.randomUUID(),
-          candidates: ["grocery-bag"],
-        }),
-        signature: "fixture",
-      },
-    }),
-  );
 });
-test("guest camera, discoveries, two-state cleanups, map, equipment and CPU XP persist", async ({
+test("existing guest discoveries, two-state cleanups, equipment and CPU XP remain usable", async ({
   page,
 }, info) => {
   test.setTimeout(90000);
-  await scan(page);
-  await expect(page).toHaveURL(/\/scan$/);
-  await page.getByRole("link", { name: "Open ShoreDex" }).click();
+  await existingGuestFind(page);
   await expect(page.locator(".dex-grid")).toBeVisible();
   await expect(page.locator(".state-map")).toHaveCount(0);
   await page.getByRole("link", { name: "U.S. Map", exact: true }).click();
@@ -58,7 +50,8 @@ test("guest camera, discoveries, two-state cleanups, map, equipment and CPU XP p
   await expect(
     page.getByRole("button", { name: "Unequip head" }),
   ).toBeVisible();
-  await scan(page);
+  await existingGuestFind(page);
+  await page.locator(".dex-entry.unlocked").click();
   await page.evaluate(() =>
     window.dispatchEvent(
       new CustomEvent("test-location", {
@@ -70,7 +63,7 @@ test("guest camera, discoveries, two-state cleanups, map, equipment and CPU XP p
     .getByRole("button", { name: "I Picked It Up", exact: true })
     .click();
   await expect(
-    page.getByText("+10 cleanup XP saved. OK recorded."),
+    page.getByText("All owned finds have cleanup self-reports."),
   ).toBeVisible();
   await page.goto("/collection/map");
   await expect(page.getByText("States Cleaned: 2 / 50")).toBeVisible();
@@ -139,12 +132,13 @@ test("guest location denial leaves cleanup unassigned and story can start withou
       },
     ),
   );
-  await scan(page);
+  await existingGuestFind(page);
+  await page.locator(".dex-entry.unlocked").click();
   await page
     .getByRole("button", { name: "I Picked It Up", exact: true })
     .click();
   await expect(
-    page.getByText("+15 cleanup XP saved. No state assigned."),
+    page.getByText("All owned finds have cleanup self-reports."),
   ).toBeVisible();
   await page.goto("/collection/map");
   await expect(page.getByText("States Cleaned: 0 / 50")).toBeVisible();

@@ -13,6 +13,12 @@ export function quotaError(
   error: { code?: string; message: string },
   guest = true,
 ) {
+  if (error.message.includes("Wait 30 seconds"))
+    return new ScanError(
+      "SCAN_RETRY_TOO_SOON",
+      429,
+      "This photo is already being identified. Wait 30 seconds before retrying.",
+    );
   if (error.message.includes("This photo was already collected"))
     return new ScanError(
       "SCAN_ALREADY_COLLECTED",

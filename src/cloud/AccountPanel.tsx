@@ -25,8 +25,8 @@ export function AccountPanel() {
       <h2>Save Your Progress</h2>
       <p>
         {userId
-          ? "Signed in. Guest saves are backed up automatically. Existing account equipment and appearance take precedence."
-          : "Back up your adventure and play across devices. Guest progress stays on this device and can be lost if browser data is cleared."}
+          ? "Signed in. Existing guest saves are transferred when cloud backup is available; failed transfers remain on this device. Account equipment and appearance take precedence."
+          : "Sign in to scan and collect trash, and play across devices. Battles and exploration remain available as a guest. Guest progress stays on this device and can be lost if browser data is cleared."}
       </p>
       {userId ? (
         <>
@@ -36,6 +36,9 @@ export function AccountPanel() {
             onClick={() => void logout()}
           >
             {busy ? "Signing out…" : "Log out"}
+          </button>
+          <button className="button secondary" onClick={() => void refresh()}>
+            Retry guest backup
           </button>
           <Link className="button text" to="/auth/reset?next=%2Fprofile">
             Reset password

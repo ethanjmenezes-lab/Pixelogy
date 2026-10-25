@@ -1,5 +1,4 @@
 import { ScanError, providerError, quotaError } from "../server/scanErrors.js";
-import { reserveGuestScan } from "../server/guest.js";
 import type { IncomingHttpHeaders } from "node:http";
 export type AnalyzeRequest = {
   method?: string;
@@ -52,37 +51,36 @@ export default async function handler(
     return res
       .status(400)
       .json({ error: "A resized JPEG and explicit consent are required." });
-  if (!process.env.GEMINI_API_KEY)
+  if (!req.headers.authorization?.match(/^Bearer (.+)$/))
     return res
-      .status(503)
+      .status(401)
       .json({
-        code: "GEMINI_KEY_MISSING",
+        code: "SCAN_LOGIN_REQUIRED",
         requestId,
-        error:
-          "Photo identification is missing its server API key. Please try again after the service is configured.",
+        error: "Sign in to scan and collect trash.",
       });
+  if (!process.env.GEMINI_API_KEY)
+    return res.status(503).json({
+      code: "GEMINI_KEY_MISSING",
+      requestId,
+      error:
+        "Photo identification is missing its server API key. Please try again after the service is configured.",
+    });
   let stage: "reservation" | "provider" | "validation" | "receipt" =
     "reservation";
   try {
-    let userId: string, scanId: string;
-    if (req.headers.authorization) {
-      const auth = await authorized(req.headers);
-      userId = auth.userId;
-      const hash = createHash("sha256").update(parsed.data.image).digest("hex");
-      const result = await auth.client.rpc("begin_scan", { image_hash: hash });
-      if (result.error) throw quotaError(result.error, false);
-      scanId = result.data;
-    } else
-      ({ userId, scanId } = await reserveGuestScan(
-        req.headers,
-        parsed.data.image,
-      ));
+    const auth = await authorized(req.headers);
+    const userId = auth.userId;
+    const hash = createHash("sha256").update(parsed.data.image).digest("hex");
+    const result = await auth.client.rpc("begin_scan", { image_hash: hash });
+    if (result.error) throw quotaError(result.error, false);
+    const scanId = result.data;
     stage = "provider";
     const ai = new GoogleGenAI({
       apiKey: process.env.GEMINI_API_KEY,
       httpOptions: { timeout: 25000 },
     });
-    const result = await ai.models.generateContent({
+    const generated = await ai.models.generateContent({
       model: process.env.GEMINI_MODEL || "gemini-3.8-flash",
       contents: [
         {
@@ -139,7 +137,9 @@ export default async function handler(
       },
     });
     stage = "validation";
-    const recognition = objectRecognition.parse(JSON.parse(result.text ?? ""));
+    const recognition = objectRecognition.parse(
+      JSON.parse(generated.text ?? ""),
+    );
     const match = matchCatalog(recognition);
     stage = "receipt";
     return res.status(200).json({
@@ -162,7 +162,7 @@ export default async function handler(
           ? new ScanError(
               "SCAN_SESSION_EXPIRED",
               401,
-              "Your account session expired. Sign out to scan as a guest or sign in again.",
+              "Sign in to scan and collect trash. Your session may have expired.",
             )
           : error instanceof Error && error.message === "CONFIG"
             ? new ScanError(

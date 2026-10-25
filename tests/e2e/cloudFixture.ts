@@ -8,7 +8,11 @@ import {
 } from "../../src/lib/battle";
 import { statsFor, type Equipment, type Collectible } from "../../src/lib/gear";
 import { defaultProfile } from "../../src/world/profile";
-export async function mockAccount(page: Page, catalogId = "grocery-bag") {
+export async function mockAccount(
+  page: Page,
+  catalogId = "grocery-bag",
+  signedIn = true,
+) {
   const userId = "11111111-1111-4111-8111-111111111111",
     discoveryId = "22222222-2222-4222-8222-222222222222";
   const user = {
@@ -27,21 +31,22 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
     ),
     "fixture",
   ].join(".");
-  await page.addInitScript(
-    ({ user, token }) =>
-      localStorage.setItem(
-        "sb-rsdgbxpqpdewqpmeuwvp-auth-token",
-        JSON.stringify({
-          access_token: token,
-          refresh_token: "fixture-refresh",
-          expires_at: 4102444800,
-          expires_in: 999999,
-          token_type: "bearer",
-          user,
-        }),
-      ),
-    { user, token },
-  );
+  if (signedIn)
+    await page.addInitScript(
+      ({ user, token }) =>
+        localStorage.setItem(
+          "sb-rsdgbxpqpdewqpmeuwvp-auth-token",
+          JSON.stringify({
+            access_token: token,
+            refresh_token: "fixture-refresh",
+            expires_at: 4102444800,
+            expires_in: 999999,
+            token_type: "bearer",
+            user,
+          }),
+        ),
+      { user, token },
+    );
   const state: {
     discoveries: Array<Record<string, unknown>>;
     equipment: Array<Record<string, unknown>>;
@@ -69,6 +74,17 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
       const url = new URL(route.request().url()),
         path = url.pathname,
         body = route.request().postDataJSON();
+      if (path.endsWith("/token"))
+        return route.fulfill({
+          json: {
+            access_token: token,
+            refresh_token: "fixture-refresh",
+            expires_in: 3600,
+            token_type: "bearer",
+            user,
+          },
+        });
+      if (path.endsWith("/logout")) return route.fulfill({ json: {} });
       if (path.startsWith("/auth/")) return route.fulfill({ json: user });
       if (path.includes("/rpc/")) {
         const fn = path.split("/").pop();
