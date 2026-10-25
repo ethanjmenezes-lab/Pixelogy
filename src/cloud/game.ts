@@ -22,7 +22,7 @@ export async function fetchCloudGame(): Promise<CloudGame | null> {
     upgrade(db) {
       db.createObjectStore("snapshots");
     },
-  });
+  }).catch(() => null);
   try {
     const tables = [
       "player_discoveries",
@@ -101,16 +101,22 @@ export async function fetchCloudGame(): Promise<CloudGame | null> {
       offline: false,
       userId: session.user.id,
     };
-    await cache.put("snapshots", result, session.user.id);
+    // Offline caching is optional; quota or private-mode failures must not
+    // discard a successful authenticated server response.
+    await cache
+      ?.put("snapshots", result, session.user.id)
+      .catch(() => undefined);
     return result;
   } catch (error) {
     if (navigator.onLine) throw error;
-    const cached = await cache.get("snapshots", session.user.id);
+    const cached = await cache
+      ?.get("snapshots", session.user.id)
+      .catch(() => undefined);
     if (cached) return { ...cached, offline: true } as CloudGame;
     throw new Error(
       "This account has no offline save on this device. Connect to load it.",
     );
   } finally {
-    cache.close();
+    cache?.close();
   }
 }
