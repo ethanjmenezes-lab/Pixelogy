@@ -72,7 +72,7 @@ test("workshop separates main unlocks from equipped specials and persists select
     .scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath("workshop-moves.png") });
   await section
-    .getByRole("heading", { name: "Slot 3 · Equipment Special", exact: true })
+    .getByRole("heading", { name: "Equipment Special", exact: true })
     .scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath("workshop-specials.png") });
   await page
@@ -158,6 +158,7 @@ test("battle XP retries once, unlocks Shell Slam without replacing Pinch, and su
       { once: true },
     );
   });
+  test.setTimeout(90000);
   await page.getByRole("button", { name: "Start Battle", exact: true }).click();
   for (let i = 0; i < 12; i++) {
     if (
@@ -171,8 +172,14 @@ test("battle XP retries once, unlocks Shell Slam without replacing Pinch, and su
     const special = page.getByRole("button", { name: /^Basic Splash/ });
     if (await special.isEnabled()) await special.click();
     else await pinch.click();
-    await expect(page.locator(".turn-banner")).not.toContainText(
-      "Pebble is choosing",
+    await expect(page.locator(".battle-scene")).toHaveAttribute(
+      "data-phase",
+      "windup",
+    );
+    await expect(page.locator(".battle-scene")).toHaveAttribute(
+      "data-phase",
+      "ready",
+      { timeout: 10000 },
     );
   }
   await expect(

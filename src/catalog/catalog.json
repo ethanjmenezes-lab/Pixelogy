@@ -504,12 +504,12 @@
     "aliases": [
       "dispensing pump cap"
     ],
-    "rarity": "rare",
-    "description": "A recognizable dispensing pump cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "A clean, detached pump cap makes springy crab boots. Its crooked spout is the signature. A recognizable dispensing pump cap. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "bottle_cap",
     "gearId": "cap_boots",
     "sprite": "/shoredex/dispensing-pump-cap.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "clear-drink-cup",
@@ -572,12 +572,12 @@
     "aliases": [
       "bubble tea cup"
     ],
-    "rarity": "common",
-    "description": "A recognizable bubble tea cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "A wide straw and pearl-print cup make a playful crown. A recognizable bubble tea cup. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "disposable_cup",
     "gearId": "cup_crown",
     "sprite": "/shoredex/bubble-tea-cup.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "slush-cup",
@@ -1750,12 +1750,12 @@
     "aliases": [
       "biscuit tin"
     ],
-    "rarity": "common",
-    "description": "A recognizable biscuit tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "An intact round biscuit tin with a flower-stamped lid: a keepsake among everyday discoveries. A recognizable biscuit tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "other_litter",
     "gearId": null,
     "sprite": "/shoredex/biscuit-tin.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "chocolate-tin",
@@ -1869,12 +1869,12 @@
     "aliases": [
       "rounded pencil tin"
     ],
-    "rarity": "rare",
-    "description": "A recognizable rounded pencil tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "A rounded pencil case with a bright striped lid. A school-day companion joins the ShoreDex. A recognizable rounded pencil tin. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "other_litter",
     "gearId": null,
     "sprite": "/shoredex/rounded-pencil-tin.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "newspaper-sheet",
@@ -2346,12 +2346,12 @@
     "aliases": [
       "egg carton"
     ],
-    "rarity": "uncommon",
-    "description": "A recognizable egg carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "Six little chambers form a remarkable paper fortress. A recognizable egg carton. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "paper_cardboard",
     "gearId": "cardboard_shell",
     "sprite": "/shoredex/egg-carton.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "pizza-box",
@@ -2380,12 +2380,12 @@
     "aliases": [
       "cardboard cup carrier"
     ],
-    "rarity": "rare",
-    "description": "A recognizable cardboard cup carrier. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "Four cup cradles form a champion’s cardboard shell. A recognizable cardboard cup carrier. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "paper_cardboard",
     "gearId": "cardboard_shell",
     "sprite": "/shoredex/cardboard-cup-carrier.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "milk-carton",
@@ -2669,12 +2669,12 @@
     "aliases": [
       "spiral straw"
     ],
-    "rarity": "uncommon",
-    "description": "A recognizable spiral straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "A looping straw becomes a tide-twisting spear. A recognizable spiral straw. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "straw",
     "gearId": "straw_spear",
     "sprite": "/shoredex/spiral-straw.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "spoon-straw",
@@ -3213,12 +3213,12 @@
     "aliases": [
       "thread spool"
     ],
-    "rarity": "uncommon",
-    "description": "A recognizable thread spool. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
+    "rarity": "legendary",
+    "description": "Sunset thread winds around this pocket-sized legend. A recognizable thread spool. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.",
     "gearCategory": "other_litter",
     "gearId": null,
     "sprite": "/shoredex/thread-spool.svg",
-    "spriteStatus": "draft"
+    "spriteStatus": "finished"
   },
   {
     "id": "yarn-offcut",

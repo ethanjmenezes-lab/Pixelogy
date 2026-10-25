@@ -579,3 +579,171 @@
     animation: none;
   }
 }
+.cpu-trainer {
+  left: auto;
+  right: 3%;
+  bottom: 47%;
+  width: 14%;
+  animation: trainer-idle 3s steps(2) infinite;
+}
+.cpu-trainer > span {
+  display: block;
+  text-align: center;
+  background: #fff8df;
+  color: #594793;
+  border: 1px solid #594793;
+  font-size: 9px;
+  font-weight: 900;
+}
+.arena-crab.enemy {
+  right: 16%;
+  bottom: 26%;
+}
+.trainer-cheer {
+  animation: trainer-cheer 0.8s steps(3) !important;
+}
+.trainer-victory {
+  animation: trainer-cheer 1s steps(3) 3 !important;
+}
+.trainer-defeat {
+  filter: grayscale(0.6);
+  rotate: -8deg;
+}
+.combat-windup.attack-lunge,
+.combat-windup.dash-lunge,
+.combat-windup.multi-lunge {
+  animation: battle-strike 0.8s steps(4) both;
+}
+.combat-windup .snap-jaws {
+  opacity: 1;
+  animation: claw-snap 0.8s steps(3);
+}
+.move-fx {
+  position: absolute;
+  z-index: 3;
+  top: 25%;
+  left: 55%;
+  font-size: 28px;
+  color: #fff8df;
+  text-shadow: 2px 2px #594793;
+  pointer-events: none;
+  animation: pixel-impact 0.8s steps(4) both;
+}
+.fx-tidal_slam {
+  color: #25c6b2;
+  animation: water-travel 0.8s steps(5) both;
+}
+.fx-guard,
+.fx-can_counter {
+  inset: 10% 0;
+  text-align: center;
+  font-size: 80px;
+  color: #a9ddab;
+  animation: shield-grow 0.8s steps(4) both;
+}
+@keyframes battle-strike {
+  35% {
+    translate: -5px 3px;
+  }
+  90%,
+  100% {
+    translate: 24px -8px;
+  }
+}
+@keyframes pixel-impact {
+  0%,
+  55% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  100% {
+    opacity: 1;
+    scale: 1.5;
+  }
+}
+@keyframes water-travel {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 55px -25px;
+  }
+}
+@keyframes shield-grow {
+  from {
+    opacity: 0.3;
+    scale: 0.7;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes trainer-cheer {
+  50% {
+    translate: 0 -8px;
+    rotate: 6deg;
+  }
+}
+@keyframes trainer-idle {
+  50% {
+    translate: 0 -2px;
+  }
+}
+@keyframes claw-snap {
+  50% {
+    scale: 0.8;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-scene *,
+  .battle-scene *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.reduced-motion .battle-scene * {
+  animation: none !important;
+  transition: none !important;
+}
+[data-action="bottle_slash"].combat-windup .gear-bottle {
+  transform-origin: 10px 31px;
+  rotate: 0deg;
+  animation: bottle-swing 0.8s steps(4);
+}
+[data-action="can_counter"].combat-windup .gear-shield {
+  animation: battle-guard 0.8s steps(4);
+}
+[data-action="bag_snare"].combat-windup .gear-bag,
+[data-action="paper_barrage"].combat-windup .gear-paper {
+  animation: battle-guard 0.8s steps(4);
+}
+.fx-bag_snare {
+  color: #a9ddab;
+  font-size: 45px;
+}
+.fx-paper_barrage {
+  color: #fff8df;
+  animation: water-travel 0.8s steps(4);
+}
+.fx-cap_dash {
+  color: #25c6b2;
+}
+.landed-impact {
+  position: absolute;
+  left: 42%;
+  top: 25%;
+  color: #fff8df;
+  text-shadow: 3px 3px #f58a08;
+  font-size: 48px;
+  animation: shield-grow 0.4s steps(3);
+  z-index: 4;
+}
+@keyframes bottle-swing {
+  30% {
+    rotate: -20deg;
+  }
+  100% {
+    rotate: 45deg;
+  }
+}

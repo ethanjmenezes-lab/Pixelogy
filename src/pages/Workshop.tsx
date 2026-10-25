@@ -52,9 +52,7 @@ export function Workshop() {
     <>
       <div className="section-heading page-title">
         <div>
-          <span className="eyebrow">BUILT FROM YOUR LITTLE DISCOVERIES</span>
-          <h1>{movesOnly ? "Choose your attacks." : "The crab workshop."}</h1>
-          <p>A little resourceful. A lot of personality.</p>
+          <h1>{movesOnly ? "Moves" : "Crab Workshop"}</h1>
         </div>
         <Link className="button primary" to="/battle/practice">
           {fromBattle ? "Return to Matchup" : "Let’s battle"}{" "}
@@ -73,7 +71,6 @@ export function Workshop() {
               <span className="eyebrow">
                 YOUR CRAB / {preview ? "PREVIEW" : "EQUIPPED"}
               </span>
-              <span className="pill">RED & RESOURCEFUL</span>
             </div>
             <div className="workshop-crab">
               <Crab gear={equippedBlueprints(previewLoadout, items)} />
@@ -83,13 +80,37 @@ export function Workshop() {
                 <button
                   key={s}
                   className={`slot-button ${slot === s ? "selected" : ""}`}
+                  aria-label={slotLabels[s]}
                   aria-pressed={slot === s}
                   onClick={() => {
                     setSlot(s);
                     setPreview(null);
                   }}
                 >
-                  {loadout[s] ? <Check size={19} /> : <Plus size={19} />}
+                  {items.find((i) => i.id === loadout[s]) ? (
+                    <ItemArt item={items.find((i) => i.id === loadout[s])!} />
+                  ) : (
+                    <svg
+                      aria-hidden="true"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 16 16"
+                      shapeRendering="crispEdges"
+                      fill="currentColor"
+                    >
+                      <path
+                        d={
+                          [
+                            "M3 3h10v3h2v3H1V6h2z",
+                            "M4 2h8v2h2v8h-2v2H4v-2H2V4h2z",
+                            "M7 1h2v10h3v2H9v2H7v-2H4v-2h3z",
+                            "M2 2h12v8h-2v2h-2v2H6v-2H4v-2H2z",
+                            "M2 2h4v8h3v4H1V8h1zM10 2h4v8h2v4h-6z",
+                          ][slots.indexOf(s)]
+                        }
+                      />
+                    </svg>
+                  )}
                   <span>{slotLabels[s]}</span>
                 </button>
               ))}
@@ -127,21 +148,22 @@ export function Workshop() {
                 </div>
               ))}
             </div>
-            <p className="field-help">
-              Same little crab. Fair, fixed gear bonuses. Rarity is just for
-              looks.
-            </p>
           </section>
           <section className="panel gear-drawer">
-            <span className="eyebrow">FIND THE RIGHT FIT</span>
             <h2>{slotLabels[slot]} gear</h2>
-            <p>Choose a discovery to preview its look and stats.</p>
+
             {available.length ? (
               <div className="gear-list">
                 {available.map((item) => (
                   <button
                     key={item.id}
                     className={`gear-option ${preview === item.id ? "selected" : ""}`}
+                    aria-pressed={preview === item.id}
+                    aria-label={`${catalog[item.gearBlueprintId!].label} · ${Object.entries(
+                      catalog[item.gearBlueprintId!].statBonus,
+                    )
+                      .map(([s, v]) => `${s} +${v}`)
+                      .join(" · ")}`}
                     onClick={() => setPreview(item.id)}
                   >
                     <ItemArt item={item} />
@@ -166,13 +188,9 @@ export function Workshop() {
             ) : (
               <div className="drawer-empty">
                 <ShellIcon />
-                <h3>A little room to grow.</h3>
-                <p>
-                  Discover safe litter to unlock{" "}
-                  {slotLabels[slot].toLowerCase()} gear.
-                </p>
+                <h3>No Gear</h3>
                 <Link className="button secondary" to="/scan">
-                  Find your first piece <ArrowUpRight size={16} />
+                  Scan <ArrowUpRight size={16} />
                 </Link>
               </div>
             )}
@@ -194,10 +212,6 @@ export function Workshop() {
                 Unequip {slotLabels[slot].toLowerCase()}
               </button>
             )}
-            <div className="drawer-note">
-              Gear is yours to keep. Swap it, remove it, try something new.
-              Nothing gets used up.
-            </div>
           </section>
         </div>
       )}

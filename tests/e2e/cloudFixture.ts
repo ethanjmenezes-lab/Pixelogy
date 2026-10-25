@@ -8,7 +8,7 @@ import {
 } from "../../src/lib/battle";
 import { statsFor, type Equipment, type Collectible } from "../../src/lib/gear";
 import { defaultProfile } from "../../src/world/profile";
-export async function mockAccount(page: Page) {
+export async function mockAccount(page: Page, catalogId = "grocery-bag") {
   const userId = "11111111-1111-4111-8111-111111111111",
     discoveryId = "22222222-2222-4222-8222-222222222222";
   const user = {
@@ -68,7 +68,7 @@ export async function mockAccount(page: Page) {
       if (path.includes("/rpc/")) {
         const fn = path.split("/").pop();
         if (fn === "award_discovery") {
-          if (body.catalog_id !== "grocery-bag")
+          if (body.catalog_id !== catalogId)
             return route.fulfill({
               status: 400,
               json: { message: "Not a validated candidate" },
@@ -81,12 +81,12 @@ export async function mockAccount(page: Page) {
             state.discoveries.push({
               id,
               user_id: userId,
-              catalog_id: "grocery-bag",
+              catalog_id: catalogId,
               discovered_at: new Date().toISOString(),
             });
           }
           return route.fulfill({
-            json: { id, catalogId: "grocery-bag", isNew },
+            json: { id, catalogId, isNew },
           });
         }
         if (fn === "equip_discovery") {

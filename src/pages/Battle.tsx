@@ -37,6 +37,14 @@ function BattleSession() {
     cloudOffline,
   } = useGame();
   const requestLock = useRef(false);
+  const [requestPending, setRequestPending] = useState(false);
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
   const [networkError, setNetworkError] = useState("");
   const [reward, setReward] = useState<{
     id: string;
@@ -133,6 +141,7 @@ function BattleSession() {
   async function remoteAction(action: "turn" | "quit", move?: BattleAction) {
     if (requestLock.current || !session) return;
     requestLock.current = true;
+    setRequestPending(true);
     setNetworkError("");
     try {
       const next = await remoteRequest({
@@ -141,6 +150,7 @@ function BattleSession() {
         version: session.battle.version,
         move,
       });
+      if (!alive.current) return;
       setSession((current) =>
         current?.battle.id === next.id ? { ...current, battle: next } : current,
       );
@@ -149,6 +159,7 @@ function BattleSession() {
       setNetworkError((e as Error).message);
     } finally {
       requestLock.current = false;
+      if (alive.current) setRequestPending(false);
     }
   }
   function start() {
@@ -236,7 +247,10 @@ function BattleSession() {
         </p>
       )}
       <BattleArenaScreen
+        key={session.battle.id}
         {...session}
+        visible={visible}
+        requestPending={requestPending}
         rewardText={
           session.remote
             ? battle?.status === "completed"

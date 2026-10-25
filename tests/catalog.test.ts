@@ -28,7 +28,7 @@ it("has 200 stable distinct entries with real SVG assets and explicit art status
   }
   expect(
     shoreCatalog.filter((c) => c.spriteStatus === "finished"),
-  ).toHaveLength(40);
+  ).toHaveLength(48);
   expect(
     new Set(shoreCatalog.map((c) => readFileSync("public" + c.sprite, "utf8")))
       .size,
@@ -86,5 +86,21 @@ it("signs the exact user, candidate and expiry payload; edits invalidate signatu
   } finally {
     if (old === undefined) delete process.env.SCAN_SIGNING_SECRET;
     else process.env.SCAN_SIGNING_SECRET = old;
+  }
+});
+
+it("contains eight finished canonical Legendaries with distinct safe identities", () => {
+  const legendary = shoreCatalog.filter((c) => c.rarity === "legendary");
+  expect(legendary).toHaveLength(8);
+  expect(
+    new Set(legendary.map((c) => readFileSync("public" + c.sprite, "utf8")))
+      .size,
+  ).toBe(8);
+  for (const c of legendary) {
+    expect(c.spriteStatus).toBe("finished");
+    expect(
+      identify(c.name, c.material as ObjectRecognition["material"]).candidates,
+    ).toEqual([c.id]);
+    expect(c.name).not.toMatch(/glass|battery|chemical|blade/i);
   }
 });

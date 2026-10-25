@@ -40,9 +40,9 @@ test("menu routes return to the same place and profile persists", async ({
 }) => {
   await page.goto("/");
   for (const label of [
-    /^Scan A new/,
-    /^ShoreDex Your/,
-    /^My Crab Gear/,
+    /^Scan Camera/,
+    /^ShoreDex Collection/,
+    /^My Crab Equipment/,
     /^Battle Practice/,
     /^Leaderboard Online/,
   ]) {
@@ -121,7 +121,7 @@ test("poor accuracy and denied GPS never replace location with a fictional map",
     page.getByRole("heading", { name: "Waiting for a clearer location" }),
   ).toBeVisible();
   await openMenu(page);
-  await page.getByRole("link", { name: /^My Crab Gear/ }).click();
+  await page.getByRole("link", { name: /^My Crab Equipment/ }).click();
   await expect(page.locator(".feature-overlay")).toBeVisible();
 });
 test("permission denial leaves local features accessible", async ({ page }) => {
@@ -148,7 +148,7 @@ test("permission denial leaves local features accessible", async ({ page }) => {
   ).toBeVisible();
   await expect(page.locator(".gps-avatar")).toHaveCount(0);
   await openMenu(page);
-  await page.getByRole("link", { name: /^ShoreDex Your/ }).click();
+  await page.getByRole("link", { name: /^ShoreDex Collection/ }).click();
   await expect(page.locator(".feature-overlay")).toBeVisible();
 });
 test("map service failure offers retry without blocking local gameplay", async ({

@@ -7,6 +7,8 @@ import { type Stats } from "../lib/gear";
 import { catalog } from "../lib/gear";
 import type { BattleAction, BattleState, FighterState } from "../lib/battle";
 import { moves, moveValues, type MoveLoadout } from "../lib/moves";
+import { useCombatPresentation } from "./useCombatPresentation";
+import type { CombatPhase } from "./presentation";
 import { cpuSetup } from "../lib/battle";
 export function BattleIntroScreen({
   stats,
@@ -204,28 +206,44 @@ function HealthBar({ fighter }: { fighter: FighterState }) {
     </div>
   );
 }
-function BattleMessageBox({ battle }: { battle: BattleState }) {
+function BattleMessageBox({
+  battle,
+  phase,
+  action,
+}: {
+  battle: BattleState;
+  phase: CombatPhase;
+  action?: BattleState["log"][number];
+}) {
   const latest = battle.log.at(-1);
   return (
     <div className="battle-message">
       <div role="status">
         <p>
-          {latest ? describe(latest) : "The tide is turning. Ready your claws!"}
+          {phase === "windup" && action
+            ? `${moves[action.action].name}!`
+            : latest
+              ? `${latest.damage ? `${latest.damage} Damage!` : "Defend ready!"}${latest.counterDamage ? ` Counter ${latest.counterDamage}!` : ""}`
+              : "Ready!"}
         </p>
         <strong className="turn-banner">
-          {battle.status !== "active"
-            ? battle.status === "forfeited"
-              ? "Practice abandoned"
-              : battle.winnerId === "player"
-                ? "Victory! Nicely pinched."
-                : "Pebble wins. Ready for a rematch?"
-            : battle.currentActorId === "player"
-              ? "Your turn. Make a little wave."
-              : "Pebble is choosing a move…"}
+          {phase === "windup" && action
+            ? action.actorId === "cpu"
+              ? "Pebble’s Turn!"
+              : "Your move!"
+            : battle.status !== "active"
+              ? battle.status === "forfeited"
+                ? "Practice abandoned"
+                : battle.winnerId === "player"
+                  ? "Victory!"
+                  : "Pebble wins!"
+              : battle.currentActorId === "player"
+                ? "Your Turn!"
+                : "Pebble’s Turn!"}
         </strong>
       </div>
       <details className="battle-history">
-        <summary>Match notes · {battle.version} moves</summary>
+        <summary>Battle log · {battle.version} moves</summary>
         <div className="combat-log">
           {battle.log.length ? (
             battle.log.map((entry) => (
@@ -248,7 +266,9 @@ function BattleActionMenu({
   battle,
   act,
   quit,
+  disabled,
 }: {
+  disabled: boolean;
   battle: BattleState;
   act: (action: BattleAction) => void;
   quit: () => void;
@@ -262,6 +282,7 @@ function BattleActionMenu({
             className={`arena-move ${index === 1 ? "guard" : index === 2 ? "tidal_slam" : "pinch"}`}
             onClick={() => act(action)}
             disabled={
+              disabled ||
               battle.currentActorId !== "player" ||
               (battle.fighters[0].cooldowns[action] ?? 0) > 0
             }
@@ -282,9 +303,11 @@ function BattleActionMenu({
   );
 }
 export function BattleArenaScreen({
-  battle,
+  battle: authoritative,
   gear,
   trainer,
+  visible = true,
+  requestPending = false,
   act,
   quit,
   replay,
@@ -296,6 +319,8 @@ export function BattleArenaScreen({
   currentLevel,
 }: {
   battle: BattleState;
+  visible?: boolean;
+  requestPending?: boolean;
   gear: string[];
   trainer: Profile;
   act: (action: BattleAction) => void;
@@ -308,14 +333,18 @@ export function BattleArenaScreen({
   retryReward: () => void;
   currentLevel: number;
 }) {
+  const { battle, phase, action, resolving } = useCombatPresentation(
+    authoritative,
+    visible,
+  );
   const heading = useRef<HTMLHeadingElement>(null);
-  const ended = battle.status !== "active";
+  const ended = battle.status !== "active" && !resolving;
   useEffect(() => {
     heading.current?.focus();
   }, [battle.id, ended]);
-  const latest = battle.log.at(-1);
   return (
     <div
+      data-phase={phase}
       className="battle-scene"
       data-battle-id={battle.id}
       data-version={battle.version}
@@ -334,8 +363,28 @@ export function BattleArenaScreen({
             <HealthBar key={f.userId} fighter={f} />
           ))}
         </div>
-        <div className="battle-trainer">
+        <div
+          className={`battle-trainer ${ended ? (battle.winnerId === "player" ? "trainer-victory" : "trainer-defeat") : phase === "windup" && action?.actorId === "player" ? "trainer-cheer" : ""}`}
+        >
           <PlayerAvatar profile={trainer} facing="right" />
+        </div>
+        <div
+          className={`battle-trainer cpu-trainer ${ended ? (battle.winnerId === "cpu" ? "trainer-victory" : "trainer-defeat") : phase === "windup" && action?.actorId === "cpu" ? "trainer-cheer" : ""}`}
+          aria-label="Coral, Pebble’s CPU trainer"
+        >
+          <PlayerAvatar
+            profile={{
+              nickname: "Coral",
+              skin: 2,
+              hair: 2,
+              hairStyle: "long",
+              clothing: 1,
+              hat: "cap",
+              motion: trainer.motion,
+            }}
+            facing="left"
+          />
+          <span>CPU</span>
         </div>
         {battle.fighters.map((f, i) => (
           <div
@@ -344,23 +393,54 @@ export function BattleArenaScreen({
             data-gear={i === 0 ? gear.join(",") : "can_shield"}
           >
             <div
-              key={`${battle.id}-${battle.version}`}
+              key={`${battle.id}-${action?.turn}-${phase}`}
+              data-action={
+                action?.actorId === f.userId ? action.action : undefined
+              }
               className={
-                latest
-                  ? latest.actorId === f.userId
-                    ? moves[latest.action].animation
-                    : latest.damage
-                      ? "hit-reaction"
-                      : ""
-                  : ""
+                phase === "windup" && action?.actorId === f.userId
+                  ? `combat-windup ${moves[action.action].animation}`
+                  : phase === "impact" &&
+                      action &&
+                      ((action.actorId !== f.userId && action.damage) ||
+                        (action.actorId === f.userId && action.counterDamage))
+                    ? "hit-reaction"
+                    : ""
               }
             >
+              {phase === "windup" && action?.actorId === f.userId && (
+                <span
+                  aria-hidden="true"
+                  className={`move-fx fx-${action.action}`}
+                >
+                  {moves[action.action].effect === "guard" ||
+                  moves[action.action].effect === "counter"
+                    ? "◇"
+                    : action.action === "tidal_slam"
+                      ? "▪ ▪ ▪"
+                      : action.action === "bag_snare"
+                        ? "▦"
+                        : action.action === "paper_barrage"
+                          ? "▱ ▱"
+                          : action.action === "cap_dash"
+                            ? "≋"
+                            : "✦"}
+                </span>
+              )}
+              {phase === "impact" &&
+                action &&
+                action.actorId !== f.userId &&
+                action.damage > 0 && (
+                  <span className="landed-impact" aria-hidden="true">
+                    ✦
+                  </span>
+                )}
               <Crab gear={i === 0 ? gear : ["can_shield"]} label={f.nickname} />
             </div>
           </div>
         ))}
       </div>
-      <BattleMessageBox battle={battle} />
+      <BattleMessageBox battle={battle} phase={phase} action={action} />
       {ended ? (
         <div className="arena-results">
           <p role="status">
@@ -393,7 +473,25 @@ export function BattleArenaScreen({
           </div>
         </div>
       ) : (
-        <BattleActionMenu battle={battle} act={act} quit={quit} />
+        <BattleActionMenu
+          battle={battle}
+          act={(move) => {
+            if (
+              !resolving &&
+              !requestPending &&
+              visible &&
+              battle.status === "active"
+            )
+              act(move);
+          }}
+          quit={quit}
+          disabled={
+            resolving ||
+            requestPending ||
+            !visible ||
+            battle.status !== "active"
+          }
+        />
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { legends, legendaryArt } from "./legendary-art.mjs";
 import process from "node:process";
 import { mkdirSync, writeFileSync } from "node:fs";
 // Stable, authored species list. Brands and random colors never create species.
@@ -366,15 +367,26 @@ for (const [family, material, gearCategory, gearId, names] of groups)
       subtype: id,
       material,
       aliases,
-      rarity: v === 9 ? "rare" : v >= 6 ? "uncommon" : "common",
-      description: `A recognizable ${name.toLowerCase()}. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.`,
+      rarity: legends[id]
+        ? "legendary"
+        : v === 9
+          ? "rare"
+          : v >= 6
+            ? "uncommon"
+            : "common",
+      description:
+        (legends[id] ? legends[id][0] + " " : "") +
+        `A recognizable ${name.toLowerCase()}. Only empty, clean, intact nonhazardous litter is eligible. Never handle unsafe waste for a reward.`,
       gearCategory,
       gearId,
       sprite: `/shoredex/${id}.svg`,
-      spriteStatus: v < 2 ? "finished" : "draft",
+      spriteStatus: legends[id] || v < 2 ? "finished" : "draft",
     };
     records.push(row);
-    writeFileSync(`public/shoredex/${id}.svg`, art(family, v));
+    writeFileSync(
+      `public/shoredex/${id}.svg`,
+      legends[id] ? legendaryArt(id) : art(family, v),
+    );
   });
 writeFileSync(
   "src/catalog/catalog.json",

@@ -19,7 +19,8 @@ test("matchup, frozen preview, arena, guard, replay and exit", async ({
   await expect(
     page.getByRole("heading", { name: "Beach battle" }),
   ).toBeFocused();
-  await expect(page.locator(".battle-trainer svg")).toBeVisible();
+  await expect(page.locator(".battle-trainer svg")).toHaveCount(2);
+  await expect(page.locator(".cpu-trainer")).toBeVisible();
   await expect(page.locator(".arena-crab")).toHaveCount(2);
   await page.getByRole("button", { name: /^Defend/ }).click();
   await expect(page.getByText("Defend · next hit halved")).toBeVisible();
@@ -58,6 +59,7 @@ test("arena fits phones and landscape with reduced motion", async ({
   await page.getByRole("button", { name: "Start Battle", exact: true }).click();
   for (const size of [
     { width: 375, height: 667 },
+    { width: 375, height: 812 },
     { width: 390, height: 844 },
     { width: 430, height: 932 },
     { width: 844, height: 390 },
@@ -106,7 +108,7 @@ test("CPU pauses in background and an exited match cannot advance", async ({
   });
   await page.waitForTimeout(1100);
   await expect(page.locator(".battle-history summary")).toContainText(
-    "1 moves",
+    "0 moves",
   );
   await page.evaluate(() => {
     Object.defineProperty(document, "hidden", {

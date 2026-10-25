@@ -1,17 +1,17 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 export const menuItems = [
-  { to: "/scan", label: "Scan", caption: "A new discovery", icon: "scan" },
+  { to: "/scan", label: "Scan", caption: "Camera", icon: "scan" },
   {
     to: "/collection",
     label: "ShoreDex",
-    caption: "Your little treasures",
+    caption: "Collection",
     icon: "dex",
   },
   {
     to: "/workshop",
     label: "My Crab",
-    caption: "Gear up your buddy",
+    caption: "Equipment",
     icon: "crab",
   },
   {
@@ -29,7 +29,7 @@ export const menuItems = [
   {
     to: "/profile",
     label: "Profile / Settings",
-    caption: "Make yourself at home",
+    caption: "Account & settings",
     icon: "profile",
   },
 ];
@@ -77,8 +77,7 @@ export function GameMenu({ onClose }: { onClose: () => void }) {
       <div className="menu-handle" />
       <div className="menu-title">
         <div>
-          <small>YOUR NEXT LITTLE ADVENTURE</small>
-          <h2 id="menu-title">Where to, explorer?</h2>
+          <h2 id="menu-title">Adventure</h2>
         </div>
         <button
           className="pixel-close"
@@ -104,7 +103,6 @@ export function GameMenu({ onClose }: { onClose: () => void }) {
           </Link>
         ))}
       </div>
-      <p className="menu-note">A small discovery can start a big adventure.</p>
     </dialog>
   );
 }

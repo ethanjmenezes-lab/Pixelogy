@@ -32,7 +32,6 @@ export function WorkshopMoves() {
   }
   return (
     <section className="panel workshop-moves" aria-label="Crab moves">
-      <span className="eyebrow">TWO WAYS TO GROW</span>
       <h2>Moves</h2>
       <p>
         <strong>Crab level {level}</strong> · {progression.xp} battle XP ·{" "}
@@ -43,38 +42,36 @@ export function WorkshopMoves() {
         max={100}
         value={progression.xp % 100}
       />
-      <p>
-        Win +40 battle XP · loss +15 · exit +0. Battle XP is separate from
-        cleanup XP and your explorer level.
-      </p>
+      <details>
+        <summary>Battle XP & move rules</summary>
+        <p>
+          Win +40 battle XP · loss +15 · exit +0. Battle XP is separate from
+          cleanup XP and your explorer level. Specials require their equipped
+          gear.
+        </p>
+      </details>
       <p role="status">{notice}</p>
       {(
         [
           {
             slot: "main",
-            title: "Slot 1 · Main Attack",
+            title: "Main Attack",
             ids: mainMoves.map((m) => m.id),
           },
           {
             slot: "defend",
-            title: "Slot 2 · Defend",
+            title: "Defend",
             ids: ["guard"] as MoveId[],
           },
           {
             slot: "special",
-            title: "Slot 3 · Equipment Special",
+            title: "Equipment Special",
             ids: specials,
           },
         ] as const
       ).map((group) => (
         <div className="move-library" key={group.slot}>
           <h3>{group.title}</h3>
-          {group.slot === "special" && (
-            <p>
-              Specials need equipped gear, never a level. Unequipping their
-              source removes access.
-            </p>
-          )}
           {group.ids.map((id) => {
             const m = moves[id];
             const locked = m.level !== undefined && m.level > level;
@@ -90,7 +87,10 @@ export function WorkshopMoves() {
                     {m.name}
                     {selected ? " · Equipped" : locked ? " · Locked" : ""}
                   </h4>
-                  <p>{m.description}</p>
+                  <details>
+                    <summary>Move info</summary>
+                    <p>{m.description}</p>
+                  </details>
                   <p>
                     {moveValues(m)} · Cooldown:{" "}
                     {m.cooldown ? `${m.cooldown} own turns` : "none"}

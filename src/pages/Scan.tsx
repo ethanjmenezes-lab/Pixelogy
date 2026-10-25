@@ -193,7 +193,7 @@ function ScanSession() {
           </Link>
         </section>
       ) : saved && entry ? (
-        <section className="panel discovery-result">
+        <section className={`panel discovery-result ${entry.rarity}`}>
           <span className="eyebrow">
             {saved.isNew
               ? "NEW DISCOVERY"

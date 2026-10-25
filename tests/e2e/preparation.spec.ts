@@ -73,7 +73,7 @@ test("preparation actions, equipped move cards, and phone layouts", async ({
   }
   await page.getByRole("link", { name: "Change Attacks", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Choose your attacks." }),
+    page.getByRole("heading", { name: "Moves", level: 1 }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Unlock at level 3", exact: true }),
@@ -81,7 +81,7 @@ test("preparation actions, equipped move cards, and phone layouts", async ({
   await page.getByRole("link", { name: "Done · Return to Matchup" }).click();
   await page.getByRole("link", { name: "Change Gear", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "The crab workshop." }),
+    page.getByRole("heading", { name: "Crab Workshop" }),
   ).toBeVisible();
   await page
     .getByRole("link", { name: "Return to Matchup", exact: true })

@@ -18,6 +18,7 @@ test.beforeEach(async ({ page }) => {
 test("AI discovery → saved gear → CPU battle → persistent optional cleanup", async ({
   page,
 }) => {
+  test.setTimeout(90000);
   let aiRequests = 0;
   page.on("request", (req) => {
     if (req.url().includes("/api/analyze")) aiRequests++;
@@ -27,7 +28,7 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
     page.getByRole("region", { name: "Pixelogy GPS overworld" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Open crab menu" }).click();
-  await page.getByRole("link", { name: /^Scan A new discovery/ }).click();
+  await page.getByRole("link", { name: /^Scan Camera/ }).click();
   await takePhoto(page);
   await identify(page);
   await page
@@ -86,6 +87,11 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
       "data-version",
       previous!,
     );
+    await expect(page.locator(".battle-scene")).toHaveAttribute(
+      "data-phase",
+      "ready",
+      { timeout: 10000 },
+    );
   }
   await expect(
     page.getByRole("heading", { name: "Practice complete." }),
@@ -93,9 +99,7 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
   await expect(page.locator(".hud-info > small")).toContainText("0");
   await page.getByRole("link", { name: "Back to world", exact: true }).click();
   await page.getByRole("button", { name: "Open crab menu" }).click();
-  await page
-    .getByRole("link", { name: /^ShoreDex Your little treasures/ })
-    .click();
+  await page.getByRole("link", { name: /^ShoreDex Collection/ }).click();
   await page.locator(".dex-entry.unlocked").click();
   await page
     .getByRole("button", { name: "I safely disposed of this litter" })
@@ -442,7 +446,7 @@ test("ShoreDex is dense, numbered and keyboard accessible at phone sizes", async
     const columns = await grid.evaluate(
       (el) => getComputedStyle(el).gridTemplateColumns.split(" ").length,
     );
-    expect(columns).toBe(width === 430 ? 5 : 4);
+    expect(columns).toBe(5);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -463,7 +467,7 @@ test("ShoreDex is dense, numbered and keyboard accessible at phone sizes", async
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.getByRole("searchbox").fill("grocery bag");
   await expect(page.locator(".dex-entry")).toHaveCount(1);
-  await page.getByRole("checkbox", { name: "Owned only" }).check();
+  await page.getByRole("button", { name: "owned", exact: true }).click();
   await expect(page.getByText("No entries match these filters.")).toBeVisible();
 });
 

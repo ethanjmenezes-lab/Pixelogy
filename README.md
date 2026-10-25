@@ -51,4 +51,6 @@ npm run test:e2e
 
 Browser tests use explicit synthetic camera/location fixtures; they do not establish native hardware behavior. See revision notes for actual latest results. No connected Figma file was used; original code/art follows the written design specification.
 
-Current catalog: **200 entries, 40 finished starter sprites, 160 explicitly marked draft sprites**. Tests cover all canonical names and representative aliases, blocked/unknown recognition, server-derived battles, account UI, duplicate quantities and legacy gameplay. See [cloud architecture and setup](docs/SHOREDEX_CLOUD.md) and [revision notes](docs/REVISION_NOTES.md) for verification and the outstanding cloud activation requirements.
+Current catalog: **200 entries, 48 finished sprites (including 8 canonical Legendaries), 152 explicitly marked draft sprites**. Tests cover all canonical names and representative aliases, blocked/unknown recognition, server-derived battles, account UI, duplicate quantities and legacy gameplay. See [cloud architecture and setup](docs/SHOREDEX_CLOUD.md) and [revision notes](docs/REVISION_NOTES.md) for verification and the outstanding cloud activation requirements.
+
+Coastal RPG UI and battle presentation: [implementation notes](docs/RPG_POLISH.md).

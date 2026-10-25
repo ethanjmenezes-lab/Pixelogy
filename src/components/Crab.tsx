@@ -39,7 +39,7 @@ export function Crab({
         <path d="M9 19h6v5H9zM49 19h6v5h-6z" />
       </g>
       {has("magazine_mail") && (
-        <g>
+        <g className="gear-paper">
           <path d="M22 34h20v14H22z" fill="#709d8c" />
           <path d="M24 35h6v11h-6z" fill="#e8e7af" />
           <path d="M32 36h8v3h-8zm0 5h7v2h-7z" fill="#244d53" />
@@ -59,7 +59,7 @@ export function Crab({
         </g>
       )}
       {has("bottle_blade") && (
-        <g transform="rotate(-25 10 31)">
+        <g className="gear-bottle" transform="rotate(-25 10 31)">
           <path
             d="M7 15h6v19H7zM8 9h4v7H8z"
             fill="#a8d8c7"
@@ -75,7 +75,7 @@ export function Crab({
         <path d="M8 8h3v33H8zM8 8h10v3H8z" fill="#e9cb6b" />
       )}
       {has("can_shield") && (
-        <g>
+        <g className="gear-shield">
           <path d="M47 27h12v3h3v15h-3v4H47v-4h-3V30h3z" fill="#729899" />
           <path d="M48 29h10v16H48z" fill="#b1d1c4" />
           <path d="M50 33h6v8h-6z" fill="#e0b85c" />
@@ -84,7 +84,7 @@ export function Crab({
       )}
       <path d="M24 18h5v10h-5zm12 0h5v10h-5" fill="#a93732" />
       {has("bag_helm") && (
-        <g>
+        <g className="gear-bag">
           <path d="M21 12h4V7h5v7h5V7h5v6h4v10H21z" fill="#dbe4bd" />
           <path d="M23 18h19v6H23z" fill="#a9c19e" />
           <path d="M27 15h10v3H27z" fill="#f4efcf" />

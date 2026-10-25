@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Shell, Check, X } from "lucide-react";
 import { useGame } from "../components/GameContext";
@@ -13,8 +19,14 @@ export function Collection() {
   const [category, setCategory] = useState("all"),
     [rarity, setRarity] = useState("all"),
     [slot, setSlot] = useState("all"),
-    [owned, setOwned] = useState(false),
+    [ownership, setOwnership] = useState("all"),
     [search, setSearch] = useState("");
+  const filterTrigger = useRef<HTMLButtonElement>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draft, setDraft] = useState({ category, rarity, slot });
+  const activeFilters = [category, rarity, slot].filter(
+    (v) => v !== "all",
+  ).length;
   const [selected, setSelected] = useState<CatalogEntry | null>(null),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
@@ -29,7 +41,8 @@ export function Collection() {
     (c) =>
       (category === "all" || c.category === category) &&
       (rarity === "all" || c.rarity === rarity) &&
-      (!owned || byCatalog.has(c.id)) &&
+      (ownership === "all" ||
+        (ownership === "owned" ? byCatalog.has(c.id) : !byCatalog.has(c.id))) &&
       (slot === "all" || (c.gearId && catalog[c.gearId].slot === slot)) &&
       [c.name, ...c.aliases].some((n) =>
         n.toLowerCase().includes(search.toLowerCase()),
@@ -45,7 +58,7 @@ export function Collection() {
     <>
       <div className="page-title">
         <span className="eyebrow">YOUR COASTAL FIELD GUIDE</span>
-        <h1>The ShoreDex.</h1>
+        <h1>ShoreDex</h1>
         <p>
           <strong>
             {byCatalog.size} / {shoreCatalog.length}
@@ -53,7 +66,7 @@ export function Collection() {
           species discovered · {items.filter((i) => i.catalogId).length} finds
         </p>
         <Link className="button primary" to="/scan">
-          Discover a collectible
+          Scan
         </Link>
       </div>
       {!userId && (
@@ -68,69 +81,113 @@ export function Collection() {
           equipment.
         </p>
       )}
-      <div className="dex-filters">
-        <label>
-          Search
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Bottle, paper, can…"
-          />
-        </label>
-        <label>
-          Category
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="all">All categories</option>
-            {[...new Set(shoreCatalog.map((c) => c.category))].map((c) => (
-              <option key={c} value={c}>
-                {c.replaceAll("_", " ")}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Rarity
-          <select value={rarity} onChange={(e) => setRarity(e.target.value)}>
-            <option value="all">All rarities</option>
-            {["common", "uncommon", "rare", "legendary"].map((r) => (
-              <option key={r}>{r}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Equipment
-          <select value={slot} onChange={(e) => setSlot(e.target.value)}>
-            <option value="all">All slots</option>
-            {slots.map((s) => (
-              <option key={s} value={s}>
-                {slotLabels[s]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="consent">
-          <input
-            type="checkbox"
-            checked={owned}
-            onChange={(e) => setOwned(e.target.checked)}
-          />
-          Owned only
-        </label>
+      <div className="dex-toolbar">
+        <input
+          aria-label="Search ShoreDex"
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search ShoreDex…"
+        />
+        <button
+          className="button secondary"
+          ref={filterTrigger}
+          onClick={() => {
+            setDraft({ category, rarity, slot });
+            setFiltersOpen(true);
+          }}
+        >
+          Filter{activeFilters ? ` · ${activeFilters}` : ""}
+        </button>
       </div>
-      <p className="field-help">
-        {filtered.length} entries · Draft artwork is marked in details.
+      <div className="dex-tabs" aria-label="Discovery filters">
+        {["all", "owned", "undiscovered"].map((v) => (
+          <button
+            key={v}
+            aria-pressed={ownership === v}
+            onClick={() => setOwnership(v)}
+          >
+            {v}
+          </button>
+        ))}
+      </div>
+      <p className="field-help" role="status">
+        {filtered.length} entries
       </p>
+      {filtersOpen && (
+        <ItemDialog
+          onClose={() => setFiltersOpen(false)}
+          sheet
+          restoreFocus={filterTrigger}
+        >
+          <div className="dialog-top">
+            <h2 id="item-title">Filter ShoreDex</h2>
+            <button
+              className="icon-button"
+              aria-label="Close filters"
+              onClick={() => setFiltersOpen(false)}
+            >
+              <X />
+            </button>
+          </div>
+          {(
+            [
+              [
+                "category",
+                "Category",
+                [...new Set(shoreCatalog.map((c) => c.category))],
+              ],
+              ["rarity", "Rarity", ["common", "uncommon", "rare", "legendary"]],
+              ["slot", "Equipment Slot", slots],
+            ] as const
+          ).map(([key, title, values]) => (
+            <fieldset className="filter-chip-group" key={key}>
+              <legend>{title}</legend>
+              {["all", ...values].map((v) => (
+                <button
+                  key={v}
+                  aria-pressed={draft[key] === v}
+                  onClick={() => setDraft({ ...draft, [key]: v })}
+                >
+                  {v === "all"
+                    ? "Any"
+                    : key === "slot"
+                      ? slotLabels[v as keyof typeof slotLabels]
+                      : v.replaceAll("_", " ")}
+                </button>
+              ))}
+            </fieldset>
+          ))}
+          <div className="filter-sheet-actions">
+            <button
+              className="button secondary"
+              onClick={() =>
+                setDraft({ category: "all", rarity: "all", slot: "all" })
+              }
+            >
+              Reset
+            </button>
+            <button
+              className="button primary"
+              onClick={() => {
+                setCategory(draft.category);
+                setRarity(draft.rarity);
+                setSlot(draft.slot);
+                setFiltersOpen(false);
+              }}
+            >
+              Apply
+            </button>
+          </div>
+        </ItemDialog>
+      )}
       <div className="dex-grid">
         {filtered.map((c) => {
           const found = byCatalog.has(c.id);
           return (
             <button
               key={c.id}
-              className={`dex-entry ${found ? "unlocked" : "locked"}`}
+              className={`dex-entry ${found ? "unlocked " + c.rarity : "locked"}`}
               aria-label={`#${c.number} ${found ? c.name : "Undiscovered"}`}
               onClick={() => {
                 setSelected(c);
@@ -313,11 +370,11 @@ function LegacyCollection() {
       <div className="section-heading page-title">
         <div>
           <span className="eyebrow">YOUR POCKET-SIZED FIELD JOURNAL</span>
-          <h1>The ShoreDex.</h1>
+          <h1>ShoreDex</h1>
           <p>Every little find has a place here.</p>
         </div>
         <Link className="button primary" to="/scan">
-          Find something new <ArrowUpRight size={18} />
+          Scan <ArrowUpRight size={18} />
         </Link>
       </div>
       <div className="collection-toolbar">
@@ -366,7 +423,7 @@ function LegacyCollection() {
             Your card and gear unlock without a disposal claim.
           </p>
           <Link className="button primary" to="/scan">
-            Start discovering <ArrowUpRight size={16} />
+            Scan <ArrowUpRight size={16} />
           </Link>
         </div>
       )}
@@ -447,19 +504,39 @@ function LegacyCollection() {
 function ItemDialog({
   children,
   onClose,
+  sheet = false,
+  restoreFocus,
 }: {
   children: ReactNode;
   onClose: () => void;
+  sheet?: boolean;
+  restoreFocus?: RefObject<HTMLButtonElement | null>;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    ref.current?.showModal();
-    return () => ref.current?.close();
-  }, []);
+    const dialog = ref.current!;
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      restoreFocus?.current?.focus();
+    };
+  }, [restoreFocus]);
   return (
     <dialog
       ref={ref}
-      className="item-dialog"
+      className={`item-dialog ${sheet ? "filter-sheet" : ""}`}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          const r = e.currentTarget.getBoundingClientRect();
+          if (
+            e.clientX < r.left ||
+            e.clientX > r.right ||
+            e.clientY < r.top ||
+            e.clientY > r.bottom
+          )
+            onClose();
+        }
+      }}
       aria-labelledby="item-title"
       onCancel={onClose}
     >
