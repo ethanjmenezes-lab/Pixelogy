@@ -43,8 +43,18 @@ function ScanSession() {
   useEffect(() => {
     mounted.current = true;
     void readConsent()
-      .then(setConsent)
-      .finally(() => setReady(true));
+      .then((value) => {
+        if (mounted.current) setConsent(value);
+      })
+      .catch(() => {
+        if (mounted.current)
+          setError(
+            "Could not read your privacy preference. Enable scanning below to retry, or return to the world.",
+          );
+      })
+      .finally(() => {
+        if (mounted.current) setReady(true);
+      });
     return () => {
       mounted.current = false;
       generation.current++;
@@ -63,8 +73,8 @@ function ScanSession() {
     lock.current = false;
     setBusy(false);
   }
-  async function analyze(image: string) {
-    if (!consent || !userId || lock.current) return;
+  async function analyze(image: string, justConsented = false) {
+    if ((!consent && !justConsented) || !userId || lock.current) return;
     reset();
     const version = generation.current;
     const abort = new AbortController();
@@ -98,6 +108,7 @@ function ScanSession() {
       if (!mounted.current || generation.current !== version) return;
       if (!(await readConsent()))
         throw new Error("Photo analysis consent was revoked.");
+      if (!mounted.current || generation.current !== version) return;
       setAnalysis(result);
       setSelected(result.status === "matched" ? result.candidates[0] : "");
       setMode(
@@ -128,7 +139,8 @@ function ScanSession() {
       setSource(image);
       void analyze(image);
     } catch (e) {
-      setError((e as Error).message);
+      if (mounted.current && version === generation.current)
+        setError((e as Error).message);
     }
   }
   async function save() {
@@ -173,7 +185,7 @@ function ScanSession() {
     <>
       <div className="page-title">
         <span className="eyebrow">FIND YOUR NEXT SHOReDEX ENTRY</span>
-        <h1>Discover something good.</h1>
+        <h1>Scan</h1>
         <p>A real-world find. An original pixel collectible.</p>
       </div>
       {error && (
@@ -266,6 +278,14 @@ function ScanSession() {
         </section>
       ) : (
         <section className="scan-flow panel" data-scan-state={mode}>
+          {ready && !source && <CameraCapture onPhoto={capture} />}
+          {source && (
+            <img
+              className="scan-source"
+              src={source}
+              alt="Private captured photo"
+            />
+          )}
           {!ready ? (
             <p>Getting your camera ready…</p>
           ) : !consent ? (
@@ -282,7 +302,10 @@ function ScanSession() {
                 onClick={() => {
                   setBusy(true);
                   void saveConsent(true)
-                    .then(() => setConsent(true))
+                    .then(() => {
+                      setConsent(true);
+                      if (source) return analyze(source, true);
+                    })
                     .catch((e) => setError(e.message))
                     .finally(() => setBusy(false));
                 }}
@@ -295,14 +318,6 @@ function ScanSession() {
             </>
           ) : (
             <>
-              {!source && <CameraCapture onPhoto={capture} />}
-              {source && (
-                <img
-                  className="scan-source"
-                  src={source}
-                  alt="Private captured photo"
-                />
-              )}
               {mode === "analyzing" && (
                 <p role="status">
                   Identifying your find and matching the ShoreDex…
@@ -366,7 +381,7 @@ function ScanSession() {
                     disabled={busy || !selected || !reviewed}
                     onClick={() => void save()}
                   >
-                    Save discovery
+                    {busy ? "Saving…" : "Save discovery"}
                   </button>
                 </>
               )}

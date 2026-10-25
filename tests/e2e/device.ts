@@ -97,7 +97,9 @@ export async function enableScanning(page: Page) {
     name: "Enable automatic scanning",
   });
   await expect(
-    enable.or(page.getByRole("button", { name: "Take photo", exact: true })),
+    enable
+      .or(page.getByRole("button", { name: "Take photo", exact: true }))
+      .first(),
   ).toBeVisible();
   if (await enable.isVisible()) await enable.click();
 }

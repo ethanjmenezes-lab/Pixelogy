@@ -235,7 +235,7 @@ test("keyboard navigation and reduced motion remain usable", async ({
   await page.getByRole("link", { name: "Scan a discovery" }).focus();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("heading", { name: "Discover something good." }),
+    page.getByRole("heading", { name: "Scan", exact: true }),
   ).toBeVisible();
 });
 test("remembered consent analyzes later captures and can be revoked", async ({
@@ -527,4 +527,65 @@ test("account practice remains available offline without awarding cloud XP", asy
     page.getByText(/Offline practice · no battle XP awarded/),
   ).toBeVisible();
   await context.setOffline(false);
+});
+
+test("capture locks during encoding and ignores callbacks after leaving", async ({
+  page,
+}) => {
+  let calls = 0;
+  page.on("request", (request) => {
+    if (request.url().includes("/api/analyze")) calls++;
+  });
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.toBlob;
+    HTMLCanvasElement.prototype.toBlob = function (callback, type, quality) {
+      original.call(
+        this,
+        (blob) => setTimeout(() => callback(blob), 500),
+        type,
+        quality,
+      );
+    };
+  });
+  await page.goto("/scan");
+  await enableScanning(page);
+  await expect(
+    page.getByRole("button", { name: "Take photo", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Take photo", exact: true })
+    .evaluate((button: HTMLButtonElement) => {
+      button.click();
+      button.click();
+    });
+  await expect(
+    page.getByRole("button", { name: "Capturing…", exact: true }),
+  ).toBeDisabled();
+  await identify(page);
+  expect(calls).toBe(1);
+  await page.getByRole("button", { name: "Retake photo", exact: true }).click();
+  await page.getByRole("button", { name: "Take photo", exact: true }).click();
+  await page.getByRole("link", { name: "Back to world", exact: true }).click();
+  await page.waitForTimeout(1200);
+  expect(calls).toBe(1);
+  await expect(page.locator(".scan-source")).toHaveCount(0);
+});
+
+test("camera captures locally before consent and analyzes the held photo only after opt-in", async ({
+  page,
+}) => {
+  let requests = 0;
+  page.on("request", (req) => {
+    if (req.url().includes("/api/analyze")) requests++;
+  });
+  await page.goto("/scan");
+  await page.getByRole("button", { name: "Take photo", exact: true }).click();
+  await expect(page.getByAltText("Private captured photo")).toBeVisible();
+  expect(requests).toBe(0);
+  await page.getByRole("button", { name: "Enable automatic scanning" }).click();
+  await expect(page.locator(".scan-flow")).toHaveAttribute(
+    "data-scan-state",
+    "review",
+  );
+  expect(requests).toBe(1);
 });

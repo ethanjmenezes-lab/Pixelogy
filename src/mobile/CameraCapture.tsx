@@ -5,6 +5,9 @@ import { captureNative, takeRestored, onRestored } from "./capture";
 export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
   const video = useRef<HTMLVideoElement>(null),
     stream = useRef<MediaStream | null>(null);
+  const captureLock = useRef(false),
+    generation = useRef(0);
+  const [capturing, setCapturing] = useState(false);
   const callback = useRef(onPhoto);
   callback.current = onPhoto;
   const [error, setError] = useState(""),
@@ -13,12 +16,15 @@ export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
   useEffect(() => {
     let active = true;
     const stop = () => {
+      generation.current++;
+      captureLock.current = false;
+      setCapturing(false);
       stream.current?.getTracks().forEach((t) => t.stop());
       stream.current = null;
       setReady(false);
     };
     const accept = (file: File) => {
-      if (active) {
+      if (active && !document.hidden) {
         stop();
         callback.current(file);
       }
@@ -42,7 +48,7 @@ export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
           audio: false,
         })
         .then((media) => {
-          if (!active) {
+          if (!active || document.hidden) {
             media.getTracks().forEach((t) => t.stop());
             return;
           }
@@ -79,29 +85,51 @@ export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
   }, [attempt]);
   async function take() {
     const element = video.current;
-    if (!element?.videoWidth) return;
-    const canvas = document.createElement("canvas");
-    const scale = Math.min(
-      1,
-      1280 / Math.max(element.videoWidth, element.videoHeight),
-    );
-    canvas.width = Math.round(element.videoWidth * scale);
-    canvas.height = Math.round(element.videoHeight * scale);
-    canvas
-      .getContext("2d")!
-      .drawImage(element, 0, 0, canvas.width, canvas.height);
-    canvas.toBlob(
-      (blob) => {
-        if (blob) {
-          stream.current?.getTracks().forEach((t) => t.stop());
-          callback.current(
-            new File([blob], "capture.jpg", { type: "image/jpeg" }),
-          );
-        }
-      },
-      "image/jpeg",
-      0.85,
-    );
+    if (
+      !element?.videoWidth ||
+      !ready ||
+      captureLock.current ||
+      document.hidden
+    )
+      return;
+    captureLock.current = true;
+    setCapturing(true);
+    const version = generation.current;
+    try {
+      const canvas = document.createElement("canvas");
+      const scale = Math.min(
+        1,
+        1280 / Math.max(element.videoWidth, element.videoHeight),
+      );
+      canvas.width = Math.round(element.videoWidth * scale);
+      canvas.height = Math.round(element.videoHeight * scale);
+      canvas
+        .getContext("2d")!
+        .drawImage(element, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        (blob) => {
+          if (version !== generation.current || document.hidden) return;
+          if (blob) {
+            setReady(false);
+            stream.current?.getTracks().forEach((t) => t.stop());
+            stream.current = null;
+            callback.current(
+              new File([blob], "capture.jpg", { type: "image/jpeg" }),
+            );
+          } else {
+            setError("Photo could not be captured. Please retry.");
+          }
+          captureLock.current = false;
+          setCapturing(false);
+        },
+        "image/jpeg",
+        0.85,
+      );
+    } catch {
+      captureLock.current = false;
+      setCapturing(false);
+      setError("Photo could not be captured. Please retry.");
+    }
   }
   return (
     <div>
@@ -122,8 +150,12 @@ export function CameraCapture({ onPhoto }: { onPhoto: (file: File) => void }) {
       {error && <p role="alert">{error}</p>}
       <div className="camera-actions">
         {!native && ready && (
-          <button className="button primary" onClick={() => void take()}>
-            Take photo
+          <button
+            className="button primary"
+            disabled={capturing}
+            onClick={() => void take()}
+          >
+            {capturing ? "Capturing…" : "Take photo"}
           </button>
         )}
         {(!ready || error) && (
