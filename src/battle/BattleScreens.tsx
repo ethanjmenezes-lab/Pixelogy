@@ -229,17 +229,19 @@ function BattleMessageBox({
         <strong className="turn-banner">
           {phase === "windup" && action
             ? action.actorId === "cpu"
-              ? "Pebble’s Turn!"
+              ? `${battle.fighters[1].nickname.replace(" · CPU", "")}’s Turn!`
               : "Your move!"
             : battle.status !== "active"
               ? battle.status === "forfeited"
-                ? "Practice abandoned"
+                ? battle.mode === "story"
+                  ? "Stage abandoned"
+                  : "Practice abandoned"
                 : battle.winnerId === "player"
                   ? "Victory!"
-                  : "Pebble wins!"
+                  : `${battle.fighters[1].nickname} wins!`
               : battle.currentActorId === "player"
                 ? "Your Turn!"
-                : "Pebble’s Turn!"}
+                : `${battle.fighters[1].nickname.replace(" · CPU", "")}’s Turn!`}
         </strong>
       </div>
       <details className="battle-history">
@@ -248,7 +250,7 @@ function BattleMessageBox({
           {battle.log.length ? (
             battle.log.map((entry) => (
               <p key={entry.turn}>
-                {entry.turn}. {describe(entry)}
+                {entry.turn}. {describe(entry, battle.fighters[1].nickname)}
               </p>
             ))
           ) : (
@@ -259,8 +261,8 @@ function BattleMessageBox({
     </div>
   );
 }
-function describe(entry: BattleState["log"][number]) {
-  return `${entry.actorId === "player" ? "You" : "Pebble (CPU)"} used ${moves[entry.action].name}${entry.damage ? ` · ${entry.damage} damage${entry.hits > 1 ? ` (${entry.hits} hits)` : ""}` : ""}${entry.effect ? ` · ${entry.effect}` : ""}${entry.counterDamage ? ` · counter dealt ${entry.counterDamage} damage` : ""}.`;
+function describe(entry: BattleState["log"][number], enemy: string) {
+  return `${entry.actorId === "player" ? "You" : enemy} used ${moves[entry.action].name}${entry.damage ? ` · ${entry.damage} damage${entry.hits > 1 ? ` (${entry.hits} hits)` : ""}` : ""}${entry.effect ? ` · ${entry.effect}` : ""}${entry.counterDamage ? ` · counter dealt ${entry.counterDamage} damage` : ""}.`;
 }
 function BattleActionMenu({
   battle,
@@ -297,7 +299,7 @@ function BattleActionMenu({
         ))}
       </div>
       <button className="arena-exit" onClick={quit}>
-        Exit Practice
+        {battle.mode === "story" ? "Exit Stage" : "Exit Practice"}
       </button>
     </div>
   );
@@ -317,6 +319,8 @@ export function BattleArenaScreen({
   rewardFailed,
   retryReward,
   currentLevel,
+  opponent,
+  storyTitle,
 }: {
   battle: BattleState;
   visible?: boolean;
@@ -332,6 +336,8 @@ export function BattleArenaScreen({
   rewardFailed: boolean;
   retryReward: () => void;
   currentLevel: number;
+  opponent?: Profile;
+  storyTitle?: string;
 }) {
   const { battle, phase, action, resolving } = useCombatPresentation(
     authoritative,
@@ -352,9 +358,13 @@ export function BattleArenaScreen({
       <h1 className="battle-scene-title" ref={heading} tabIndex={-1}>
         {ended
           ? battle.status === "forfeited"
-            ? "Practice ended."
-            : "Practice complete."
-          : "Beach battle"}
+            ? storyTitle
+              ? "Stage ended."
+              : "Practice ended."
+            : storyTitle
+              ? "Stage complete."
+              : "Practice complete."
+          : (storyTitle ?? "Beach battle")}
       </h1>
       <div className="battle-stage">
         <BattleBackground />
@@ -370,18 +380,24 @@ export function BattleArenaScreen({
         </div>
         <div
           className={`battle-trainer cpu-trainer ${ended ? (battle.winnerId === "cpu" ? "trainer-victory" : "trainer-defeat") : phase === "windup" && action?.actorId === "cpu" ? "trainer-cheer" : ""}`}
-          aria-label="Coral, Pebble’s CPU trainer"
+          aria-label={
+            opponent
+              ? `${opponent.nickname}, CPU trainer`
+              : "Coral, Pebble’s CPU trainer"
+          }
         >
           <PlayerAvatar
-            profile={{
-              nickname: "Coral",
-              skin: 2,
-              hair: 2,
-              hairStyle: "long",
-              clothing: 1,
-              hat: "cap",
-              motion: trainer.motion,
-            }}
+            profile={
+              opponent ?? {
+                nickname: "Coral",
+                skin: 2,
+                hair: 2,
+                hairStyle: "long",
+                clothing: 1,
+                hat: "cap",
+                motion: trainer.motion,
+              }
+            }
             facing="left"
           />
           <span>CPU</span>
@@ -390,7 +406,9 @@ export function BattleArenaScreen({
           <div
             key={f.userId}
             className={`arena-crab ${i === 0 ? "ally" : "enemy"} ${f.currentHp === 0 ? "knocked-out" : ""}`}
-            data-gear={i === 0 ? gear.join(",") : "can_shield"}
+            data-gear={
+              i === 0 ? gear.join(",") : f.snapshotBlueprints.join(",")
+            }
           >
             <div
               key={`${battle.id}-${action?.turn}-${phase}`}
@@ -435,7 +453,10 @@ export function BattleArenaScreen({
                     ✦
                   </span>
                 )}
-              <Crab gear={i === 0 ? gear : ["can_shield"]} label={f.nickname} />
+              <Crab
+                gear={i === 0 ? gear : f.snapshotBlueprints}
+                label={f.nickname}
+              />
             </div>
           </div>
         ))}
@@ -465,7 +486,7 @@ export function BattleArenaScreen({
               Play again
             </button>
             <button className="button secondary" onClick={intro}>
-              Return to Matchup
+              {storyTitle ? "Continue story" : "Return to Matchup"}
             </button>
             <Link className="button secondary" to="/workshop">
               Change Gear

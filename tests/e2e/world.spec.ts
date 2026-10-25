@@ -45,6 +45,7 @@ test("menu routes return to the same place and profile persists", async ({
     /^My Crab Equipment/,
     /^Battle Practice/,
     /^Leaderboard Online/,
+    /^Story Mode Adventure/,
   ]) {
     await openMenu(page);
     await page.getByRole("link", { name: label }).click();
@@ -53,8 +54,7 @@ test("menu routes return to the same place and profile persists", async ({
       .getByRole("link", { name: "Back to world", exact: true })
       .click();
   }
-  await openMenu(page);
-  await page.getByRole("link", { name: /^Profile \/ Settings/ }).click();
+  await page.getByRole("link", { name: "Open explorer profile" }).click();
   await page.getByLabel("Explorer name").fill("Sunny");
   await page.getByRole("button", { name: "Outfit color 2" }).click();
   await page.getByLabel("Headwear").selectOption("cap");
@@ -89,7 +89,7 @@ test("phone sizes and landscape keep controls within viewport without document s
     ).toEqual({ w: width, h: height });
     await openMenu(page);
     await expect(
-      page.getByRole("link", { name: /^Profile \/ Settings/ }),
+      page.getByRole("link", { name: /^Story Mode Adventure/ }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Close menu" }).click();
   }

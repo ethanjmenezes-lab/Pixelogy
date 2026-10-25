@@ -5,6 +5,7 @@ const destinations = new Set([
   "/workshop",
   "/battle/practice",
   "/profile",
+  "/story",
   "/leaderboard",
 ]);
 export function authDestination(value: string | null | undefined) {

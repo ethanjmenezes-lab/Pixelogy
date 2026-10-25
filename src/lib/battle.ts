@@ -25,7 +25,8 @@ export type FighterState = {
 };
 export type BattleState = {
   id: string;
-  mode: "practice";
+  mode: "practice" | "story";
+  storyStageId?: string;
   status: "active" | "completed" | "forfeited";
   rulesVersion: 2;
   version: number;
@@ -229,7 +230,10 @@ export function cpuAction(state: BattleState): BattleAction {
   );
   if (lethal) return lethal;
   if (cpu.currentHp <= 20 && cpu.turnsTaken % 3 === 1 && !cpu.guarding)
-    return !(cpu.cooldowns.can_counter ?? 0) ? "can_counter" : "guard";
+    return cpu.moves.includes("can_counter") &&
+      !(cpu.cooldowns.can_counter ?? 0)
+      ? "can_counter"
+      : "guard";
   return cpu.moves[0];
 }
 export const battleXpAward = (state: BattleState) =>

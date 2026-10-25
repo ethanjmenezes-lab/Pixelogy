@@ -27,10 +27,10 @@ export const menuItems = [
     icon: "trophy",
   },
   {
-    to: "/profile",
-    label: "Profile / Settings",
-    caption: "Account & settings",
-    icon: "profile",
+    to: "/story",
+    label: "Story Mode",
+    caption: "Adventure",
+    icon: "story",
   },
 ];
 export function PixelIcon({ kind }: { kind: string }) {
@@ -40,6 +40,7 @@ export function PixelIcon({ kind }: { kind: string }) {
     crab: "M7 9h10v9H7zM3 5h4v7H3zM17 5h4v7h-4zM5 16h3v5H5zM16 16h3v5h-3zM8 5h2v4H8zM14 5h2v4h-2z",
     battle: "M4 3h4l12 14-3 3L5 7zM17 3h4L7 20l-3-3z",
     trophy: "M7 3h10v11h-3v4h4v3H6v-3h4v-4H7zM3 5h3v7H3zM18 5h3v7h-3z",
+    story: "M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2zM8 6h2v10H8zM14 8h2v10h-2z",
     profile: "M8 3h8v8H8zM5 14h14v7H5z",
   };
   return (

@@ -29,6 +29,27 @@ if (process.argv[2] === "--smoke") {
     await import(pathToFileURL(entry).href);
     process.stdout.write(`Loaded ${relative(output, entry)} in plain Node\n`);
   }
+  for (const name of ["battle", "story"]) {
+    const { default: endpoint } = await import(
+      pathToFileURL(join(output, `api/${name}.js`)).href
+    );
+    for (const [method, expected] of [
+      ["GET", 405],
+      ["POST", 400],
+    ]) {
+      let status;
+      const res = {
+        setHeader() {},
+        status(code) {
+          status = code;
+          return res;
+        },
+        json() {},
+      };
+      await endpoint({ method, headers: {}, body: {} }, res);
+      assert.equal(status, expected);
+    }
+  }
   const { default: handler } = await import(
     pathToFileURL(join(output, "api/analyze.js")).href
   );
@@ -68,7 +89,7 @@ if (process.argv[2] === "--smoke") {
     assert.equal(typeof payload.error, "string");
   }
   process.stdout.write(
-    "API runtime smoke: 5 rejection/fallback checks passed\n",
+    "API runtime smoke: 9 rejection/fallback checks passed\n",
   );
 } else {
   const output = await mkdtemp(join(tmpdir(), "pixelogy-api-runtime-"));

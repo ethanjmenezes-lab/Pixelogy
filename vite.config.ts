@@ -9,7 +9,10 @@ function localApi(): Plugin {
     name: "pixelogy-local-api",
     configureServer(server) {
       server.middlewares.use("/api", async (req, res, next) => {
-        if(!["/analyze","/battle"].includes(req.url??"")){next();return;}
+        if (!["/analyze", "/battle", "/story"].includes(req.url ?? "")) {
+          next();
+          return;
+        }
         const respond = (status: number, body: unknown) => {
           res.statusCode = status;
           res.setHeader("Content-Type", "application/json");
@@ -34,7 +37,12 @@ function localApi(): Plugin {
             respond(400, { error: "Invalid JSON." });
             return;
           }
-          const { default: handler } = req.url === "/battle" ? await import("./api/battle.ts") : await import("./api/analyze.ts");
+          const { default: handler } =
+            req.url === "/story"
+              ? await import("./api/story.ts")
+              : req.url === "/battle"
+                ? await import("./api/battle.ts")
+                : await import("./api/analyze.ts");
           const response = {
             setHeader: (name: string, value: string) =>
               res.setHeader(name, value),
@@ -53,7 +61,9 @@ function localApi(): Plugin {
           );
         } catch {
           if (!res.writableEnded)
-            respond(500, { error: "Local API failed. Retry identification later." });
+            respond(500, {
+              error: "Local API failed. Retry identification later.",
+            });
         }
       });
     },
@@ -61,7 +71,13 @@ function localApi(): Plugin {
 }
 export default defineConfig(({ mode }) => {
   if (mode === "api") {
-    const env = loadEnv(mode, process.cwd(), ["GEMINI_", "ALLOWED_ORIGINS", "SUPABASE_", "VITE_SUPABASE_", "SCAN_SIGNING_SECRET"]);
+    const env = loadEnv(mode, process.cwd(), [
+      "GEMINI_",
+      "ALLOWED_ORIGINS",
+      "SUPABASE_",
+      "VITE_SUPABASE_",
+      "SCAN_SIGNING_SECRET",
+    ]);
     for (const key of Object.keys(env))
       if (env[key]) process.env[key] = env[key];
   }

@@ -1,3 +1,10 @@
+# Story Mode: Shellshore (2026-10-24)
+
+- Added the permanent Story Mode menu tile; Profile/Settings remains on the avatar HUD. Added original animated opening, five-region overview, authored Shellshore beach path, five distinct NPC battles, boss intro/completion, best stars, first Tide Shard and a story-portrait Sunburst cosmetic.
+- Reused combat rules, timing, actual owned gear/moves and account battle XP. Added authenticated `/api/story`, shared trusted-player snapshot loader and signed, transactional Supabase story RPCs. First-clear XP is 40/40/40/40/80, repeats/defeats/exits zero; no cleanup XP or scan gear grants. Applied migration and passed live rollback ownership/idempotency tests.
+- 78 unit tests, typecheck, lint, nine plain-Node checks and production build passed. All 86 existing browser regressions passed in the full run; both campaign playthroughs passed. Fixed the new retry-layout issue and ambiguous navigation selector; final targeted Story run passed 6/6 across Chromium/WebKit.
+- Regions 2–5 and final endings are explicitly incomplete. Online account connection is required for Story; no offline campaign sync. Database is prepared, but new frontend/API hosted acceptance and physical-device tests remain pending. See [full scope, files and test details](STORY_MODE.md).
+
 # Coastal RPG polish — 2026-10-24
 
 - ShoreDex: five-column phone grid, search/ownership tabs, staged category/rarity/slot chips in a focus-managed bottom sheet; Apply/Reset, Escape and backdrop dismissal.

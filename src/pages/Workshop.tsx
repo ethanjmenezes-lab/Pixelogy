@@ -19,7 +19,11 @@ export function Workshop() {
   const { items, loadout, refresh } = useGame();
   const [params] = useSearchParams();
   const movesOnly = params.get("section") === "moves";
-  const fromBattle = params.get("from") === "battle";
+  const returnTo =
+    params.get("from") === "story"
+      ? "/story?stage=" + encodeURIComponent(params.get("stage") ?? "")
+      : "/battle/practice";
+  const fromBattle = ["battle", "story"].includes(params.get("from") ?? "");
   const initial = items.find((i) => i.id === params.get("item"));
   const [slot, setSlot] = useState<GearSlot>(
     initial?.gearBlueprintId ? catalog[initial.gearBlueprintId].slot : "head",
@@ -54,7 +58,7 @@ export function Workshop() {
         <div>
           <h1>{movesOnly ? "Moves" : "Crab Workshop"}</h1>
         </div>
-        <Link className="button primary" to="/battle/practice">
+        <Link className="button primary" to={returnTo}>
           {fromBattle ? "Return to Matchup" : "Let’s battle"}{" "}
           <ArrowUpRight size={18} />
         </Link>
@@ -217,7 +221,7 @@ export function Workshop() {
       )}
       <WorkshopMoves />
       {fromBattle && (
-        <Link className="button primary full" to="/battle/practice">
+        <Link className="button primary full" to={returnTo}>
           Done · Return to Matchup
         </Link>
       )}

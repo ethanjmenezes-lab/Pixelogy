@@ -98,6 +98,9 @@ export function OverworldScreen({ covered }: { covered: boolean }) {
         >
           <div className="portrait">
             <PlayerAvatar profile={profile} />
+            <span className="hud-settings" aria-hidden="true">
+              ⚙
+            </span>
             <span>{level.level}</span>
           </div>
           <div className="hud-info">

@@ -1,3 +1,5 @@
+> Story Mode update (2026-10-24): Shellshore’s four trainers and Captain Sandy are implemented with animated cutscenes, stars and server-validated Supabase progression. Regions 2–5 and final endings remain future chapters. Database migration applied; frontend/API deployment acceptance pending. See [scope and verification](STORY_MODE.md).
+
 > Current release update: AI-only identification is required for new discoveries; manual identification and safety/category overrides are removed. Online analysis must succeed before saving. Real geography uses the authored tropical pixel-art MapLibre style; older manual-fallback and Liberty-style descriptions below are historical. Existing saves remain intact.
 
 > Primary release: mobile-first PWA on Vercel HTTPS. Follow [PWA setup](PWA_SETUP.md). Native projects and store submission are optional future work, not release prerequisites. Keep browser camera/GPS, existing local saves and gameplay. Do not cache private/API/photo responses.

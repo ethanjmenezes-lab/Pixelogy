@@ -17,12 +17,14 @@ import { Battle } from "./pages/Battle";
 import { Leaderboard } from "./pages/Leaderboard";
 import { Auth } from "./pages/Auth";
 import { Profile } from "./pages/Profile";
+import { Story } from "./story/Story";
 const titles: Record<string, string> = {
   "/auth/login": "Log In",
   "/auth/signup": "Sign Up",
   "/auth/reset": "Password reset",
   "/auth/callback": "Confirm account",
   "/auth/update-password": "New password",
+  "/story": "The Shattered Tide",
   "/scan": "Field scanner",
   "/collection": "ShoreDex",
   "/workshop": "My crab",
@@ -79,6 +81,7 @@ function Layout() {
               >
                 <Routes>
                   <Route path="/auth/*" element={<Auth />} />
+                  <Route path="/story" element={<Story />} />
                   <Route path="/scan" element={<Scan />} />
                   <Route path="/collection" element={<Collection />} />
                   <Route path="/workshop" element={<Workshop />} />
