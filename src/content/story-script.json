@@ -24,7 +24,7 @@
         "camera": "pan from player to truck",
         "dialogue_exact": [
           {
-            "speaker": "PLAYER",
+            "speaker": "CAPTION",
             "text": "Something isn't right."
           }
         ]

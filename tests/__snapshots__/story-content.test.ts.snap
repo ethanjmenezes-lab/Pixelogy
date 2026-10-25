@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`preserves unchanged regions and snapshots the explicitly revised opening 1`] = `"e4cf31f4b2fc2e34e1e668f5562a0cb8dfb3466e330322bf68095061d33d5ec8"`;
+exports[`preserves unchanged regions and snapshots the explicitly revised opening 1`] = `"ed93d0e96ff29b574d0fb3bd92a1a7cb27d07a9d5a59ee66263284da68ac46f0"`;
 
 exports[`preserves unchanged regions and snapshots the explicitly revised opening 2`] = `
 {
@@ -353,7 +353,7 @@ exports[`preserves unchanged regions and snapshots the explicitly revised openin
 CLEAN COASTS. BRIGHTER FUTURES.",
   "opening.shots.1.dialogue_exact": [
     {
-      "speaker": "PLAYER",
+      "speaker": "CAPTION",
       "text": "Something isn't right.",
     },
   ],

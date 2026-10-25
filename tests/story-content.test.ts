@@ -33,3 +33,9 @@ it("has five regions, 25 exact encounters, seven opening shots and six ending sh
     expect(stageById(stages[i].id)).toBe(stages[i]); // old save and deep link alias
   });
 });
+
+it("attributes the opening observation to the exact requested caption", () => {
+  expect(script.opening.shots[1].dialogue_exact).toEqual([
+    { speaker: "CAPTION", text: "Something isn't right." },
+  ]);
+});
