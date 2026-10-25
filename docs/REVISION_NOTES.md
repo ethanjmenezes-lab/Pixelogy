@@ -240,3 +240,11 @@ Verification:
 - All repository migrations applied successfully to isolated PGlite PostgreSQL with pgcrypto; four rollback SQL fixtures (`rls`, `conspiracy`, `walking`, `guest`) passed. Checks include quota forgery and caps, source/account isolation, import retry and overlap, legacy gear, malformed legacy records, cleanup provenance/state immutability and existing reward rules. Local database results are not hosted acceptance.
 
 Three staged guest/quota/map migrations are prepared but **not applied live**. Automatic approval review rejected the combined live migration because it changes privileged functions, grants/RLS, cleanup rewards and guest imports. No bypass or live database change was performed for this feature. Migrations require review/approval before deployment. Hosted anonymous Gemini, real email delivery, cross-device imports/map sync and physical-phone camera/GPS remain unverified. See `GUEST_AND_US_MAP.md` for changed files, merge limits and rollout order.
+
+## 2026-10-25 — Cloud scanning diagnosis and actionable errors
+
+Reproduced the deployed guest-scan 503 and confirmed the missing `reserve_guest_scan` Supabase RPC is the pre-Gemini blocker. Vercel's identification route loads, production Gemini/signing/Supabase variable names exist, and the live catalog has 200 entries. No secrets were revealed. Live quota migration was rejected by automatic approval review; no database, environment or deployment change was made.
+
+Added stage-specific safe error codes/request IDs, quota/signing/provider diagnostics and friendly client timeout/non-JSON handling. Guest saves remain local and idempotent; existing account import logic is preserved. Added an original sample bottle image and deterministic integration coverage through the actual catalog matcher, receipt signer and IndexedDB save with mocked external provider/database boundaries. No failed identification awards a collectible.
+
+Passed typecheck/NodeNext, lint, 117 unit/integration tests, nine plain-Node API assertions, 40 Chromium/WebKit scanner/guest cases, four local PostgreSQL rollback fixtures and production build. See `docs/SCAN_REPAIR.md` for full trace, exact missing migration, configured variables, backup prerequisites and pending hosted/device checks. Production is not repaired until the missing live migration is approved/applied.

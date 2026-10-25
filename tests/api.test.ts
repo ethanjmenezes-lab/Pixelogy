@@ -184,3 +184,14 @@ it("accepts guests only after anonymous quota reservation and fails closed on qu
   ).toBe(429);
   expect(generateContent).not.toHaveBeenCalled();
 });
+
+it("distinguishes a previously collected account photo from quota and configuration failures", async () => {
+  beginScan.mockResolvedValueOnce({
+    data: null,
+    error: { message: "This photo was already collected. Take a new photo." },
+  });
+  expect(
+    await call({ consent: true, image: "data:image/jpeg;base64,YQ==" }),
+  ).toMatchObject({ code: 409, data: { code: "SCAN_ALREADY_COLLECTED" } });
+  expect(generateContent).not.toHaveBeenCalled();
+});

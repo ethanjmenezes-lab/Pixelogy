@@ -1,3 +1,4 @@
+import { ScanError, providerError, quotaError } from "../server/scanErrors.js";
 import { reserveGuestScan } from "../server/guest.js";
 import type { IncomingHttpHeaders } from "node:http";
 export type AnalyzeRequest = {
@@ -14,13 +15,15 @@ import { GoogleGenAI } from "@google/genai";
 import { analyzeRequest } from "../src/lib/recognition.js";
 import { objectRecognition, matchCatalog } from "../src/catalog/matching.js";
 import { authorized, receipt } from "../server/cloud.js";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 export default async function handler(
   req: AnalyzeRequest,
   res: AnalyzeResponse,
 ) {
   res.setHeader("Cache-Control", "no-store");
+  const requestId = randomUUID();
+  res.setHeader("X-Scan-Request-Id", requestId);
   const origin = req.headers.origin;
   const allowed = (process.env.ALLOWED_ORIGINS || "")
     .split(",")
@@ -52,7 +55,14 @@ export default async function handler(
   if (!process.env.GEMINI_API_KEY)
     return res
       .status(503)
-      .json({ error: "Gemini is not configured. Please try again later." });
+      .json({
+        code: "GEMINI_KEY_MISSING",
+        requestId,
+        error:
+          "Photo identification is missing its server API key. Please try again after the service is configured.",
+      });
+  let stage: "reservation" | "provider" | "validation" | "receipt" =
+    "reservation";
   try {
     let userId: string, scanId: string;
     if (req.headers.authorization) {
@@ -60,14 +70,14 @@ export default async function handler(
       userId = auth.userId;
       const hash = createHash("sha256").update(parsed.data.image).digest("hex");
       const result = await auth.client.rpc("begin_scan", { image_hash: hash });
-      if (result.error)
-        return res.status(429).json({ error: result.error.message });
+      if (result.error) throw quotaError(result.error, false);
       scanId = result.data;
     } else
       ({ userId, scanId } = await reserveGuestScan(
         req.headers,
         parsed.data.image,
       ));
+    stage = "provider";
     const ai = new GoogleGenAI({
       apiKey: process.env.GEMINI_API_KEY,
       httpOptions: { timeout: 25000 },
@@ -128,8 +138,10 @@ export default async function handler(
         },
       },
     });
+    stage = "validation";
     const recognition = objectRecognition.parse(JSON.parse(result.text ?? ""));
     const match = matchCatalog(recognition);
+    stage = "receipt";
     return res.status(200).json({
       ...match,
       recognition,
@@ -143,22 +155,43 @@ export default async function handler(
         : {}),
     });
   } catch (error) {
-    if (error instanceof Error && error.message === "QUOTA")
-      return res
-        .status(429)
-        .json({ error: "Scan allowance reached. Please try again later." });
-    if (error instanceof Error && error.message === "AUTH")
-      return res.status(401).json({
-        error:
-          "Your account session expired. Sign out to scan as a guest or sign in again.",
-      });
-    if (error instanceof Error && error.message === "CONFIG")
-      return res.status(503).json({
-        error: "Cloud discovery is not configured. No collectible was awarded.",
-      });
-    return res.status(502).json({
-      error:
-        "Gemini could not identify this photo. Retry identification or retake your photo.",
-    });
+    const failure =
+      error instanceof ScanError
+        ? error
+        : error instanceof Error && error.message === "AUTH"
+          ? new ScanError(
+              "SCAN_SESSION_EXPIRED",
+              401,
+              "Your account session expired. Sign out to scan as a guest or sign in again.",
+            )
+          : error instanceof Error && error.message === "CONFIG"
+            ? new ScanError(
+                "SCAN_SERVER_ENV_MISSING",
+                503,
+                "The scan service is missing server configuration. Please try again after the service is updated.",
+              )
+            : error instanceof Error && error.message === "QUOTA"
+              ? new ScanError(
+                  "SCAN_QUOTA_REACHED",
+                  429,
+                  "Scan allowance reached. Please try again later.",
+                )
+              : stage === "provider"
+                ? providerError(error)
+                : stage === "validation"
+                  ? new ScanError(
+                      "GEMINI_INVALID_RESPONSE",
+                      502,
+                      "Photo identification returned an incomplete or invalid result. Retry this photo or retake it. No collectible was awarded.",
+                    )
+                  : new ScanError(
+                      "SCAN_STORAGE_UNAVAILABLE",
+                      503,
+                      "The scan service could not complete its request. Please retry shortly. Your saved collection is unchanged.",
+                    );
+    console.warn("scan_failed", { requestId, stage, code: failure.code });
+    return res
+      .status(failure.status)
+      .json({ code: failure.code, error: failure.message, requestId });
   }
 }

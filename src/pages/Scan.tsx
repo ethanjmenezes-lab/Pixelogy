@@ -91,7 +91,14 @@ function ScanSession() {
         body: JSON.stringify({ consent: true, image }),
         signal: abort.signal,
       });
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error(
+          "The identification server returned an unreadable response. Please retry shortly.",
+        );
+      }
       if (!response.ok) throw new Error(data.error || "Gemini is unavailable.");
       const parsed = catalogAnalysisSchema.safeParse(data);
       if (!parsed.success)
@@ -116,7 +123,12 @@ function ScanSession() {
     } catch (e) {
       if (mounted.current && generation.current === version) {
         setMode("error");
-        setError((e as Error).message || "Gemini returned an invalid result.");
+        setError(
+          abort.signal.aborted
+            ? "Photo identification took too long. Retry this photo or retake it."
+            : (e as Error).message ||
+                "Photo identification could not complete. Please retry.",
+        );
       }
     } finally {
       clearTimeout(timeout);
