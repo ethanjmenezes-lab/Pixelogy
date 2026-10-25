@@ -17,3 +17,10 @@ export function authLink(mode: "login" | "signup" | "reset", next: string) {
 export function confirmationUrl(origin: string, next: string) {
   return `${origin}/auth/callback?next=${encodeURIComponent(authDestination(next))}`;
 }
+
+export const productionOrigin = "https://pixelogy-three.vercel.app";
+export function recoveryUrl(origin: string) {
+  const url = new URL(origin);
+  const local = ["localhost", "127.0.0.1"].includes(url.hostname);
+  return (local ? url.origin : productionOrigin) + "/auth/confirm";
+}

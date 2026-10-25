@@ -1,3 +1,4 @@
+import { rememberRecovery, clearRecovery } from "./recovery";
 import { createClient, type Session } from "@supabase/supabase-js";
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -21,6 +22,7 @@ function initializeCloud() {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        flowType: "implicit",
       },
     });
   } catch {
@@ -28,6 +30,11 @@ function initializeCloud() {
   }
 }
 export const cloud = initializeCloud();
+// Subscribe before React and game data loading, including root fallback links.
+cloud?.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY" && session) rememberRecovery(session);
+  if (event === "SIGNED_OUT") clearRecovery();
+});
 export async function cloudSession(): Promise<Session | null> {
   if (!cloud) return null;
   const { data, error } = await cloud.auth.getSession();

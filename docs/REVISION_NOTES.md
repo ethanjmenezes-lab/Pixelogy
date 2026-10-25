@@ -1,3 +1,18 @@
+# Baby crab opening and mobile Story cleanup — 2026-10-24
+
+- Replaced only the opening with the user's exact seven-scene investigation → discovery → bond → confrontation → first-battle flow. Versioned runtime content as locked-dialogue-2.0-baby-crab; kept all regional/encounter/ending content unchanged.
+- Added original animated baby-crab staging, compact landing, wrapping/width fixes, touch-sized Next/Skip, replay and guarded automatic first battle. Preserved account watch flags and all progress; no migration.
+- Typecheck, lint, 83 unit tests, nine API checks and build passed. Full Chromium/WebKit run passed 114/114; final delayed-watch race guard passed both targeted reruns. Three phone sizes, landscape/reduced-motion regression and gameplay flows covered. Deployment and physical-device acceptance remain pending.
+- [Changed files and verification](story/BABY_CRAB_STATUS.md).
+
+# Locked story and password recovery — 2026-10-24
+
+- Corrected stable password-reset destination, public recovery callback/form, early recovery-event handling and root fallback. Verified the production domain and default confirmation email template; added eight exact live redirect entries. Cross-browser recovery passed with SDK/network fixtures; real email/device acceptance and deployment remain pending.
+- Replaced previous narrative with the supplied byte-identical JSON. Added reusable shot/caption/clock/actor/camera components, all eight opening shots, five regional arrivals/outros, six ending shots and exact 25-encounter data. Preserved legacy save aliases and battle rules. Full per-shot sound design remains incomplete; current audio is an original opt-in synth motif.
+- Applied additive cinematic constraint migration; live rollback test verifies old/new flags and duplicate-watch idempotency. No test account remains or inventory/progress deletion occurred.
+- Typecheck, lint, 83 unit tests, nine plain-Node API checks and production build passed. Full browser run: 104 passes / 8 outdated arrival-fixture failures; corrected region-entry fixtures and all eight reruns passed. No combat/save assertions removed. All 112 cases have a passing result across those runs, including preserved camera/GPS/gameplay/PWA flows.
+- Details and changed paths: [Story Mode](STORY_MODE.md), [authentication](AUTH_RELEASE.md). Earlier narrative/status entries below are historical.
+
 # The Blacktide Conspiracy (2026-10-24)
 
 - Replaced the magical Shattered Tide story with Blacktide Industries, CEO Caspian Vale and the deliberate dumping/cleanup-contract scheme. The earlier Shellshore entry below is historical and superseded.

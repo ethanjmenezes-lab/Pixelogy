@@ -1,3 +1,4 @@
+import { Recovery, RecoveryRedirect } from "./pages/Recovery";
 import { PwaUpdate } from "./pwa/PwaUpdate";
 import { NativeLifecycle } from "./mobile/NativeLifecycle";
 import { useEffect, useRef } from "react";
@@ -19,6 +20,8 @@ import { Auth } from "./pages/Auth";
 import { Profile } from "./pages/Profile";
 import { Story } from "./story/Story";
 const titles: Record<string, string> = {
+  "/auth/confirm": "Password recovery",
+  "/reset-password": "Set New Password",
   "/auth/login": "Log In",
   "/auth/signup": "Sign Up",
   "/auth/reset": "Password reset",
@@ -35,6 +38,9 @@ const titles: Record<string, string> = {
 function Layout() {
   const { loading, error, refresh, profile } = useGame();
   const location = useLocation();
+  const authRoute =
+    location.pathname.startsWith("/auth/") ||
+    location.pathname === "/reset-password";
   const covered = location.pathname !== "/";
   const panel = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -47,6 +53,7 @@ function Layout() {
     <div
       className={`game-device ${profile.motion === "reduced" ? "reduced-motion" : ""}`}
     >
+      <RecoveryRedirect />
       <NativeLifecycle />
       <PwaUpdate />
       <a
@@ -56,7 +63,7 @@ function Layout() {
       >
         Skip to controls
       </a>
-      {loading ? (
+      {loading && !authRoute ? (
         <div className="game-loading">Opening Pixelogy…</div>
       ) : (
         <>
@@ -80,6 +87,9 @@ function Layout() {
                 className="feature-content"
               >
                 <Routes>
+                  <Route path="/auth/confirm" element={<Recovery />} />
+                  <Route path="/reset-password" element={<Recovery />} />
+                  <Route path="/auth/update-password" element={<Recovery />} />
                   <Route path="/auth/*" element={<Auth />} />
                   <Route path="/story" element={<Story />} />
                   <Route path="/scan" element={<Scan />} />

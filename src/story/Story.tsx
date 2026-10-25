@@ -1,23 +1,23 @@
+import { script } from "./script";
+import {
+  StoryStagePreview,
+  StoryRegionMap,
+  StoryProgress as StoryProgressView,
+  ScriptDialogue,
+} from "./StoryPresentation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useGame } from "../components/GameContext";
 import { cloud, authHeaders, rpc } from "../cloud/client";
 import { analyzeUrl } from "../mobile/platform";
 import { Crab } from "../components/Crab";
-import { PlayerAvatar } from "../world/PlayerAvatar";
 import { BattleArenaScreen } from "../battle/BattleScreens";
 import type { BattleState, BattleAction } from "../lib/battle";
 import type { Profile } from "../world/profile";
-import {
-  crabLevel,
-  normalizeProgression,
-  ownedBlueprints,
-  moves,
-} from "../lib/moves";
+import { crabLevel, normalizeProgression, ownedBlueprints } from "../lib/moves";
 import {
   stageById,
   regionDefinitions,
-  regionStages,
   regionUnlocked,
   restored,
   evidenceFound,
@@ -25,8 +25,14 @@ import {
   unlocked,
   type StoryProgress,
 } from "./campaign";
-import { Cutscene, OPENING, cinematicIds, type Cinematic } from "./Cutscene";
-import { IslandArt, RegionScenery, CorporateTrainer } from "./StoryArt";
+import {
+  Cutscene,
+  OPENING,
+  cinematicIds,
+  sceneImplemented,
+  type Cinematic,
+} from "./Cutscene";
+import { IslandArt, RegionScenery } from "./StoryArt";
 import "./story.css";
 type Save = { progress: StoryProgress[]; watched: string[] };
 export function Story() {
@@ -43,6 +49,10 @@ function StorySession() {
   const [params, setParams] = useSearchParams();
   const stage = stageById(params.get("stage") ?? "");
   const requestedScene = useRef(params.get("scene"));
+  const startRequested = params.get("start") === "1";
+  const landing = !params.get("stage") && !params.get("region");
+  const launchAfterOpening = useRef(false);
+  const autoStarted = useRef(false);
   const regionIndex = Math.max(
     0,
     regionDefinitions.findIndex((r) => r.id === params.get("region")),
@@ -59,8 +69,7 @@ function StorySession() {
   const [visible, setVisible] = useState(!document.hidden);
   const mounted = useRef(true),
     lock = useRef(false),
-    startId = useRef(crypto.randomUUID()),
-    afterCinema = useRef<(() => void) | null>(null);
+    startId = useRef(crypto.randomUUID());
   const load = useCallback(async () => {
     if (!cloud || !userId) return null;
     const [p, w] = await Promise.all([
@@ -91,21 +100,34 @@ function StorySession() {
     void load()
       .then((s) => {
         if (s && mounted.current) {
-          if (!s.watched.includes(OPENING)) setCinematic(OPENING);
+          if (
+            !landing &&
+            !startRequested &&
+            !autoStarted.current &&
+            !s.watched.includes(OPENING)
+          )
+            setCinematic(OPENING);
           else if (
             requestedScene.current &&
-            cinematicIds.includes(requestedScene.current)
-          ) {
-            const scene = requestedScene.current;
-            const r = regionDefinitions.findIndex((r) =>
-              scene.startsWith(r.id + "-"),
-            );
-            if (
-              (scene === "conspiracy-ending" && restored(4, s.progress)) ||
-              (r >= 0 && scene.endsWith("-restored") && restored(r, s.progress))
-            )
-              setCinematic(scene);
-          }
+            cinematicIds.includes(requestedScene.current) &&
+            sceneImplemented(requestedScene.current) &&
+            (script.regions.some(
+              (r, i) =>
+                r.outro_scene.id === requestedScene.current &&
+                restored(i, s.progress),
+            ) ||
+              (requestedScene.current === script.ending.id &&
+                restored(4, s.progress)))
+          )
+            setCinematic(requestedScene.current);
+          else if (
+            !landing &&
+            !stage &&
+            regionUnlocked(regionIndex, s.progress) &&
+            !s.watched.includes(script.regions[regionIndex].intro_scene.id) &&
+            sceneImplemented(script.regions[regionIndex].intro_scene.id)
+          )
+            setCinematic(script.regions[regionIndex].intro_scene.id);
         }
       })
       .catch((e) => {
@@ -115,13 +137,18 @@ function StorySession() {
       mounted.current = false;
       document.removeEventListener("visibilitychange", visibility);
     };
-  }, [load]);
+  }, [load, stage, regionIndex, landing, startRequested]);
   const finishCinema = useCallback(() => {
     if (!cinematic) return;
     const id = cinematic;
     setCinematic(null);
-    if (id.endsWith("-restored") || id === "conspiracy-ending")
+    if (id.endsWith(".outro"))
       setParams({ region: region.id }, { replace: true });
+    if (id === OPENING && launchAfterOpening.current) {
+      launchAfterOpening.current = false;
+      setParams({ stage: "shellshore.01", start: "1" });
+    }
+    if (id === script.regions[4].outro_scene.id) setCinematic(script.ending.id);
     if (userId)
       void rpc("watch_story", { cinematic: id })
         .then(() => load())
@@ -131,10 +158,8 @@ function StorySession() {
               "Cinematic preference could not be saved. It may replay next visit.",
             );
         });
-    const next = afterCinema.current;
-    afterCinema.current = null;
-    next?.();
-  }, [cinematic, load, userId, setParams, region.id]);
+  }, [cinematic, load, userId, setParams, region.id, save?.watched]);
+
   async function request(body: object) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20000);
@@ -177,6 +202,19 @@ function StorySession() {
       if (mounted.current) setBusy(false);
     }
   }
+  useEffect(() => {
+    if (
+      params.get("start") === "1" &&
+      stage &&
+      save &&
+      !cinematic &&
+      !autoStarted.current
+    ) {
+      autoStarted.current = true;
+      setParams({ stage: stage.contentId }, { replace: true });
+      void start();
+    }
+  });
   async function action(action: "turn" | "quit", move?: BattleAction) {
     if (lock.current || !session || document.hidden) return;
     lock.current = true;
@@ -211,42 +249,67 @@ function StorySession() {
     const r = current?.region ?? 0,
       region = regionDefinitions[r];
     setParams(
-      win && current?.boss
+      win && current?.boss && sceneImplemented(script.regions[r].outro_scene.id)
         ? {
             region: region.id,
-            scene: r === 4 ? "conspiracy-ending" : `${region.id}-restored`,
+            scene: script.regions[r].outro_scene.id,
           }
         : { region: region.id },
     );
   }
 
-  if (!userId)
+  if (cinematic)
     return (
-      <section className="story-screen">
+      <Cutscene
+        id={cinematic}
+        profile={profile}
+        gear={gear}
+        done={finishCinema}
+      />
+    );
+  if (landing || !userId)
+    return (
+      <section className="story-screen story-landing">
         <h1>{STORY_TITLE}</h1>
-        <div className="story-map-art">
+        <p>Investigate Blacktide. Save the coast.</p>
+        <div
+          className="story-key-art"
+          aria-label="A tiny red crab on the coast"
+        >
           <IslandArt />
+          <Crab gear={[]} label="Baby red crab" />
         </div>
-        <p>
-          A five-region adventure against Blacktide Industries. Sign in for
-          permanent progress, stars and battle XP.
-        </p>
-        <Link className="button primary" to="/auth/login?next=%2Fstory">
-          Sign in to begin
-        </Link>
+        {userId ? (
+          <button
+            className="button primary"
+            disabled={!save}
+            onClick={() => {
+              if (save?.progress.length) setParams({ region: "shellshore" });
+              else {
+                launchAfterOpening.current = true;
+                setCinematic(OPENING);
+              }
+            }}
+          >
+            Start Story
+          </button>
+        ) : (
+          <Link className="button primary" to="/auth/login?next=%2Fstory">
+            Start Story
+          </Link>
+        )}
         <button
           className="button secondary"
-          onClick={() => setCinematic(OPENING)}
+          onClick={() => {
+            launchAfterOpening.current = false;
+            setCinematic(OPENING);
+          }}
         >
-          Watch the opening
+          Watch Opening
         </button>
-        {cinematic && (
-          <Cutscene id={cinematic} profile={profile} done={finishCinema} />
-        )}
+        {error && <p role="alert">{error}</p>}
       </section>
     );
-  if (cinematic)
-    return <Cutscene id={cinematic} profile={profile} done={finishCinema} />;
   if (!save)
     return (
       <section className="story-screen">
@@ -302,124 +365,32 @@ function StorySession() {
           rewardFailed={false}
           retryReward={() => {}}
           currentLevel={crabLevel(progression.xp)}
+          storyDialogue={<ScriptDialogue lines={s.defeatLines} />}
           rewardText={
             session.battle.winnerId === "player"
-              ? `${s.defeat} Victory saved. Best stars: ${save.progress.find((p) => p.stage_id === s.id)?.best_stars ?? "…"}/3. First-clear reward +${s.xp} battle XP; repeats +0.`
+              ? `Victory saved. Best stars: ${save.progress.find((p) => p.stage_id === s.id)?.best_stars ?? "…"}/3. First-clear reward +${s.xp} battle XP; repeats +0.`
               : "No story XP for defeat or exit. Try another approach."
           }
         />
       </>
     );
   }
-  if (stage) {
-    const available = unlocked(stage, save.progress);
+  if (stage)
     return (
-      <section className="story-screen story-preview">
-        <span className="eyebrow">
-          {regionDefinitions[stage.region].name.toUpperCase()} · STAGE{" "}
-          {regionStages(stage.region).indexOf(stage) + 1}
-          {stage.boss ? " · BOSS" : ""}
-        </span>
-        <h1>{stage.name}</h1>
-        <div className="story-matchup">
-          {[
-            {
-              trainer: profile,
-              gear,
-              name: "Your crab",
-              level: crabLevel(selected.xp),
-            },
-            {
-              trainer: stage.trainer,
-              gear: stage.gear,
-              name: stage.crab,
-              level: stage.level,
-            },
-          ].map((f, i) => (
-            <div key={i}>
-              {i ? (
-                <CorporateTrainer profile={f.trainer} />
-              ) : (
-                <PlayerAvatar profile={f.trainer} facing="right" />
-              )}
-              <Crab gear={f.gear} label={f.name} />
-              <strong>
-                {f.trainer.nickname}
-                {i ? " · CPU" : ""}
-              </strong>
-              <small>
-                {f.name} · Lv. {f.level}
-              </small>
-            </div>
-          ))}
-        </div>
-        <blockquote>{stage.intro}</blockquote>
-        <div className="story-moves">
-          {[selected.main, "guard", selected.special].map((id) => (
-            <span key={id}>{moves[id as BattleAction].name}</span>
-          ))}
-        </div>
-        <p>First clear +{stage.xp} battle XP · Replays +0</p>
-        {error && (
-          <p className="notice error" role="alert">
-            {error}
-          </p>
-        )}
-        {available ? (
-          <button
-            className="button primary"
-            disabled={busy}
-            onClick={() => {
-              if (
-                stage.boss &&
-                !save.watched.includes(
-                  `${regionDefinitions[stage.region].id}-boss`,
-                )
-              ) {
-                afterCinema.current = () => void start();
-                setCinematic(`${regionDefinitions[stage.region].id}-boss`);
-              } else void start();
-            }}
-          >
-            {busy ? "Preparing…" : "Start Battle"}
-          </button>
-        ) : (
-          <p role="status">
-            {regionUnlocked(stage.region, save.progress)
-              ? `Defeat all four trainers to unlock ${regionDefinitions[stage.region].boss}.`
-              : "Clear the previous region to enter this stage."}
-          </p>
-        )}
-        <div className="button-row">
-          <Link
-            className="button secondary"
-            to={`/workshop?section=moves&from=story&stage=${stage.id}`}
-          >
-            Change Attacks
-          </Link>
-          <Link
-            className="button secondary"
-            to={`/workshop?section=gear&from=story&stage=${stage.id}`}
-          >
-            Change Gear
-          </Link>
-        </div>
-        <button
-          className="button text"
-          onClick={() =>
-            setParams({ region: regionDefinitions[stage.region].id })
-          }
-        >
-          Island map
-        </button>
-      </section>
+      <StoryStagePreview
+        stage={stage}
+        profile={profile}
+        gear={gear}
+        level={crabLevel(selected.xp)}
+        selected={[selected.main, "guard", selected.special]}
+        available={unlocked(stage, save.progress)}
+        busy={busy}
+        error={error}
+        start={() => void start()}
+        map={() => setParams({ region: regionDefinitions[stage.region].id })}
+      />
     );
-  }
-  const currentStages = regionStages(regionIndex),
-    cleared = currentStages.filter((s) =>
-      save.progress.some((p) => p.stage_id === s.id),
-    ).length,
-    clean = restored(regionIndex, save.progress),
+  const clean = restored(regionIndex, save.progress),
     evidence = evidenceFound(save.progress);
   return (
     <section className="story-screen">
@@ -452,46 +423,19 @@ function StorySession() {
         ))}
       </div>
       <h2>{region.name}</h2>
-      <p className="story-progress">
-        {cleared}/5 wins ·{" "}
-        {save.progress
-          .filter((p) => currentStages.some((s) => s.id === p.stage_id))
-          .reduce((n, p) => n + p.best_stars, 0)}
-        /15 stars · {evidence.length}/5 evidence files
-      </p>
+      <StoryProgressView progress={save.progress} region={regionIndex} />
       <p className="region-condition" role="status">
-        {clean
-          ? "Restored: dumping stopped, wildlife returning."
-          : "Investigation active: Blacktide operations continue."}
+        {clean ? "Restoration underway" : "Investigation active"}
       </p>
-      <div className="story-stage-path" aria-label={`${region.name} stages`}>
-        <RegionScenery region={regionIndex} clean={clean} map />
-        {currentStages.map((s, i) => {
-          const canPlay = unlocked(s, save.progress),
-            stars =
-              save.progress.find((p) => p.stage_id === s.id)?.best_stars ?? 0;
-          return (
-            <button
-              className={`story-node ${s.boss ? "boss" : ""}`}
-              key={s.id}
-              disabled={!canPlay}
-              onClick={() => {
-                startId.current = crypto.randomUUID();
-                setError("");
-                setParams({ stage: s.id });
-              }}
-              aria-label={`${i + 1}. ${s.name}${s.boss ? ", boss" : ""}, ${stars} stars${!canPlay ? ", locked" : ""}`}
-            >
-              <b>{s.boss ? "♜" : i + 1}</b>
-              <span>{s.trainer.nickname}</span>
-              <small aria-hidden="true">
-                {"★".repeat(stars)}
-                {"☆".repeat(3 - stars)}
-              </small>
-            </button>
-          );
-        })}
-      </div>
+      <StoryRegionMap
+        region={regionIndex}
+        progress={save.progress}
+        select={(s) => {
+          startId.current = crypto.randomUUID();
+          setError("");
+          setParams({ stage: s.contentId });
+        }}
+      />
       {restored(0, save.progress) && (
         <div className="story-reward">
           <Crab gear={gear} label="Your crab with the Shellshore sunburst" />
@@ -509,11 +453,10 @@ function StorySession() {
           evidence.map((r) => (
             <article key={r.id}>
               <strong>▤ {r.evidence}</strong>
-              <p>{r.finding}</p>
             </article>
           ))
         ) : (
-          <p>Defeat Foreman Sandy to recover the night-shift manifest.</p>
+          <p>0/5 evidence files</p>
         )}
         {restored(4, save.progress) && (
           <strong>Case exposed · coastline restoration underway</strong>
@@ -531,34 +474,32 @@ function StorySession() {
         >
           Replay opening
         </button>
-        {regionUnlocked(regionIndex, save.progress) && (
-          <>
+        {regionUnlocked(regionIndex, save.progress) &&
+          sceneImplemented(script.regions[regionIndex].intro_scene.id) && (
             <button
               className="button secondary"
-              onClick={() => setCinematic(`${region.id}-briefing`)}
+              onClick={() =>
+                setCinematic(script.regions[regionIndex].intro_scene.id)
+              }
             >
               Region briefing
             </button>
+          )}
+        {clean &&
+          sceneImplemented(script.regions[regionIndex].outro_scene.id) && (
             <button
               className="button secondary"
-              onClick={() => setCinematic(`${region.id}-boss`)}
+              onClick={() =>
+                setCinematic(script.regions[regionIndex].outro_scene.id)
+              }
             >
-              {region.boss} introduction
+              Replay restoration
             </button>
-          </>
-        )}
-        {clean && (
-          <button
-            className="button secondary"
-            onClick={() => setCinematic(`${region.id}-restored`)}
-          >
-            Replay restoration
-          </button>
-        )}
+          )}
         {restored(4, save.progress) && (
           <button
             className="button secondary"
-            onClick={() => setCinematic("conspiracy-ending")}
+            onClick={() => setCinematic(script.ending.id)}
           >
             Replay ending
           </button>

@@ -1,0 +1,438 @@
+.story-cutscene {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: calc(100dvh - 105px);
+  padding: 12px;
+  background: #282044;
+  color: #fff8df;
+  border: 3px solid #594793;
+}
+.story-cutscene h1 {
+  font-size: 18px;
+  color: #fff8df;
+  margin: 0;
+  line-height: 1.2;
+}
+.cutscene-view {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  overflow: hidden;
+  border: 3px solid #fff8df;
+  background: #25c6b2;
+}
+.shot-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.shot-camera {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  image-rendering: pixelated;
+}
+.shot-camera canvas {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.shot-actor {
+  position: absolute;
+  width: 12%;
+  height: 22%;
+  transform: translate(-50%, -50%);
+}
+.shot-actor .player-avatar {
+  width: 100%;
+  height: 100%;
+}
+.shot-crab {
+  position: absolute;
+  width: 23%;
+  transform-origin: center;
+  translate: -50% -50%;
+}
+.shot-crab svg {
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+.shot-caption {
+  min-height: 106px;
+  background: #fff8df;
+  color: #282044;
+  border: 3px solid #8872bd;
+  padding: 10px 12px;
+}
+.shot-caption b {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #594793;
+}
+.shot-caption p {
+  margin: 5px 0 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.shot-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  text-align: center;
+  color: #fff8df;
+  background: #282044e8;
+  padding: 7px;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.3;
+  border: 2px solid #fff8df;
+}
+.cutscene-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.cutscene-controls .button {
+  min-height: 44px;
+  padding: 7px;
+}
+.story-cutscene small {
+  font-size: 10px;
+  color: #fff8df;
+}
+.recording-phone {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  background: #25c6b2;
+  border: 2px solid #282044;
+  transform: rotate(-8deg);
+}
+.cap-prop {
+  position: absolute;
+  left: 8%;
+  top: 39%;
+  width: 26%;
+  height: 24%;
+  background: #74c9c4;
+  border: 3px solid #fff8df;
+  box-shadow: 2px 2px #282044;
+}
+.volunteer::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 58%;
+  width: 12px;
+  height: 14px;
+  background: #fff8df;
+  border: 2px solid #594793;
+}
+.pointing::after {
+  content: "";
+  position: absolute;
+  left: 80%;
+  top: 36%;
+  width: 20px;
+  height: 5px;
+  background: #daaa82;
+}
+.map-pin-hand {
+  position: absolute;
+  color: #f58a08;
+  font-size: 24px;
+}
+.iris-map {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    160deg,
+    #f0c88c 0 80px,
+    #fff8df 80px 100px,
+    #25c6b2 100px 170px
+  );
+}
+.first-node {
+  position: absolute;
+  left: 36%;
+  top: 50%;
+  border: 4px solid #594793;
+  background: #fff8df;
+  color: #282044;
+  width: 80px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+.story-stage-preview .story-matchup {
+  animation: trainer-enter 0.8s steps(6) both;
+}
+.story-stage-preview .script-dialogue {
+  animation: dialogue-enter 1s steps(1) both;
+}
+.script-dialogue {
+  background: #fff8df;
+  border: 3px solid #594793;
+  padding: 12px;
+  margin: 8px 0;
+  color: #282044;
+}
+.script-dialogue b {
+  display: block;
+  font-size: 11px;
+  color: #594793;
+}
+.script-dialogue p {
+  margin: 4px 0;
+  font-size: 16px;
+}
+@keyframes trainer-enter {
+  from {
+    transform: translateX(35px);
+    opacity: 0.2;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes dialogue-enter {
+  0%,
+  80% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .story-cutscene {
+    min-height: 0;
+    height: calc(100dvh - 105px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 6px;
+  }
+  .story-cutscene h1 {
+    font-size: 13px;
+    grid-column: 2;
+  }
+  .cutscene-view {
+    grid-column: 1;
+    grid-row: 1/5;
+    min-height: 0;
+  }
+  .shot-caption {
+    grid-column: 2;
+    min-height: 0;
+    padding: 6px;
+  }
+  .shot-caption p {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+  .cutscene-controls {
+    grid-column: 2;
+    gap: 3px;
+  }
+  .cutscene-controls .button {
+    font-size: 11px;
+    padding: 2px;
+    min-height: 44px;
+  }
+  .story-cutscene small {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-stage-preview * {
+    animation: none !important;
+  }
+}
+.reduced-motion .story-stage-preview * {
+  animation: none !important;
+}
+.cutscene-controls .button.text {
+  color: #fff8df;
+}
+.story-cutscene[data-paused="false"][data-reduced="false"]
+  .shot-crab
+  .snap-jaws {
+  animation: claw-ready 0.65s steps(2) infinite;
+  opacity: 1;
+}
+@keyframes claw-ready {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(3px);
+  }
+}
+.professional::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  top: 12%;
+  width: 70%;
+  height: 15%;
+  background: #fff8df;
+  border: 2px solid #594793;
+}
+.story-cutscene[data-paused="true"] * {
+  animation-play-state: paused !important;
+}
+
+/* Constrain flex/grid intrinsic widths instead of masking overflowing text. */
+.story-screen,
+.story-cutscene,
+.story-screen *,
+.story-cutscene * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+.story-screen,
+.story-cutscene {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.story-screen :is(h1, h2, p, strong, small, button, a),
+.story-cutscene :is(h1, p, b, button) {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.story-screen h1 {
+  font-size: clamp(23px, 6vw, 28px);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.story-screen .button-row {
+  flex-wrap: wrap;
+}
+.story-moves {
+  flex-wrap: wrap;
+}
+.story-moves span {
+  min-width: 0;
+  flex-basis: 80px;
+}
+.story-matchup strong,
+.story-matchup small {
+  text-align: center;
+}
+.story-cutscene {
+  min-height: 0;
+  padding: 12px;
+}
+.cutscene-view {
+  flex: none;
+  height: clamp(220px, 39dvh, 360px);
+  min-height: 0;
+  animation: scene-reveal 0.3s ease-out both;
+}
+.shot-caption {
+  min-height: 108px;
+  flex-shrink: 0;
+}
+.shot-caption p {
+  font-size: 17px;
+  line-height: 1.45;
+}
+.shot-overlay {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.story-landing {
+  text-align: center;
+  gap: 16px;
+  padding: 22px 14px;
+}
+.story-landing > p {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.story-key-art {
+  position: relative;
+  height: 260px;
+  border: 3px solid #594793;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #25c6b2;
+}
+.story-key-art > svg:last-child {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  bottom: 12px;
+  left: calc(50% - 55px);
+  filter: drop-shadow(3px 5px 0 #28204444);
+}
+.baby-companion {
+  width: 14%;
+}
+.baby-treasure {
+  position: absolute;
+  left: 5%;
+  top: 40%;
+  width: 18%;
+  height: 15%;
+  background: #fff8df;
+  border: 2px solid #594793;
+  transform: rotate(-15deg);
+}
+.baby-battle-iris {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+@keyframes scene-reveal {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cutscene-view {
+    animation: none;
+  }
+}
+.story-cutscene[data-reduced="true"] .cutscene-view {
+  animation: none;
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .cutscene-view {
+    height: auto;
+    min-height: 0;
+  }
+  .shot-caption p {
+    font-size: 13px;
+  }
+}
+.feature-header:has(+ .feature-content .story-screen),
+.feature-header:has(+ .feature-content .story-cutscene) {
+  gap: 10px;
+}
+.feature-header:has(+ .feature-content .story-screen) strong,
+.feature-header:has(+ .feature-content .story-cutscene) strong {
+  min-width: 0;
+  flex: 1;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+.story-cutscene[data-paused="true"] .cutscene-view {
+  animation: none;
+}
+.feature-overlay:has(.story-landing) {
+  animation: none;
+}

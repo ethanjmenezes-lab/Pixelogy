@@ -1,3 +1,30 @@
+# Password recovery correction — 2026-10-24
+
+This section supersedes the older recovery status below.
+
+## Root cause and fix
+
+The current production alias was verified in Vercel as `https://pixelogy-three.vercel.app`. Reset requests previously used the current browser origin and an arbitrary `next` query. The live Supabase allowlist only covered six exact callback/update-password URLs. Requests from a rotating preview or another return destination could fall back to the Site URL. The root page did not route `PASSWORD_RECOVERY` to a password form.
+
+- `src/cloud/authNavigation.ts`: hosted requests now use the stable `/auth/confirm` URL; local development retains its local origin.
+- `src/cloud/client.ts` and `recovery.ts`: explicit implicit flow, early recovery-event handling and an expiring, user-bound UI marker. No token/password logging or extra credential storage. Supabase still authorizes password changes.
+- `src/pages/Recovery.tsx`: public callback waits for SDK session establishment before removing the URL fragment; `/reset-password` supports confirmation, validation, errors, refresh and success/login. Legacy `/auth/update-password` and root recovery fallbacks are supported. Missing/expired/invalid links offer Request Another Link.
+- `src/pages/Auth.tsx` requests the fixed destination. `src/App.tsx` allows recovery before game-data loading. Existing Vercel SPA rewrite already supports these routes and excludes APIs/static assets.
+
+## Verified live configuration
+
+Site URL remains the stable production origin. Eight entries were added, preserving the existing six (14 total): `/auth/confirm` and `/reset-password` on production, `http://localhost:5173`, `http://127.0.0.1:5173` and `http://127.0.0.1:5175`. Dashboard readback confirmed the saved entries.
+
+The recovery email template was inspected and uses verified `{{ .ConfirmationURL }}`. Template editing is disabled until custom SMTP is configured, so the valid default implicit flow is retained; it does not require the requesting browser's PKCE verifier. No token-hash template was installed, no authentication security setting was disabled, and no broad preview wildcard was added.
+
+## Actual acceptance and remaining work
+
+All 18 authentication browser checks passed across Chromium and WebKit, including requesting in one context and completing recovery in a fresh context, refresh, new-password login, invalid/expired links, root fallback, ordinary-session rejection and phone layouts. These use the real Supabase SDK with intercepted service responses, not actual email delivery or physical devices. Stable URL/rewrite unit tests passed.
+
+**Live recovery is not verified.** A dedicated test account was requested; none was supplied. No real recovery email was sent and no personal password was changed. Vercel CLI reports logged out; this change has not been deployed. After deployment, request the newest email on a dedicated account, open it in a separate browser/device, set the password, then log in with it. Check consumed/expired links and Safari outside the installed PWA. No further template change is required for the chosen default flow.
+
+---
+
 # Authentication repair — 2026-10-24
 
 ## Diagnosis and implemented repair

@@ -1,0 +1,786 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`preserves unchanged regions and snapshots the explicitly revised opening 1`] = `"e4cf31f4b2fc2e34e1e668f5562a0cb8dfb3466e330322bf68095061d33d5ec8"`;
+
+exports[`preserves unchanged regions and snapshots the explicitly revised opening 2`] = `
+{
+  "battle_ui_text_exact": {
+    "boss": "BOSS",
+    "continue": "Continue",
+    "defeat": "Defeat",
+    "enemy_turn": "Enemy Turn!",
+    "locked": "Locked",
+    "region_cleared": "Region Clear!",
+    "replay": "Replay",
+    "retry": "Try Again",
+    "skip": "Skip",
+    "stage_cleared": "Stage Clear!",
+    "start": "Start Battle",
+    "victory": "Victory!",
+    "your_turn": "Your Turn!",
+  },
+  "encounters.0.defeat_exact": [
+    {
+      "speaker": "ROAN",
+      "text": "I don’t get paid enough to fight a crab.",
+    },
+  ],
+  "encounters.0.intro_exact": [
+    {
+      "speaker": "ROAN",
+      "text": "No photos. Keep walking.",
+    },
+  ],
+  "encounters.1.defeat_exact": [
+    {
+      "speaker": "PIP",
+      "text": "Those crates weren’t supposed to be here.",
+    },
+  ],
+  "encounters.1.intro_exact": [
+    {
+      "speaker": "PIP",
+      "text": "You picked a bad night for sightseeing.",
+    },
+  ],
+  "encounters.10.defeat_exact": [
+    {
+      "speaker": "FLASH",
+      "text": "They only film the clean side.",
+    },
+  ],
+  "encounters.10.intro_exact": [
+    {
+      "speaker": "FLASH",
+      "text": "Smile! The ocean loves our brand.",
+    },
+  ],
+  "encounters.11.defeat_exact": [
+    {
+      "speaker": "LUMA",
+      "text": "Why does a cleanup voucher expire?",
+    },
+  ],
+  "encounters.11.intro_exact": [
+    {
+      "speaker": "LUMA",
+      "text": "Win a free cleanup voucher!",
+    },
+  ],
+  "encounters.12.defeat_exact": [
+    {
+      "speaker": "DEX",
+      "text": "The chat is asking about the barges.",
+    },
+  ],
+  "encounters.12.intro_exact": [
+    {
+      "speaker": "DEX",
+      "text": "Careful. You’re live.",
+    },
+  ],
+  "encounters.13.defeat_exact": [
+    {
+      "speaker": "ECHO",
+      "text": "There’s a copy. I left it in Studio B.",
+    },
+  ],
+  "encounters.13.intro_exact": [
+    {
+      "speaker": "ECHO",
+      "text": "We never play the raw footage.",
+    },
+  ],
+  "encounters.14.defeat_exact": [
+    {
+      "speaker": "VEX",
+      "text": "That video was never approved for broadcast!",
+    },
+  ],
+  "encounters.14.intro_exact": [
+    {
+      "speaker": "VEX",
+      "text": "A good story beats an ugly fact.",
+    },
+  ],
+  "encounters.15.defeat_exact": [
+    {
+      "speaker": "REED",
+      "text": "Even the herons stopped coming here.",
+    },
+  ],
+  "encounters.15.intro_exact": [
+    {
+      "speaker": "REED",
+      "text": "Trail’s closed. Company orders.",
+    },
+  ],
+  "encounters.16.defeat_exact": [
+    {
+      "speaker": "MOSS",
+      "text": "Those aren’t the numbers I submitted.",
+    },
+  ],
+  "encounters.16.intro_exact": [
+    {
+      "speaker": "MOSS",
+      "text": "The water readings are perfectly normal.",
+    },
+  ],
+  "encounters.17.defeat_exact": [
+    {
+      "speaker": "SOL",
+      "text": "Mara kept the original results.",
+    },
+  ],
+  "encounters.17.intro_exact": [
+    {
+      "speaker": "SOL",
+      "text": "They said this was a restoration project.",
+    },
+  ],
+  "encounters.18.defeat_exact": [
+    {
+      "speaker": "FINCH",
+      "text": "Funny how they missed every dumping truck.",
+    },
+  ],
+  "encounters.18.intro_exact": [
+    {
+      "speaker": "FINCH",
+      "text": "You can’t outrun our cameras.",
+    },
+  ],
+  "encounters.19.defeat_exact": [
+    {
+      "speaker": "DIRECTOR PIKE",
+      "text": "The access codes are in my case.",
+    },
+  ],
+  "encounters.19.intro_exact": [
+    {
+      "speaker": "DIRECTOR PIKE",
+      "text": "Those wetlands belong to our investors.",
+    },
+  ],
+  "encounters.2.defeat_exact": [
+    {
+      "speaker": "MOTT",
+      "text": "Talk to the foreman. I’m done.",
+    },
+  ],
+  "encounters.2.intro_exact": [
+    {
+      "speaker": "MOTT",
+      "text": "Every truck is logged. Every log is private.",
+    },
+  ],
+  "encounters.20.defeat_exact": [
+    {
+      "speaker": "SLATE",
+      "text": "You made it farther than anyone.",
+    },
+  ],
+  "encounters.20.intro_exact": [
+    {
+      "speaker": "SLATE",
+      "text": "No visitors. No exceptions.",
+    },
+  ],
+  "encounters.21.defeat_exact": [
+    {
+      "speaker": "IVORY",
+      "text": "Maybe we wrote the wrong rules.",
+    },
+  ],
+  "encounters.21.intro_exact": [
+    {
+      "speaker": "IVORY",
+      "text": "We followed every rule we wrote.",
+    },
+  ],
+  "encounters.22.defeat_exact": [
+    {
+      "speaker": "PEARL",
+      "text": "My ads look different with the lights on.",
+    },
+  ],
+  "encounters.22.intro_exact": [
+    {
+      "speaker": "PEARL",
+      "text": "A clean image is a clean conscience.",
+    },
+  ],
+  "encounters.23.defeat_exact": [
+    {
+      "speaker": "KNOX",
+      "text": "It doesn’t clean. It just moves the trash.",
+    },
+  ],
+  "encounters.23.intro_exact": [
+    {
+      "speaker": "KNOX",
+      "text": "The Tidebreaker keeps this company running.",
+    },
+  ],
+  "encounters.24.defeat_exact": [
+    {
+      "speaker": "CASPIAN VALE",
+      "text": "You’ve ruined a very profitable arrangement.",
+    },
+  ],
+  "encounters.24.intro_exact": [
+    {
+      "speaker": "CASPIAN VALE",
+      "text": "Pollution is a problem. We sell the solution.",
+    },
+  ],
+  "encounters.3.defeat_exact": [
+    {
+      "speaker": "TESS",
+      "text": "I should’ve checked what they unloaded.",
+    },
+  ],
+  "encounters.3.intro_exact": [
+    {
+      "speaker": "TESS",
+      "text": "My badge says CLEAN. That’s all I knew.",
+    },
+  ],
+  "encounters.4.defeat_exact": [
+    {
+      "speaker": "FOREMAN SANDY",
+      "text": "The manifests are in my office. Take them.",
+    },
+  ],
+  "encounters.4.intro_exact": [
+    {
+      "speaker": "FOREMAN SANDY",
+      "text": "This beach is under contract. So am I.",
+    },
+  ],
+  "encounters.5.defeat_exact": [
+    {
+      "speaker": "DOCK",
+      "text": "Guess a crab counts as authorized.",
+    },
+  ],
+  "encounters.5.intro_exact": [
+    {
+      "speaker": "DOCK",
+      "text": "Authorized cargo only.",
+    },
+  ],
+  "encounters.6.defeat_exact": [
+    {
+      "speaker": "ACE",
+      "text": "I should put that in the incident report.",
+    },
+  ],
+  "encounters.6.intro_exact": [
+    {
+      "speaker": "ACE",
+      "text": "You missed the safety briefing.",
+    },
+  ],
+  "encounters.7.defeat_exact": [
+    {
+      "speaker": "KIRA",
+      "text": "Except those shipments. They skipped the system.",
+    },
+  ],
+  "encounters.7.intro_exact": [
+    {
+      "speaker": "KIRA",
+      "text": "Nothing leaves without a barcode.",
+    },
+  ],
+  "encounters.8.defeat_exact": [
+    {
+      "speaker": "LENN",
+      "text": "I asked questions once. Then they moved me here.",
+    },
+  ],
+  "encounters.8.intro_exact": [
+    {
+      "speaker": "LENN",
+      "text": "Two invoices. One shipment. No questions.",
+    },
+  ],
+  "encounters.9.defeat_exact": [
+    {
+      "speaker": "WRENCH",
+      "text": "The invoices are in that terminal. Read them.",
+    },
+  ],
+  "encounters.9.intro_exact": [
+    {
+      "speaker": "WRENCH",
+      "text": "I built the machines. I didn’t write the orders.",
+    },
+  ],
+  "ending.shots.0.dialogue_exact": [
+    {
+      "speaker": "NEWS REPORT (RADIO)",
+      "text": "Blacktide executives face a full investigation.",
+    },
+  ],
+  "ending.shots.1.overlay_exact": "SHELLSHORE · WEEKS LATER",
+  "ending.shots.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "It’ll take time. But the coast is healing.",
+    },
+  ],
+  "ending.shots.3.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "You two started all this.",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "We didn’t do it alone.",
+    },
+  ],
+  "ending.shots.4.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "There’s still more shore out there.",
+    },
+  ],
+  "ending.shots.5.overlay_exact": "THE END — FOR NOW",
+  "opening.shots.0.overlay_exact": "BLACKTIDE
+CLEAN COASTS. BRIGHTER FUTURES.",
+  "opening.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "Something isn't right.",
+    },
+  ],
+  "opening.shots.2.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "So this is where it's going...",
+    },
+  ],
+  "opening.shots.3.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "Hey... where did you come from?",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "You were hiding in there?",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "You're just a little guy.",
+    },
+  ],
+  "opening.shots.3.overlay_exact": "The little crab doesn't run.",
+  "opening.shots.4.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "You want to fight this mess too?",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "Then let's do it together.",
+    },
+  ],
+  "opening.shots.5.dialogue_exact": [
+    {
+      "speaker": "BLACKTIDE WORKER",
+      "text": "You're not supposed to be here.",
+    },
+    {
+      "speaker": "BLACKTIDE WORKER",
+      "text": "Drop the camera. Walk away.",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "This beach is covered in your trash.",
+    },
+    {
+      "speaker": "BLACKTIDE WORKER",
+      "text": "You didn't see anything.",
+    },
+    {
+      "speaker": "BLACKTIDE WORKER",
+      "text": "What, that little crab?",
+    },
+    {
+      "speaker": "BLACKTIDE WORKER",
+      "text": "Fine. We'll crush you both.",
+    },
+  ],
+  "opening.shots.6.dialogue_exact": [
+    {
+      "speaker": "",
+      "text": "BABY CRAB steps forward!",
+    },
+    {
+      "speaker": "",
+      "text": "BLACKTIDE WORKER challenges you!",
+    },
+  ],
+  "regions.0.intro.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They unloaded six trucks last night.",
+    },
+  ],
+  "regions.0.intro.1.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "None of them came to clean.",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "Then we start there.",
+    },
+  ],
+  "regions.0.intro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They unloaded six trucks last night.",
+    },
+  ],
+  "regions.0.intro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "None of them came to clean.",
+    },
+    {
+      "speaker": "PLAYER",
+      "text": "Then we start there.",
+    },
+  ],
+  "regions.0.outro.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "These trucks came from Rustport.",
+    },
+  ],
+  "regions.0.outro.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "This wasn’t an accident.",
+    },
+  ],
+  "regions.0.outro.1.overlay_exact": "EVIDENCE FOUND: SHIPPING MANIFEST",
+  "regions.0.outro.2.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "Let’s see who signed the delivery.",
+    },
+  ],
+  "regions.0.outro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "These trucks came from Rustport.",
+    },
+  ],
+  "regions.0.outro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "This wasn’t an accident.",
+    },
+  ],
+  "regions.0.outro_scene.shots.1.overlay_exact": "EVIDENCE FOUND: SHIPPING MANIFEST",
+  "regions.0.outro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "Let’s see who signed the delivery.",
+    },
+  ],
+  "regions.1.intro.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "The trucks start here.",
+    },
+  ],
+  "regions.1.intro.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "They charge to dump it… and charge to remove it.",
+    },
+    {
+      "speaker": "NIA",
+      "text": "Twice. For the same trash.",
+    },
+  ],
+  "regions.1.intro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "The trucks start here.",
+    },
+  ],
+  "regions.1.intro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "They charge to dump it… and charge to remove it.",
+    },
+    {
+      "speaker": "NIA",
+      "text": "Twice. For the same trash.",
+    },
+  ],
+  "regions.1.outro.0.dialogue_exact": [
+    {
+      "speaker": "WRENCH",
+      "text": "I built the sorter. They built the loophole.",
+    },
+  ],
+  "regions.1.outro.1.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "These invoices could shut them down.",
+    },
+  ],
+  "regions.1.outro.1.overlay_exact": "EVIDENCE FOUND: DOUBLE-BILLED INVOICES",
+  "regions.1.outro.2.dialogue_exact": [
+    {
+      "speaker": "VEX (BROADCAST)",
+      "text": "Don’t believe every wave of gossip.",
+    },
+  ],
+  "regions.1.outro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "WRENCH",
+      "text": "I built the sorter. They built the loophole.",
+    },
+  ],
+  "regions.1.outro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "These invoices could shut them down.",
+    },
+  ],
+  "regions.1.outro_scene.shots.1.overlay_exact": "EVIDENCE FOUND: DOUBLE-BILLED INVOICES",
+  "regions.1.outro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "VEX (BROADCAST)",
+      "text": "Don’t believe every wave of gossip.",
+    },
+  ],
+  "regions.2.intro.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They’ve turned cleanup into a show.",
+    },
+  ],
+  "regions.2.intro.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "Then let’s show the whole picture.",
+    },
+  ],
+  "regions.2.intro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They’ve turned cleanup into a show.",
+    },
+  ],
+  "regions.2.intro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "Then let’s show the whole picture.",
+    },
+  ],
+  "regions.2.outro.0.dialogue_exact": [
+    {
+      "speaker": "VEX",
+      "text": "That footage was never meant to air!",
+    },
+  ],
+  "regions.2.outro.1.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They can’t crop the truth now.",
+    },
+  ],
+  "regions.2.outro.1.overlay_exact": "EVIDENCE FOUND: UNEDITED RECORDING",
+  "regions.2.outro.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA (MESSAGE)",
+      "text": "If you want proof, come alone.",
+    },
+  ],
+  "regions.2.outro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "VEX",
+      "text": "That footage was never meant to air!",
+    },
+  ],
+  "regions.2.outro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They can’t crop the truth now.",
+    },
+  ],
+  "regions.2.outro_scene.shots.1.overlay_exact": "EVIDENCE FOUND: UNEDITED RECORDING",
+  "regions.2.outro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA (MESSAGE)",
+      "text": "If you want proof, come alone.",
+    },
+  ],
+  "regions.3.intro.0.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "It’s too quiet.",
+    },
+  ],
+  "regions.3.intro.1.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "I reported what we found.",
+    },
+    {
+      "speaker": "DR. MARA",
+      "text": "Blacktide changed every number.",
+    },
+  ],
+  "regions.3.intro.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "Pike has the originals. Get them.",
+    },
+  ],
+  "regions.3.intro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "It’s too quiet.",
+    },
+  ],
+  "regions.3.intro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "I reported what we found.",
+    },
+    {
+      "speaker": "DR. MARA",
+      "text": "Blacktide changed every number.",
+    },
+  ],
+  "regions.3.intro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "Pike has the originals. Get them.",
+    },
+  ],
+  "regions.3.outro.0.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "These records prove they knew.",
+    },
+  ],
+  "regions.3.outro.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "We’ve got enough to expose them.",
+    },
+  ],
+  "regions.3.outro.1.overlay_exact": "EVIDENCE FOUND: ORIGINAL WATER TESTS",
+  "regions.3.outro.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "Then we take it to the source.",
+    },
+  ],
+  "regions.3.outro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "These records prove they knew.",
+    },
+  ],
+  "regions.3.outro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "We’ve got enough to expose them.",
+    },
+  ],
+  "regions.3.outro_scene.shots.1.overlay_exact": "EVIDENCE FOUND: ORIGINAL WATER TESTS",
+  "regions.3.outro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "DR. MARA",
+      "text": "Then we take it to the source.",
+    },
+  ],
+  "regions.4.intro.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "The last shipment came from here.",
+    },
+  ],
+  "regions.4.intro.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "They built a business out of making a mess.",
+    },
+  ],
+  "regions.4.intro.2.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "Then let’s shut it down.",
+    },
+  ],
+  "regions.4.intro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "The last shipment came from here.",
+    },
+  ],
+  "regions.4.intro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "They built a business out of making a mess.",
+    },
+  ],
+  "regions.4.intro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "Then let’s shut it down.",
+    },
+  ],
+  "regions.4.outro.0.dialogue_exact": [
+    {
+      "speaker": "VALE",
+      "text": "You have no idea what you’ve cost me.",
+    },
+  ],
+  "regions.4.outro.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "A lot less than you cost the coast.",
+    },
+  ],
+  "regions.4.outro.1.overlay_exact": "EVIDENCE FOUND: THE BOARD ORDER",
+  "regions.4.outro.2.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They can’t hide the record now.",
+    },
+  ],
+  "regions.4.outro_scene.shots.0.dialogue_exact": [
+    {
+      "speaker": "VALE",
+      "text": "You have no idea what you’ve cost me.",
+    },
+  ],
+  "regions.4.outro_scene.shots.1.dialogue_exact": [
+    {
+      "speaker": "PLAYER",
+      "text": "A lot less than you cost the coast.",
+    },
+  ],
+  "regions.4.outro_scene.shots.1.overlay_exact": "EVIDENCE FOUND: THE BOARD ORDER",
+  "regions.4.outro_scene.shots.2.dialogue_exact": [
+    {
+      "speaker": "NIA",
+      "text": "They can’t hide the record now.",
+    },
+  ],
+}
+`;

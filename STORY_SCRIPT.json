@@ -1,0 +1,1645 @@
+{
+  "title": "Pixelogy: The Blacktide Conspiracy",
+  "version": "locked-dialogue-1.0",
+  "dialogue_policy": "ALL fields ending _exact are the sole canonical on-screen text. Display verbatim; no paraphrases, auto-generated text, or extra scripted lines. Dynamic functional UI labels and player-entered names are outside this constraint.",
+  "premise": "Blacktide Industries secretly creates coastal pollution, then charges cities to clean it up. A young explorer and red crab uncover evidence, defeat security crab trainers, and stop the dumping operation.",
+  "tone": "Playful adventure with genuine stakes, lean dialogue, visual storytelling; no preachy monologues or text-slide cinematics.",
+  "opening": {
+    "id": "cinematic.opening",
+    "title": "The Night the Beach Changed",
+    "kind": "cutscene",
+    "trigger": "first_story_mode_entry_only",
+    "shots": [
+      {
+        "id": "open.01",
+        "duration_seconds": 4,
+        "visual_action": "Sunrise. Track sideways across Shellshore: surf, dune grass, footprints, a crab disappearing into a sandcastle. The beach is beautiful and alive.",
+        "camera": "slow horizontal pan",
+        "overlay_exact": "SHELLSHORE BEACH",
+        "sound_design": "soft surf, gulls, light chiptune melody"
+      },
+      {
+        "id": "open.02",
+        "duration_seconds": 4,
+        "visual_action": "A beachfront video billboard flickers to life: Blacktide logo, perfectly clean beach footage, smiling executive silhouette. Show a Blacktide-branded truck driving past.",
+        "camera": "push in to billboard",
+        "overlay_exact": "BLACKTIDE INDUSTRIES",
+        "dialogue_exact": [
+          {
+            "speaker": "BLACKTIDE AD",
+            "text": "Cleaner shores. Brighter futures."
+          }
+        ],
+        "sound_design": "cheerful corporate jingle"
+      },
+      {
+        "id": "open.03",
+        "duration_seconds": 3,
+        "visual_action": "Match cut: same location under moonlight. Corporate colors shift to purple. Three unmarked trucks roll in as streetlights click off.",
+        "camera": "match cut, then tilt down",
+        "overlay_exact": "11:58 PM",
+        "sound_design": "jingle slows and cuts out; diesel engine"
+      },
+      {
+        "id": "open.04",
+        "duration_seconds": 5,
+        "visual_action": "Crane tips a shipping container; piles of bagged waste spill onto the sand. The Blacktide logo is exposed on a container as a tarp blows away. Do not show the hero collecting dangerous waste.",
+        "camera": "low-angle pan across falling waste",
+        "dialogue_exact": [
+          {
+            "speaker": "PLAYER",
+            "text": "That’s the same logo."
+          }
+        ],
+        "sound_design": "metal clang, muted crash, surf"
+      },
+      {
+        "id": "open.05",
+        "duration_seconds": 5,
+        "visual_action": "Player raises phone to record. A searchlight hits them. Security trainer Roan steps into frame, barring the path.",
+        "camera": "fast zoom on light, then medium two-shot",
+        "dialogue_exact": [
+          {
+            "speaker": "ROAN",
+            "text": "No photos. Walk away."
+          },
+          {
+            "speaker": "PLAYER",
+            "text": "This is a public beach."
+          }
+        ],
+        "sound_design": "sharp alarm chirp; music drops"
+      },
+      {
+        "id": "open.06",
+        "duration_seconds": 4,
+        "visual_action": "From behind a clean bottle cap on the sand, a small red crab pops out. It picks up the cap like a tiny shield, scuttles between player and guard, then raises both claws.",
+        "camera": "close-up on cap, follow crab reveal",
+        "dialogue_exact": [
+          {
+            "speaker": "PLAYER",
+            "text": "You picked a fight for me?"
+          }
+        ],
+        "sound_design": "crab chirp and two clean claw snaps"
+      },
+      {
+        "id": "open.07",
+        "duration_seconds": 5,
+        "visual_action": "Roan sends out a corporate armored crab. Player steps behind the companion crab. Both creatures face each other. Show animated claw readiness, not static portraits.",
+        "camera": "quick alternating character close-ups",
+        "dialogue_exact": [
+          {
+            "speaker": "ROAN",
+            "text": "You’re stopping us with THAT?"
+          },
+          {
+            "speaker": "PLAYER",
+            "text": "Looks like he’s stopping you."
+          }
+        ],
+        "sound_design": "snare roll, rising battle theme"
+      },
+      {
+        "id": "open.08",
+        "duration_seconds": 4,
+        "visual_action": "Crab strikes a heroic pose. Freeze-frame for only the title beat, with wave-shaped pixels radiating outward. The title appears over moving seafoam, then reveals the first battle node.",
+        "camera": "snap zoom out, iris transition to Region 1 map",
+        "overlay_exact": "PIXELOGY: THE BLACKTIDE CONSPIRACY",
+        "sound_design": "short 8-bit brass flourish"
+      }
+    ],
+    "implementation_note": "Approx. 34 seconds. No slideshow. Dialogue sits in a consistent short speech bubble and appears ONLY during corresponding action."
+  },
+  "regions": [
+    {
+      "id": "shellshore",
+      "name": "Shellshore Beach",
+      "number": 1,
+      "theme": "A sunny beach village with dumping trucks tucked behind beachfront ads",
+      "boss": "Foreman Sandy",
+      "evidence": "SHIPPING MANIFEST",
+      "reward": "Manifest showing a Rustport loading dock and dates of illegal deliveries",
+      "intro": [
+        {
+          "id": "r1i.01",
+          "duration_seconds": 4,
+          "visual_action": "Nia, a local lifeguard, pulls a tarp from washed-up crates beside her empty lifeguard stand. Trucks idle behind the dunes.",
+          "camera": "pan from empty lifeguard stand to Nia",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "They unloaded six trucks last night."
+            }
+          ]
+        },
+        {
+          "id": "r1i.02",
+          "duration_seconds": 4,
+          "visual_action": "Player and red crab look from the crates to the Blacktide trailer. Nia points toward a guarded warehouse.",
+          "camera": "follow her hand to level path",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "None of them came to clean."
+            },
+            {
+              "speaker": "PLAYER",
+              "text": "Then we start there."
+            }
+          ]
+        }
+      ],
+      "outro": [
+        {
+          "id": "r1o.01",
+          "duration_seconds": 4,
+          "visual_action": "Sandy drops a clipboard. Nia flips through a shipping manifest and reveals a red-marked dock map.",
+          "camera": "push into the marked map",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "These trucks came from Rustport."
+            }
+          ]
+        },
+        {
+          "id": "r1o.02",
+          "duration_seconds": 4,
+          "visual_action": "As corporate guards retreat, townspeople begin carrying bags of safe litter toward proper disposal bins. Beach is partially restored, not magically pristine.",
+          "camera": "pull back to reveal activity",
+          "overlay_exact": "EVIDENCE FOUND: SHIPPING MANIFEST",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "This wasn’t an accident."
+            }
+          ]
+        },
+        {
+          "id": "r1o.03",
+          "duration_seconds": 3,
+          "visual_action": "Nia pins a route on the region map. The Rustport bridge lights up. Crab taps map with a claw.",
+          "camera": "map zoom to Rustport",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "Let’s see who signed the delivery."
+            }
+          ]
+        }
+      ],
+      "intro_scene": {
+        "id": "cinematic.shellshore.intro",
+        "title": "Shellshore Beach Arrival",
+        "kind": "cutscene",
+        "trigger": "first_enter_region_1",
+        "shots": [
+          {
+            "id": "r1i.01",
+            "duration_seconds": 4,
+            "visual_action": "Nia, a local lifeguard, pulls a tarp from washed-up crates beside her empty lifeguard stand. Trucks idle behind the dunes.",
+            "camera": "pan from empty lifeguard stand to Nia",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "They unloaded six trucks last night."
+              }
+            ]
+          },
+          {
+            "id": "r1i.02",
+            "duration_seconds": 4,
+            "visual_action": "Player and red crab look from the crates to the Blacktide trailer. Nia points toward a guarded warehouse.",
+            "camera": "follow her hand to level path",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "None of them came to clean."
+              },
+              {
+                "speaker": "PLAYER",
+                "text": "Then we start there."
+              }
+            ]
+          }
+        ]
+      },
+      "outro_scene": {
+        "id": "cinematic.shellshore.outro",
+        "title": "Shellshore Beach Cleared",
+        "kind": "cutscene",
+        "trigger": "first_defeat_shellshore_boss",
+        "shots": [
+          {
+            "id": "r1o.01",
+            "duration_seconds": 4,
+            "visual_action": "Sandy drops a clipboard. Nia flips through a shipping manifest and reveals a red-marked dock map.",
+            "camera": "push into the marked map",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "These trucks came from Rustport."
+              }
+            ]
+          },
+          {
+            "id": "r1o.02",
+            "duration_seconds": 4,
+            "visual_action": "As corporate guards retreat, townspeople begin carrying bags of safe litter toward proper disposal bins. Beach is partially restored, not magically pristine.",
+            "camera": "pull back to reveal activity",
+            "overlay_exact": "EVIDENCE FOUND: SHIPPING MANIFEST",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "This wasn’t an accident."
+              }
+            ]
+          },
+          {
+            "id": "r1o.03",
+            "duration_seconds": 3,
+            "visual_action": "Nia pins a route on the region map. The Rustport bridge lights up. Crab taps map with a claw.",
+            "camera": "map zoom to Rustport",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "Let’s see who signed the delivery."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "rustport",
+      "name": "Rustport Harbor",
+      "number": 2,
+      "theme": "Industrial port, cranes, shipping containers, oily puddle reflections",
+      "boss": "Wrench",
+      "evidence": "DOUBLE-BILLED INVOICES",
+      "reward": "Invoices proving Blacktide bills municipalities to remove waste it dumped",
+      "intro": [
+        {
+          "id": "r2i.01",
+          "duration_seconds": 4,
+          "visual_action": "Cargo cranes loom above stacked containers; behind the fence, a Blacktide cleanup ad faces the harbor.",
+          "camera": "vertical crane reveal",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "The trucks start here."
+            }
+          ]
+        },
+        {
+          "id": "r2i.02",
+          "duration_seconds": 5,
+          "visual_action": "Zoom onto two paperwork stamps on adjacent containers: DISPOSAL and EMERGENCY CLEANUP, bearing the same job number.",
+          "camera": "match-cut between the labels",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "They charge to dump it… and charge to remove it."
+            },
+            {
+              "speaker": "NIA",
+              "text": "Twice. For the same trash."
+            }
+          ]
+        }
+      ],
+      "outro": [
+        {
+          "id": "r2o.01",
+          "duration_seconds": 4,
+          "visual_action": "Wrench lets go of a wrench. His terminal shows duplicated invoices and transfer approvals.",
+          "camera": "close-up on terminal",
+          "dialogue_exact": [
+            {
+              "speaker": "WRENCH",
+              "text": "I built the sorter. They built the loophole."
+            }
+          ]
+        },
+        {
+          "id": "r2o.02",
+          "duration_seconds": 4,
+          "visual_action": "Nia copies the files to a small evidence device while Blacktide surveillance drones sweep the dock.",
+          "camera": "tracking shot under moving spotlight",
+          "overlay_exact": "EVIDENCE FOUND: DOUBLE-BILLED INVOICES",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "These invoices could shut them down."
+            }
+          ]
+        },
+        {
+          "id": "r2o.03",
+          "duration_seconds": 4,
+          "visual_action": "A screen outside the dock plays Vex on a neon boardwalk stage calling reports of dumping “false rumors.”",
+          "camera": "rack focus to billboard",
+          "dialogue_exact": [
+            {
+              "speaker": "VEX (BROADCAST)",
+              "text": "Don’t believe every wave of gossip."
+            }
+          ]
+        }
+      ],
+      "intro_scene": {
+        "id": "cinematic.rustport.intro",
+        "title": "Rustport Harbor Arrival",
+        "kind": "cutscene",
+        "trigger": "first_enter_region_2",
+        "shots": [
+          {
+            "id": "r2i.01",
+            "duration_seconds": 4,
+            "visual_action": "Cargo cranes loom above stacked containers; behind the fence, a Blacktide cleanup ad faces the harbor.",
+            "camera": "vertical crane reveal",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "The trucks start here."
+              }
+            ]
+          },
+          {
+            "id": "r2i.02",
+            "duration_seconds": 5,
+            "visual_action": "Zoom onto two paperwork stamps on adjacent containers: DISPOSAL and EMERGENCY CLEANUP, bearing the same job number.",
+            "camera": "match-cut between the labels",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "They charge to dump it… and charge to remove it."
+              },
+              {
+                "speaker": "NIA",
+                "text": "Twice. For the same trash."
+              }
+            ]
+          }
+        ]
+      },
+      "outro_scene": {
+        "id": "cinematic.rustport.outro",
+        "title": "Rustport Harbor Cleared",
+        "kind": "cutscene",
+        "trigger": "first_defeat_rustport_boss",
+        "shots": [
+          {
+            "id": "r2o.01",
+            "duration_seconds": 4,
+            "visual_action": "Wrench lets go of a wrench. His terminal shows duplicated invoices and transfer approvals.",
+            "camera": "close-up on terminal",
+            "dialogue_exact": [
+              {
+                "speaker": "WRENCH",
+                "text": "I built the sorter. They built the loophole."
+              }
+            ]
+          },
+          {
+            "id": "r2o.02",
+            "duration_seconds": 4,
+            "visual_action": "Nia copies the files to a small evidence device while Blacktide surveillance drones sweep the dock.",
+            "camera": "tracking shot under moving spotlight",
+            "overlay_exact": "EVIDENCE FOUND: DOUBLE-BILLED INVOICES",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "These invoices could shut them down."
+              }
+            ]
+          },
+          {
+            "id": "r2o.03",
+            "duration_seconds": 4,
+            "visual_action": "A screen outside the dock plays Vex on a neon boardwalk stage calling reports of dumping “false rumors.”",
+            "camera": "rack focus to billboard",
+            "dialogue_exact": [
+              {
+                "speaker": "VEX (BROADCAST)",
+                "text": "Don’t believe every wave of gossip."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "boardwalk",
+      "name": "Neon Boardwalk",
+      "number": 3,
+      "theme": "Night arcade, neon signs, public broadcasting stage, animated billboards",
+      "boss": "Vex",
+      "evidence": "UNEDITED RECORDING",
+      "reward": "Original footage revealing Blacktide instructed crews to dump trash and fabricate footage",
+      "intro": [
+        {
+          "id": "r3i.01",
+          "duration_seconds": 4,
+          "visual_action": "Boardwalk game booths and flashing signs. Huge screens repeat a cheerful Blacktide clean-coast commercial; beneath the pier, trash drifts in.",
+          "camera": "arc around billboard",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "They’ve turned cleanup into a show."
+            }
+          ]
+        },
+        {
+          "id": "r3i.02",
+          "duration_seconds": 4,
+          "visual_action": "Player watches two simultaneous feeds: a cropped promotional image and the actual dirty shoreline outside frame.",
+          "camera": "split visual then merge",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "Then let’s show the whole picture."
+            }
+          ]
+        }
+      ],
+      "outro": [
+        {
+          "id": "r3o.01",
+          "duration_seconds": 4,
+          "visual_action": "After Vex loses, the broadcast monitor glitches. Player selects unedited source from the control booth, revealing night dumping footage.",
+          "camera": "screen takeover with static transition",
+          "dialogue_exact": [
+            {
+              "speaker": "VEX",
+              "text": "That footage was never meant to air!"
+            }
+          ]
+        },
+        {
+          "id": "r3o.02",
+          "duration_seconds": 5,
+          "visual_action": "Crowd members turn away from Blacktide screens to look at the waterfront; phones show the unedited recording, no magical mass conversion.",
+          "camera": "slow pan across reacting crowd",
+          "overlay_exact": "EVIDENCE FOUND: UNEDITED RECORDING",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "They can’t crop the truth now."
+            }
+          ]
+        },
+        {
+          "id": "r3o.03",
+          "duration_seconds": 4,
+          "visual_action": "A scientist sends a message: a location pin in the mangroves and a photo of a falsified water-test report.",
+          "camera": "tight push onto message",
+          "dialogue_exact": [
+            {
+              "speaker": "DR. MARA (MESSAGE)",
+              "text": "If you want proof, come alone."
+            }
+          ]
+        }
+      ],
+      "intro_scene": {
+        "id": "cinematic.boardwalk.intro",
+        "title": "Neon Boardwalk Arrival",
+        "kind": "cutscene",
+        "trigger": "first_enter_region_3",
+        "shots": [
+          {
+            "id": "r3i.01",
+            "duration_seconds": 4,
+            "visual_action": "Boardwalk game booths and flashing signs. Huge screens repeat a cheerful Blacktide clean-coast commercial; beneath the pier, trash drifts in.",
+            "camera": "arc around billboard",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "They’ve turned cleanup into a show."
+              }
+            ]
+          },
+          {
+            "id": "r3i.02",
+            "duration_seconds": 4,
+            "visual_action": "Player watches two simultaneous feeds: a cropped promotional image and the actual dirty shoreline outside frame.",
+            "camera": "split visual then merge",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "Then let’s show the whole picture."
+              }
+            ]
+          }
+        ]
+      },
+      "outro_scene": {
+        "id": "cinematic.boardwalk.outro",
+        "title": "Neon Boardwalk Cleared",
+        "kind": "cutscene",
+        "trigger": "first_defeat_boardwalk_boss",
+        "shots": [
+          {
+            "id": "r3o.01",
+            "duration_seconds": 4,
+            "visual_action": "After Vex loses, the broadcast monitor glitches. Player selects unedited source from the control booth, revealing night dumping footage.",
+            "camera": "screen takeover with static transition",
+            "dialogue_exact": [
+              {
+                "speaker": "VEX",
+                "text": "That footage was never meant to air!"
+              }
+            ]
+          },
+          {
+            "id": "r3o.02",
+            "duration_seconds": 5,
+            "visual_action": "Crowd members turn away from Blacktide screens to look at the waterfront; phones show the unedited recording, no magical mass conversion.",
+            "camera": "slow pan across reacting crowd",
+            "overlay_exact": "EVIDENCE FOUND: UNEDITED RECORDING",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "They can’t crop the truth now."
+              }
+            ]
+          },
+          {
+            "id": "r3o.03",
+            "duration_seconds": 4,
+            "visual_action": "A scientist sends a message: a location pin in the mangroves and a photo of a falsified water-test report.",
+            "camera": "tight push onto message",
+            "dialogue_exact": [
+              {
+                "speaker": "DR. MARA (MESSAGE)",
+                "text": "If you want proof, come alone."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mangroves",
+      "name": "Whispering Mangroves",
+      "number": 4,
+      "theme": "Bioluminescent wetlands, narrow walkways, silent heron nests, research station",
+      "boss": "Director Pike",
+      "evidence": "ORIGINAL WATER TESTS",
+      "reward": "Original samples and lab reports proving Blacktide concealed environmental damage",
+      "intro": [
+        {
+          "id": "r4i.01",
+          "duration_seconds": 4,
+          "visual_action": "Quiet wetland at twilight. The usual frogs and birds are almost absent. A research lamp clicks on in a small station.",
+          "camera": "slow push through reeds",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "It’s too quiet."
+            }
+          ]
+        },
+        {
+          "id": "r4i.02",
+          "duration_seconds": 5,
+          "visual_action": "Dr. Mara meets player, revealing two water-test sheets: one with alarming values, the other stamped APPROVED with changed data.",
+          "camera": "over-the-shoulder on sheets",
+          "dialogue_exact": [
+            {
+              "speaker": "DR. MARA",
+              "text": "I reported what we found."
+            },
+            {
+              "speaker": "DR. MARA",
+              "text": "Blacktide changed every number."
+            }
+          ]
+        },
+        {
+          "id": "r4i.03",
+          "duration_seconds": 3,
+          "visual_action": "Security lights approach along the boardwalk; Mara seals documents in a waterproof case.",
+          "camera": "low shot of approaching boots",
+          "dialogue_exact": [
+            {
+              "speaker": "DR. MARA",
+              "text": "Pike has the originals. Get them."
+            }
+          ]
+        }
+      ],
+      "outro": [
+        {
+          "id": "r4o.01",
+          "duration_seconds": 4,
+          "visual_action": "Pike’s access case cracks open, revealing original test results; Mara checks seals and timestamps.",
+          "camera": "steady reveal",
+          "dialogue_exact": [
+            {
+              "speaker": "DR. MARA",
+              "text": "These records prove they knew."
+            }
+          ]
+        },
+        {
+          "id": "r4o.02",
+          "duration_seconds": 5,
+          "visual_action": "Community scientists and rangers begin work on the wetland and reopen one path. Bird calls return softly, but the damage is still visible.",
+          "camera": "wide tracking shot of careful restoration",
+          "overlay_exact": "EVIDENCE FOUND: ORIGINAL WATER TESTS",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "We’ve got enough to expose them."
+            }
+          ]
+        },
+        {
+          "id": "r4o.03",
+          "duration_seconds": 4,
+          "visual_action": "Mara marks the offshore headquarters on the map and hands over facility access codes.",
+          "camera": "map lights up offshore platform",
+          "dialogue_exact": [
+            {
+              "speaker": "DR. MARA",
+              "text": "Then we take it to the source."
+            }
+          ]
+        }
+      ],
+      "intro_scene": {
+        "id": "cinematic.mangroves.intro",
+        "title": "Whispering Mangroves Arrival",
+        "kind": "cutscene",
+        "trigger": "first_enter_region_4",
+        "shots": [
+          {
+            "id": "r4i.01",
+            "duration_seconds": 4,
+            "visual_action": "Quiet wetland at twilight. The usual frogs and birds are almost absent. A research lamp clicks on in a small station.",
+            "camera": "slow push through reeds",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "It’s too quiet."
+              }
+            ]
+          },
+          {
+            "id": "r4i.02",
+            "duration_seconds": 5,
+            "visual_action": "Dr. Mara meets player, revealing two water-test sheets: one with alarming values, the other stamped APPROVED with changed data.",
+            "camera": "over-the-shoulder on sheets",
+            "dialogue_exact": [
+              {
+                "speaker": "DR. MARA",
+                "text": "I reported what we found."
+              },
+              {
+                "speaker": "DR. MARA",
+                "text": "Blacktide changed every number."
+              }
+            ]
+          },
+          {
+            "id": "r4i.03",
+            "duration_seconds": 3,
+            "visual_action": "Security lights approach along the boardwalk; Mara seals documents in a waterproof case.",
+            "camera": "low shot of approaching boots",
+            "dialogue_exact": [
+              {
+                "speaker": "DR. MARA",
+                "text": "Pike has the originals. Get them."
+              }
+            ]
+          }
+        ]
+      },
+      "outro_scene": {
+        "id": "cinematic.mangroves.outro",
+        "title": "Whispering Mangroves Cleared",
+        "kind": "cutscene",
+        "trigger": "first_defeat_mangroves_boss",
+        "shots": [
+          {
+            "id": "r4o.01",
+            "duration_seconds": 4,
+            "visual_action": "Pike’s access case cracks open, revealing original test results; Mara checks seals and timestamps.",
+            "camera": "steady reveal",
+            "dialogue_exact": [
+              {
+                "speaker": "DR. MARA",
+                "text": "These records prove they knew."
+              }
+            ]
+          },
+          {
+            "id": "r4o.02",
+            "duration_seconds": 5,
+            "visual_action": "Community scientists and rangers begin work on the wetland and reopen one path. Bird calls return softly, but the damage is still visible.",
+            "camera": "wide tracking shot of careful restoration",
+            "overlay_exact": "EVIDENCE FOUND: ORIGINAL WATER TESTS",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "We’ve got enough to expose them."
+              }
+            ]
+          },
+          {
+            "id": "r4o.03",
+            "duration_seconds": 4,
+            "visual_action": "Mara marks the offshore headquarters on the map and hands over facility access codes.",
+            "camera": "map lights up offshore platform",
+            "dialogue_exact": [
+              {
+                "speaker": "DR. MARA",
+                "text": "Then we take it to the source."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "headquarters",
+      "name": "Blacktide Headquarters",
+      "number": 5,
+      "theme": "Offshore fortified headquarters, shipping machinery, stormy sea, corporate boardroom",
+      "boss": "CEO Caspian Vale",
+      "evidence": "THE BOARD ORDER",
+      "reward": "Signed executive authorization proving Blacktide intentionally created cleanup demand",
+      "intro": [
+        {
+          "id": "r5i.01",
+          "duration_seconds": 4,
+          "visual_action": "Corporate offshore facility rises out of rough gray water. An enormous screen still plays the clean-coast jingle, now distorted by wind.",
+          "camera": "boat-to-platform crane up",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "The last shipment came from here."
+            }
+          ]
+        },
+        {
+          "id": "r5i.02",
+          "duration_seconds": 5,
+          "visual_action": "Player looks up at spinning conveyor belts routing crates marked WASTE to sites labeled EMERGENCY CONTRACT.",
+          "camera": "tracking shot along conveyor to office windows",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "They built a business out of making a mess."
+            }
+          ]
+        },
+        {
+          "id": "r5i.03",
+          "duration_seconds": 3,
+          "visual_action": "Crab clangs its equipped armor and steps forward. Headquarters security doors slide open.",
+          "camera": "tight on crab then dolly into doors",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "Then let’s shut it down."
+            }
+          ]
+        }
+      ],
+      "outro": [
+        {
+          "id": "r5o.01",
+          "duration_seconds": 4,
+          "visual_action": "Vale stands stunned in his silent boardroom. The player retrieves a digitally signed order and sends all evidence to investigators and independent journalists.",
+          "camera": "close up of signature then widen",
+          "dialogue_exact": [
+            {
+              "speaker": "VALE",
+              "text": "You have no idea what you’ve cost me."
+            }
+          ]
+        },
+        {
+          "id": "r5o.02",
+          "duration_seconds": 4,
+          "visual_action": "Screens throughout the facility change from glossy ads to reports showing documents and investigation announcements. Guards power down their machinery.",
+          "camera": "wave of screens changing, no instantaneous global disaster fix",
+          "overlay_exact": "EVIDENCE FOUND: THE BOARD ORDER",
+          "dialogue_exact": [
+            {
+              "speaker": "PLAYER",
+              "text": "A lot less than you cost the coast."
+            }
+          ]
+        },
+        {
+          "id": "r5o.03",
+          "duration_seconds": 4,
+          "visual_action": "Nia and Mara board a rescue transport. Crab looks back as the dumping conveyors stop.",
+          "camera": "pull back across quiet dock",
+          "dialogue_exact": [
+            {
+              "speaker": "NIA",
+              "text": "They can’t hide the record now."
+            }
+          ]
+        }
+      ],
+      "intro_scene": {
+        "id": "cinematic.headquarters.intro",
+        "title": "Blacktide Headquarters Arrival",
+        "kind": "cutscene",
+        "trigger": "first_enter_region_5",
+        "shots": [
+          {
+            "id": "r5i.01",
+            "duration_seconds": 4,
+            "visual_action": "Corporate offshore facility rises out of rough gray water. An enormous screen still plays the clean-coast jingle, now distorted by wind.",
+            "camera": "boat-to-platform crane up",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "The last shipment came from here."
+              }
+            ]
+          },
+          {
+            "id": "r5i.02",
+            "duration_seconds": 5,
+            "visual_action": "Player looks up at spinning conveyor belts routing crates marked WASTE to sites labeled EMERGENCY CONTRACT.",
+            "camera": "tracking shot along conveyor to office windows",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "They built a business out of making a mess."
+              }
+            ]
+          },
+          {
+            "id": "r5i.03",
+            "duration_seconds": 3,
+            "visual_action": "Crab clangs its equipped armor and steps forward. Headquarters security doors slide open.",
+            "camera": "tight on crab then dolly into doors",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "Then let’s shut it down."
+              }
+            ]
+          }
+        ]
+      },
+      "outro_scene": {
+        "id": "cinematic.headquarters.outro",
+        "title": "Blacktide Headquarters Cleared",
+        "kind": "cutscene",
+        "trigger": "first_defeat_headquarters_boss",
+        "shots": [
+          {
+            "id": "r5o.01",
+            "duration_seconds": 4,
+            "visual_action": "Vale stands stunned in his silent boardroom. The player retrieves a digitally signed order and sends all evidence to investigators and independent journalists.",
+            "camera": "close up of signature then widen",
+            "dialogue_exact": [
+              {
+                "speaker": "VALE",
+                "text": "You have no idea what you’ve cost me."
+              }
+            ]
+          },
+          {
+            "id": "r5o.02",
+            "duration_seconds": 4,
+            "visual_action": "Screens throughout the facility change from glossy ads to reports showing documents and investigation announcements. Guards power down their machinery.",
+            "camera": "wave of screens changing, no instantaneous global disaster fix",
+            "overlay_exact": "EVIDENCE FOUND: THE BOARD ORDER",
+            "dialogue_exact": [
+              {
+                "speaker": "PLAYER",
+                "text": "A lot less than you cost the coast."
+              }
+            ]
+          },
+          {
+            "id": "r5o.03",
+            "duration_seconds": 4,
+            "visual_action": "Nia and Mara board a rescue transport. Crab looks back as the dumping conveyors stop.",
+            "camera": "pull back across quiet dock",
+            "dialogue_exact": [
+              {
+                "speaker": "NIA",
+                "text": "They can’t hide the record now."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "encounters": [
+    {
+      "id": "shellshore.01",
+      "region_id": "shellshore",
+      "stage_number": 1,
+      "stage_name": "Dune Checkpoint",
+      "trainer": "Roan",
+      "trainer_role": "Security Guard",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "ROAN",
+          "text": "No photos. Keep walking."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "ROAN",
+          "text": "I don’t get paid enough to fight a crab."
+        }
+      ],
+      "battle_background": "shellshore",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "shellshore.02",
+      "region_id": "shellshore",
+      "stage_number": 2,
+      "stage_name": "Container Row",
+      "trainer": "Pip",
+      "trainer_role": "Barge Loader",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "PIP",
+          "text": "You picked a bad night for sightseeing."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "PIP",
+          "text": "Those crates weren’t supposed to be here."
+        }
+      ],
+      "battle_background": "shellshore",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "shellshore.03",
+      "region_id": "shellshore",
+      "stage_number": 3,
+      "stage_name": "Dispatch Office",
+      "trainer": "Mott",
+      "trainer_role": "Route Dispatcher",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "MOTT",
+          "text": "Every truck is logged. Every log is private."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "MOTT",
+          "text": "Talk to the foreman. I’m done."
+        }
+      ],
+      "battle_background": "shellshore",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "shellshore.04",
+      "region_id": "shellshore",
+      "stage_number": 4,
+      "stage_name": "Inspection Gate",
+      "trainer": "Tess",
+      "trainer_role": "Junior Inspector",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "TESS",
+          "text": "My badge says CLEAN. That’s all I knew."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "TESS",
+          "text": "I should’ve checked what they unloaded."
+        }
+      ],
+      "battle_background": "shellshore",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "shellshore.05",
+      "region_id": "shellshore",
+      "stage_number": 5,
+      "stage_name": "Dumping Depot",
+      "trainer": "Foreman Sandy",
+      "trainer_role": "Regional Boss",
+      "is_boss": true,
+      "intro_exact": [
+        {
+          "speaker": "FOREMAN SANDY",
+          "text": "This beach is under contract. So am I."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "FOREMAN SANDY",
+          "text": "The manifests are in my office. Take them."
+        }
+      ],
+      "battle_background": "shellshore",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "rustport.01",
+      "region_id": "rustport",
+      "stage_number": 1,
+      "stage_name": "Harbor Gate",
+      "trainer": "Dock",
+      "trainer_role": "Gate Clerk",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "DOCK",
+          "text": "Authorized cargo only."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "DOCK",
+          "text": "Guess a crab counts as authorized."
+        }
+      ],
+      "battle_background": "rustport",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "rustport.02",
+      "region_id": "rustport",
+      "stage_number": 2,
+      "stage_name": "Crane Yard",
+      "trainer": "Ace",
+      "trainer_role": "Forklift Operator",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "ACE",
+          "text": "You missed the safety briefing."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "ACE",
+          "text": "I should put that in the incident report."
+        }
+      ],
+      "battle_background": "rustport",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "rustport.03",
+      "region_id": "rustport",
+      "stage_number": 3,
+      "stage_name": "Storage Rows",
+      "trainer": "Kira",
+      "trainer_role": "Inventory Officer",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "KIRA",
+          "text": "Nothing leaves without a barcode."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "KIRA",
+          "text": "Except those shipments. They skipped the system."
+        }
+      ],
+      "battle_background": "rustport",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "rustport.04",
+      "region_id": "rustport",
+      "stage_number": 4,
+      "stage_name": "Billing Office",
+      "trainer": "Lenn",
+      "trainer_role": "Contract Auditor",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "LENN",
+          "text": "Two invoices. One shipment. No questions."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "LENN",
+          "text": "I asked questions once. Then they moved me here."
+        }
+      ],
+      "battle_background": "rustport",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "rustport.05",
+      "region_id": "rustport",
+      "stage_number": 5,
+      "stage_name": "Sorting Engine",
+      "trainer": "Wrench",
+      "trainer_role": "Regional Boss",
+      "is_boss": true,
+      "intro_exact": [
+        {
+          "speaker": "WRENCH",
+          "text": "I built the machines. I didn’t write the orders."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "WRENCH",
+          "text": "The invoices are in that terminal. Read them."
+        }
+      ],
+      "battle_background": "rustport",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "boardwalk.01",
+      "region_id": "boardwalk",
+      "stage_number": 1,
+      "stage_name": "Promo Pier",
+      "trainer": "Flash",
+      "trainer_role": "Promo Mascot",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "FLASH",
+          "text": "Smile! The ocean loves our brand."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "FLASH",
+          "text": "They only film the clean side."
+        }
+      ],
+      "battle_background": "boardwalk",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "boardwalk.02",
+      "region_id": "boardwalk",
+      "stage_number": 2,
+      "stage_name": "Arcade Plaza",
+      "trainer": "Luma",
+      "trainer_role": "Contest Host",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "LUMA",
+          "text": "Win a free cleanup voucher!"
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "LUMA",
+          "text": "Why does a cleanup voucher expire?"
+        }
+      ],
+      "battle_background": "boardwalk",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "boardwalk.03",
+      "region_id": "boardwalk",
+      "stage_number": 3,
+      "stage_name": "Livestream Alley",
+      "trainer": "Dex",
+      "trainer_role": "Security Streamer",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "DEX",
+          "text": "Careful. You’re live."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "DEX",
+          "text": "The chat is asking about the barges."
+        }
+      ],
+      "battle_background": "boardwalk",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "boardwalk.04",
+      "region_id": "boardwalk",
+      "stage_number": 4,
+      "stage_name": "Studio B",
+      "trainer": "Echo",
+      "trainer_role": "Broadcast Technician",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "ECHO",
+          "text": "We never play the raw footage."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "ECHO",
+          "text": "There’s a copy. I left it in Studio B."
+        }
+      ],
+      "battle_background": "boardwalk",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "boardwalk.05",
+      "region_id": "boardwalk",
+      "stage_number": 5,
+      "stage_name": "Neon Stage",
+      "trainer": "Vex",
+      "trainer_role": "Regional Boss",
+      "is_boss": true,
+      "intro_exact": [
+        {
+          "speaker": "VEX",
+          "text": "A good story beats an ugly fact."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "VEX",
+          "text": "That video was never approved for broadcast!"
+        }
+      ],
+      "battle_background": "boardwalk",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "mangroves.01",
+      "region_id": "mangroves",
+      "stage_number": 1,
+      "stage_name": "Closed Boardwalk",
+      "trainer": "Reed",
+      "trainer_role": "Field Guard",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "REED",
+          "text": "Trail’s closed. Company orders."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "REED",
+          "text": "Even the herons stopped coming here."
+        }
+      ],
+      "battle_background": "mangroves",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "mangroves.02",
+      "region_id": "mangroves",
+      "stage_number": 2,
+      "stage_name": "Sampling Dock",
+      "trainer": "Moss",
+      "trainer_role": "Surveyor",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "MOSS",
+          "text": "The water readings are perfectly normal."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "MOSS",
+          "text": "Those aren’t the numbers I submitted."
+        }
+      ],
+      "battle_background": "mangroves",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "mangroves.03",
+      "region_id": "mangroves",
+      "stage_number": 3,
+      "stage_name": "Research Station",
+      "trainer": "Sol",
+      "trainer_role": "Lab Runner",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "SOL",
+          "text": "They said this was a restoration project."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "SOL",
+          "text": "Mara kept the original results."
+        }
+      ],
+      "battle_background": "mangroves",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "mangroves.04",
+      "region_id": "mangroves",
+      "stage_number": 4,
+      "stage_name": "Lookout Tower",
+      "trainer": "Finch",
+      "trainer_role": "Drone Operator",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "FINCH",
+          "text": "You can’t outrun our cameras."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "FINCH",
+          "text": "Funny how they missed every dumping truck."
+        }
+      ],
+      "battle_background": "mangroves",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "mangroves.05",
+      "region_id": "mangroves",
+      "stage_number": 5,
+      "stage_name": "Restricted Lab",
+      "trainer": "Director Pike",
+      "trainer_role": "Regional Boss",
+      "is_boss": true,
+      "intro_exact": [
+        {
+          "speaker": "DIRECTOR PIKE",
+          "text": "Those wetlands belong to our investors."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "DIRECTOR PIKE",
+          "text": "The access codes are in my case."
+        }
+      ],
+      "battle_background": "mangroves",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "headquarters.01",
+      "region_id": "headquarters",
+      "stage_number": 1,
+      "stage_name": "Outer Gate",
+      "trainer": "Slate",
+      "trainer_role": "Gate Commander",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "SLATE",
+          "text": "No visitors. No exceptions."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "SLATE",
+          "text": "You made it farther than anyone."
+        }
+      ],
+      "battle_background": "headquarters",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "headquarters.02",
+      "region_id": "headquarters",
+      "stage_number": 2,
+      "stage_name": "Compliance Floor",
+      "trainer": "Ivory",
+      "trainer_role": "Compliance Officer",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "IVORY",
+          "text": "We followed every rule we wrote."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "IVORY",
+          "text": "Maybe we wrote the wrong rules."
+        }
+      ],
+      "battle_background": "headquarters",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "headquarters.03",
+      "region_id": "headquarters",
+      "stage_number": 3,
+      "stage_name": "Media Suite",
+      "trainer": "Pearl",
+      "trainer_role": "Brand Executive",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "PEARL",
+          "text": "A clean image is a clean conscience."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "PEARL",
+          "text": "My ads look different with the lights on."
+        }
+      ],
+      "battle_background": "headquarters",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "headquarters.04",
+      "region_id": "headquarters",
+      "stage_number": 4,
+      "stage_name": "Tidebreaker Deck",
+      "trainer": "Knox",
+      "trainer_role": "Operations Chief",
+      "is_boss": false,
+      "intro_exact": [
+        {
+          "speaker": "KNOX",
+          "text": "The Tidebreaker keeps this company running."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "KNOX",
+          "text": "It doesn’t clean. It just moves the trash."
+        }
+      ],
+      "battle_background": "headquarters",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    },
+    {
+      "id": "headquarters.05",
+      "region_id": "headquarters",
+      "stage_number": 5,
+      "stage_name": "Executive Platform",
+      "trainer": "Caspian Vale",
+      "trainer_role": "Final Boss",
+      "is_boss": true,
+      "intro_exact": [
+        {
+          "speaker": "CASPIAN VALE",
+          "text": "Pollution is a problem. We sell the solution."
+        }
+      ],
+      "defeat_exact": [
+        {
+          "speaker": "CASPIAN VALE",
+          "text": "You’ve ruined a very profitable arrangement."
+        }
+      ],
+      "battle_background": "headquarters",
+      "intro_visual": "Trainer takes one step into arena, crab enters from side, camera shows both trainer-crab pairs. Animate entry before dialogue.",
+      "defeat_visual": "Defeated crab lowers claws, trainer reacts in a short original animation. Text appears once, then return to map or region-completion scene."
+    }
+  ],
+  "ending": {
+    "id": "cinematic.ending",
+    "title": "The Coast Belongs to Everyone",
+    "kind": "cutscene",
+    "trigger": "first_final_boss_win",
+    "shots": [
+      {
+        "id": "end.01",
+        "duration_seconds": 4,
+        "visual_action": "Wide of the Blacktide offshore platform. Its dumping machinery shuts down section by section. Headlines and evidence appear on reporters’ screens.",
+        "camera": "slow aerial pullback",
+        "dialogue_exact": [
+          {
+            "speaker": "NEWS REPORT (RADIO)",
+            "text": "Blacktide executives face a full investigation."
+          }
+        ],
+        "sound_design": "motors winding down, distant radio"
+      },
+      {
+        "id": "end.02",
+        "duration_seconds": 5,
+        "visual_action": "Weeks later at Shellshore, volunteers collect safe litter and sort it. Professionals handle hazardous debris. No magical cleanup effect.",
+        "camera": "pan from volunteers to restored dunes",
+        "overlay_exact": "SHELLSHORE · WEEKS LATER",
+        "sound_design": "gentle surf and returning birds"
+      },
+      {
+        "id": "end.03",
+        "duration_seconds": 5,
+        "visual_action": "Nia replaces the corrupted billboard with a painted community mural of the coast, the player and crab. Dr. Mara measures clearer water beside the pier.",
+        "camera": "track from mural to pier",
+        "dialogue_exact": [
+          {
+            "speaker": "DR. MARA",
+            "text": "It’ll take time. But the coast is healing."
+          }
+        ]
+      },
+      {
+        "id": "end.04",
+        "duration_seconds": 4,
+        "visual_action": "Player looks at red crab wearing the equipment they actually have equipped. Companion proudly snaps its claws.",
+        "camera": "close-up on crab and player",
+        "dialogue_exact": [
+          {
+            "speaker": "NIA",
+            "text": "You two started all this."
+          },
+          {
+            "speaker": "PLAYER",
+            "text": "We didn’t do it alone."
+          }
+        ]
+      },
+      {
+        "id": "end.05",
+        "duration_seconds": 5,
+        "visual_action": "Crab climbs a small dune with a bottle-cap shield and surveys the shore. Return of motion and color comes from actual habitat restoration, not a magical blast.",
+        "camera": "slow rise to golden-hour horizon",
+        "dialogue_exact": [
+          {
+            "speaker": "PLAYER",
+            "text": "There’s still more shore out there."
+          }
+        ],
+        "sound_design": "adventure theme begins"
+      },
+      {
+        "id": "end.06",
+        "duration_seconds": 4,
+        "visual_action": "The region map opens. Completed stages shine; optional postgame cleanup and battle activities remain available.",
+        "camera": "iris out into interactive story map",
+        "overlay_exact": "THE END — FOR NOW",
+        "sound_design": "short victory theme"
+      }
+    ],
+    "implementation_note": "Approx. 27 seconds. Credits/title can follow. No unearned real-world cleanup claims; no magic environmental restoration."
+  },
+  "battle_ui_text_exact": {
+    "your_turn": "Your Turn!",
+    "enemy_turn": "Enemy Turn!",
+    "victory": "Victory!",
+    "defeat": "Defeat",
+    "retry": "Try Again",
+    "continue": "Continue",
+    "skip": "Skip",
+    "replay": "Replay",
+    "start": "Start Battle",
+    "boss": "BOSS",
+    "locked": "Locked",
+    "stage_cleared": "Stage Clear!",
+    "region_cleared": "Region Clear!"
+  },
+  "implementation_notes": {
+    "battle": "Reuse the current turn-based battle engine and three selected player moves; stage and boss dialogue is only presentation.",
+    "map": "Five story regions. Four regular battles + fifth boss each; previously completed nodes replayable; locks enforced; no real-world GPS required in fictional story region map.",
+    "effects": "Use original layered pixel-art assets, animation rigs and real transitions rather than still-image/text-card slideshow. No copyrighted assets.",
+    "privacy": "Story does not imply photographs confirm cleanup or that unsafe waste should be handled."
+  }
+}

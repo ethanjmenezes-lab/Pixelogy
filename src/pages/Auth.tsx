@@ -9,6 +9,7 @@ import {
   authDestination,
   authLink,
   confirmationUrl,
+  recoveryUrl,
 } from "../cloud/authNavigation";
 import { useGame } from "../components/GameContext";
 export function Auth() {
@@ -65,23 +66,9 @@ function AuthScreen() {
   }
   async function submit() {
     await run(async () => {
-      if (updating) {
-        if (!userId)
-          throw new Error(
-            "Open a valid password-reset link from your email first.",
-          );
-        if (password !== repeat) throw new Error("The passwords do not match.");
-        const { error } = await cloud!.auth.updateUser({ password });
-        if (error) throw error;
-        setPassword("");
-        setRepeat("");
-        setMessage("Password updated. You can continue to the scanner.");
-      } else if (reset) {
+      if (reset) {
         const { error } = await cloud!.auth.resetPasswordForEmail(email, {
-          redirectTo:
-            window.location.origin +
-            "/auth/update-password?next=" +
-            encodeURIComponent(next),
+          redirectTo: recoveryUrl(window.location.origin),
         });
         if (error) throw error;
         setMessage(

@@ -1,68 +1,52 @@
-# The Blacktide Conspiracy
+> Baby-crab opening update (2026-10-24): the user-authorized seven-scene opening supersedes the old eight-shot opening. Compact landing, responsive captions, exact revised dialogue and first-battle transition are implemented. Full browser suite 114/114 passed; final delayed-watch tests 2/2 passed. See [current scope and verification](story/BABY_CRAB_STATUS.md). Earlier opening/version statements below are historical.
 
-This is Pixelogy’s canonical Story Mode, replacing the magical Shattered Tide narrative. Blacktide Industries, led by CEO Caspian Vale, deliberately dumps waste to create demand for its cleanup contracts. The player witnesses a nighttime operation; a red crab emerges from discarded packaging and defends them. Together they collect evidence and expose the scheme.
+# Locked Blacktide Conspiracy implementation
 
-Story is a separate fictional adventure. The real-GPS overworld, scanner, predefined ShoreDex, equipment, three-slot combat, attack timing and cleanup loop remain unchanged. Story Mode occupies the sixth crab-menu tile; Profile/Settings is on the HUD avatar.
+The immutable source is `src/content/story-script.json` (`locked-dialogue-1.0`), copied byte-for-byte from the supplied root `STORY_SCRIPT.json`. The human-readable script is `docs/story/STORY_SCRIPT.md`. These supersede all prior Story Mode writing, character names and evidence descriptions. No generated dialogue or Gemini story writing is used.
 
-## Playable campaign
+## Scope
 
-All five regions have four regular trainers and a boss, original themed scenery, dialogue and NPC appearances. Four distinct trainer wins unlock the regional boss; that boss unlocks the next region. Stars never gate progress.
+The reusable player implements 12 scenes / 41 shots: eight opening shots, all five regional arrivals and boss outros, and the six-shot ending. All 25 encounters derive their names, canonical content IDs, pre-battle and post-win dialogue directly from the JSON. One caption speaker is displayed at a time. Dialogue waits for Continue; no-dialogue shots advance at their specified duration. Reading or pausing can extend the nominal 34-second opening.
 
-| Region | Trainers | Boss | Evidence |
-| --- | --- | --- | --- |
-| Shellshore Beach | Pip, Nori, Skipper, Tansy | Foreman Sandy | Night-shift manifest |
-| Rustport Harbor | Jett, Bex, Olin, Cora | Wrench | Falsified shipping contracts |
-| Neon Boardwalk | Fenn, Lumi, Dax, Suri | Vex | Unedited internal recording |
-| Whispering Mangroves | Reed, Ivo, Nell, Tobin | Director Rook | Dr. Mira’s research archive |
-| Blacktide Headquarters | Aster, Quinn, Mace, Petra | CEO Caspian Vale | Tideledger access codes |
+Opening actions are animated original Canvas/SVG/CSS artwork: sunrise surf/grass/sandcastle crab; corporate billboard and passing truck; moonlit truck convoy and lights turning off; crane/container dump and moving tarp; phone/searchlight/Roan confrontation; cap and emerging crab; armored security crab and claw readiness; seafoam/title/iris into the first node. Per-shot camera transforms pan, tilt or zoom. Region 1 adds Nia's tarp reveal, guarded warehouse path, Sandy's dropped clipboard, evidence/map reveal and volunteers starting cleanup. It remains visibly imperfect rather than magically restored.
 
-Dr. Mira is the scientist ally in the Mangroves. The Tideledger is Blacktide’s internal financial record, not a magical artifact. The final battle reveals Vale’s deliberate pollution-for-profit orders; the ending broadcasts the evidence, shuts down the dumping network and shows the restored island chain.
+Later regions add animated cranes and terminal records, boardwalk feeds/broadcasts, mangrove research cases and sampling, headquarters conveyors/board orders, and the community-restoration ending. These are original stylized geometric pixel scenes, not imported video or full character-rig animation. Post-intro companions render current equipment; the opening cap is a prop and never creates inventory.
 
-The 25 stages reuse the existing deterministic resolver. Enemies use defensive counters, harbor armor, fast boardwalk attacks, reserve snares and executive equipment specials. The player’s actual owned gear, selected moves and crab level are loaded on the server and frozen at Start. Enemy equipment is NPC-only and never enters inventory. Unit tests demonstrate that the full campaign can be won with earned main-attack unlocks and no collected gear; hazardous pickups are never required.
+| Region | Boss | Exact evidence |
+| --- | --- | --- |
+| Shellshore Beach | Foreman Sandy | SHIPPING MANIFEST |
+| Rustport Harbor | Wrench | DOUBLE-BILLED INVOICES |
+| Neon Boardwalk | Vex | UNEDITED RECORDING |
+| Whispering Mangroves | Director Pike | ORIGINAL WATER TESTS |
+| Blacktide Headquarters | CEO Caspian Vale | THE BOARD ORDER |
 
-Each regional map and arena has original code-generated SVG scenery: beach cottages/palms, harbor cranes/containers, neon boardwalk/Ferris wheel, mangrove roots/research structures and offshore headquarters. Boss clears remove litter and add wildlife/flowers; the island overview and case files update from saved progress. This visual restoration is fictional and never claims real cleanup.
+The existing deterministic three-slot engine, actual owned gear, trainer customization and authoritative account battle protocol are retained. Four trainers unlock each boss; boss victory unlocks the next region. Story maps are fictional and separate from GPS. Battle/restoration never verifies real-world cleanup.
 
-## Animated scenes
+## Architecture and persistence
 
-- Opening: five six-second scenes, from sunny beach advertisement through nighttime dumping, security confrontation, crab emergence and battle readiness. Original SVG/CSS animates the camera, truck, falling packaging, searchlight, waves and sprites.
-- Each region: two-scene briefing, two-scene boss introduction and two-scene restoration. Boss introductions play before the first battle; restoration plays after a saved boss victory. Briefings and all unlocked scenes are available from the map’s cutscene controls.
-- Finale: three scenes covering public evidence, shutdown and the restored coastline. It replaces the normal completion scene after Vale; the Headquarters restoration scene is also replayable.
+- `script.ts`: typed content, scene lookup and legacy-save aliases.
+- `StoryCutscenePlayer.tsx`: scene clock, one-speaker captions, Continue/Skip, pause/background handling, reduced motion and opt-in audio.
+- `ShotStage.tsx`, `RegionalShots.ts`, `cinematic.css`: shot-specific action, actors and camera presentation.
+- `StoryPresentation.tsx`: reusable region map, stage preview and progress UI.
+- `Story.tsx`, `campaign.ts`, `BattleScreens.tsx`: exact content integrated with existing progression and battle UI.
+- `ARTWORK_LICENSE.md`: original artwork provenance. Audio is a basic original synth motif; **the screenplay's full per-shot sound design is not implemented**. No voice acting or sampled audio is claimed.
 
-The opening plays automatically on first signed-in entry. Skip, Next and replay are available. Scene timers pause when hidden; system/profile reduced motion disables decorative animation. Guest users can preview the opening, but guest preferences are not persisted. Keyboard focus moves to the cinematic heading. Portrait and landscape layouts preserve controls.
+The additive migration `20261025023127_locked_story_cinematics.sql` is applied to the connected Supabase project. It expands the cinematic-ID constraint only. All old flags, inventories, cleanup claims, stars, first-clear rewards and stable legacy stage IDs remain. Canonical IDs (for example `boardwalk.01`) map to existing save IDs (`neon-1`); both resolve. New `cinematic.*` flags permit watching the replacement story once without deleting legacy flags.
 
-## Persistence and security
-
-The original 20261025005841_story_shellshore.sql and additive 20261025013308_blacktide_conspiracy.sql migrations are applied to the connected Supabase project.
-
-- story_matches stores authoritative battle snapshots and versions.
-- story_progress stores unique owner/stage clears and best stars.
-- story_cinematics stores watched/skipped preferences.
-
-Existing shellshore-1 through shellshore-5 IDs, clears, stars, XP and old cinematic flags remain intact. Evidence and restoration derive from boss clears, so existing players receive the new narrative presentation without duplicate rewards. The revised opening uses conspiracy-opening; a legacy opening flag does not hide it. No inventory or cleanup migration occurs.
-
-Tables retain owner-only SELECT policies and deny direct client writes. /api/story authenticates the caller, loads owned equipment and moves, enforces gates, resolves actions and signs bounded receipts. apply_story verifies purpose/user/expiry/signature, locks the player, checks match version, rechecks region/boss gates and atomically saves progress/XP. Start and turn retries are idempotent; starts are limited to 30/hour. Browser-provided winners, damage, XP and gear modifiers are not trusted.
-
-First clears grant 40 battle XP per trainer and 80 per boss: 240 per region, 1,200 across the campaign. Defeat, exit and repeat clears grant zero. Replays can improve best stars. The existing battle XP controls crab level and main-attack unlocks; no separate story leveling system exists. Cleanup XP and claims remain separate. The existing Shellshore Sunburst portrait cosmetic remains available without granting gear or stats.
-
-Stars: win = one; at least 50% HP = two; at least 75% HP within six own turns (eight for bosses) = three.
-
-Story requires sign-in and connectivity. There is no offline campaign reward synchronization. Existing offline inventory/equipment/practice remain available. Failed requests offer retry; failed starts retain their request UUID. Leaving/reloading ends the displayed in-memory battle, while completed progress survives. Unfinished server matches award nothing.
-
-## Running and deployment
-
-Run npm run dev:api to serve the frontend plus analyze, practice and story handlers with the existing Supabase configuration and matching server-only SCAN_SIGNING_SECRET. Bare npm run dev serves only the frontend. npm run build includes NodeNext compilation and plain-Node loading of all three emitted API handlers. Service-worker caches remain static-only; private story/API/Supabase responses are excluded.
-
-The database expansion is live. The changed frontend/API have **not been redeployed or tested on Vercel**. Redeploy, then test real signed-in first clears, replay rewards, next-region gates and cross-device saves. Physical-phone camera/GPS/Story acceptance remains unverified.
+Existing authoritative API/RPC gates, ownership, match versions and receipt validation remain unchanged. First clears award 40 battle XP per trainer / 80 per boss (1,200 total); repeats/exits/defeats award zero. Cleanup XP is separate. Story requires an account and connectivity; local inventory/equipment/practice remain available offline.
 
 ## Actual verification
 
-- Typecheck, lint, **79 unit tests**, nine plain-Node API rejection checks and production build passed. The existing large-bundle warning remains.
-- **104/104 Playwright tests passed** across Chromium and WebKit. Coverage includes all five Shellshore wins, each later regional boss, evidence/restoration, final exposure, versioned intro replay, legacy progress, region/boss deep links, retries, rapid Start taps, exit without rewards and persisted reload.
-- Unit tests resolve all 25 encounters using earned main attacks without scan gear and reproduce every authoritative turn through the existing presentation system.
-- The unchanged capture → safe AI save → equip → CPU battle → reload → optional cleanup regression passed in both browsers, alongside GPS lifecycle, camera/consent, authentication, production offline reload and PWA update/cache exclusions.
-- Browser layout checks cover 375×812, 390×844, 430×932 and 844×390, reduced motion and keyboard focus. Screenshots inspected for the overview, all five regional arenas, nighttime dumping and landscape introduction. Browser services are deterministic fixtures, not live integration evidence.
-- Live Supabase rollback test supabase/tests/conspiracy.sql passed: existing Shellshore clears and old cinematic flags survive; 25 unique clears total 1,200 XP; legacy replays and duplicate receipts award nothing extra; best stars remain; all gates, forbidden writes, forged receipts and cross-account isolation are enforced; no cleanup reward occurs. Post-test counts match the prior story state and zero fixture accounts remain. Transaction-only test users and signing changes were rolled back.
+- Typecheck, ESLint, **83 unit tests**, nine plain-Node API rejection/load checks and production build passed. Existing large-bundle warning remains.
+- Content integrity verifies byte equality with the supplied source, SHA-256 snapshot, all exact narrative strings, runtime equality, 5 regions, 25 unique encounters, 5 bosses, 8 opening shots and 6 ending shots.
+- Full Chromium/WebKit run: **104 passed, 8 failed** because older boss tests bypassed the new region-arrival scenes, then expected the map on reload. Corrected those tests to visit/watch arrivals and retain every combat/save assertion; **all 8 passed on the targeted rerun**. Thus every one of the 112 cases has passed; this was not a single clean 112-test run.
+- Coverage includes all five Shellshore wins; every later boss, evidence and unlock; all 41 shots' exact sequential captions/overlays; gear continuity; measurable animation; pause/background/resume; legacy flags, reload, no duplicate rewards, gates, retries and rapid taps. Unit balance checks resolve all 25 encounters.
+- Existing scan → AI save → equip → CPU battle → reload → optional cleanup passed in both browsers, as did GPS, camera/consent, authentication, production offline and PWA cache/update checks.
+- Phone layouts cover 375×812, 390×844, 430×932 and landscape, reduced motion and keyboard focus. Portrait and landscape screenshots were inspected. Browser service responses are deterministic fixtures.
+- Live `supabase/tests/locked_cinematics.sql` rollback test passed: one legacy plus all 12 current flags coexist; duplicate watch is idempotent. Zero test accounts remain. No reward/storage schema was modified. Prior reward/RLS tests remain in `supabase/tests/conspiracy.sql`.
 
-## Changed files
+## Deployment limits
 
-Presentation/content: src/story/campaign.ts, StoryArt.tsx, Cutscene.tsx, Story.tsx, story.css, src/battle/BattleScreens.tsx, src/App.tsx. API gate copy: api/story.ts. Persistence: supabase/migrations/20261025013308_blacktide_conspiracy.sql, supabase/tests/conspiracy.sql. Tests: tests/story.test.ts, tests/e2e/story.spec.ts. Canonical status: this document, README, project plan, implementation checklist, cross-chat alignment and revision notes.
+The new allowlist and cinematic constraint are live; frontend/API changes are not deployed. Vercel CLI is logged out. Real emailed recovery on another device, live signed-in campaign/API interaction after deployment, physical-phone camera/GPS and iPhone cinematic performance remain unverified. See `AUTH_RELEASE.md` for the recovery diagnosis and exact acceptance procedure.
+
+Run `npm run dev:api` for local frontend plus analyze/practice/story APIs, or `npm run dev` for frontend only. Production uses `npm run build`; it includes NodeNext API compilation and plain-Node loading. Existing server-only secrets remain unchanged and out of the client bundle.

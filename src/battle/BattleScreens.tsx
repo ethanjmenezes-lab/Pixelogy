@@ -1,3 +1,4 @@
+import { ui as storyUi } from "../story/script";
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -228,21 +229,31 @@ function BattleMessageBox({
               : "Ready!"}
         </p>
         <strong className="turn-banner">
-          {phase === "windup" && action
-            ? action.actorId === "cpu"
-              ? `${battle.fighters[1].nickname.replace(" · CPU", "")}’s Turn!`
-              : "Your move!"
-            : battle.status !== "active"
-              ? battle.status === "forfeited"
-                ? battle.mode === "story"
-                  ? "Stage abandoned"
-                  : "Practice abandoned"
-                : battle.winnerId === "player"
-                  ? "Victory!"
-                  : `${battle.fighters[1].nickname} wins!`
-              : battle.currentActorId === "player"
-                ? "Your Turn!"
-                : `${battle.fighters[1].nickname.replace(" · CPU", "")}’s Turn!`}
+          {battle.mode === "story"
+            ? battle.status === "completed"
+              ? battle.winnerId === "player"
+                ? storyUi.victory
+                : storyUi.defeat
+              : battle.status === "forfeited"
+                ? "Stage abandoned"
+                : (phase === "windup" && action
+                      ? action.actorId
+                      : battle.currentActorId) === "player"
+                  ? storyUi.your_turn
+                  : storyUi.enemy_turn
+            : phase === "windup" && action
+              ? action.actorId === "cpu"
+                ? `${battle.fighters[1].nickname.replace(" · CPU", "")}’s Turn!`
+                : "Your move!"
+              : battle.status !== "active"
+                ? battle.status === "forfeited"
+                  ? "Practice abandoned"
+                  : battle.winnerId === "player"
+                    ? "Victory!"
+                    : `${battle.fighters[1].nickname} wins!`
+                : battle.currentActorId === "player"
+                  ? "Your Turn!"
+                  : `${battle.fighters[1].nickname.replace(" · CPU", "")}’s Turn!`}
         </strong>
       </div>
       <details className="battle-history">
@@ -324,6 +335,7 @@ export function BattleArenaScreen({
   storyTitle,
   scenery,
   opponentRole,
+  storyDialogue,
 }: {
   battle: BattleState;
   visible?: boolean;
@@ -343,6 +355,7 @@ export function BattleArenaScreen({
   storyTitle?: string;
   scenery?: ReactNode;
   opponentRole?: string;
+  storyDialogue?: ReactNode;
 }) {
   const { battle, phase, action, resolving } = useCombatPresentation(
     authoritative,
@@ -367,7 +380,9 @@ export function BattleArenaScreen({
               ? "Stage ended."
               : "Practice ended."
             : storyTitle
-              ? "Stage complete."
+              ? battle.winnerId === "player"
+                ? storyUi.stage_cleared
+                : storyUi.defeat
               : "Practice complete."
           : (storyTitle ?? "Beach battle")}
       </h1>
@@ -469,6 +484,7 @@ export function BattleArenaScreen({
       <BattleMessageBox battle={battle} phase={phase} action={action} />
       {ended ? (
         <div className="arena-results">
+          {storyTitle && battle.winnerId === "player" && storyDialogue}
           <p role="status">
             {rewardText} Crab level {currentLevel}. No cleanup XP awarded.
           </p>
@@ -488,10 +504,10 @@ export function BattleArenaScreen({
               disabled={!rewardReady}
               onClick={replay}
             >
-              Play again
+              {storyTitle ? storyUi.retry : "Play again"}
             </button>
             <button className="button secondary" onClick={intro}>
-              {storyTitle ? "Continue story" : "Return to Matchup"}
+              {storyTitle ? storyUi.continue : "Return to Matchup"}
             </button>
             <Link className="button secondary" to="/workshop">
               Change Gear

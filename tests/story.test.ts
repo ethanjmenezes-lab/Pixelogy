@@ -93,7 +93,7 @@ it("preserves Shellshore IDs, converts clears to evidence, and gates every regio
     "shellshore-5",
   ]);
   expect(evidenceFound(progress).map((r) => r.evidence)).toEqual([
-    "Night-shift manifest",
+    "SHIPPING MANIFEST",
   ]);
   expect(regionUnlocked(1, progress)).toBe(true);
   expect(regionUnlocked(2, progress)).toBe(false);

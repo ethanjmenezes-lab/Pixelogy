@@ -17,7 +17,7 @@ const session = {
   token_type: "bearer",
   user,
 };
-test.beforeEach(async ({ page }) => {
+async function authFixture(page: import("@playwright/test").Page) {
   await mockCamera(page);
   await mockLocation(page);
   await page.route(
@@ -31,7 +31,8 @@ test.beforeEach(async ({ page }) => {
       return route.fulfill({ json: [] });
     },
   );
-});
+}
+test.beforeEach(async ({ page }) => authFixture(page));
 test("guest scan redirects, login persists across reload, logout restores guest", async ({
   page,
 }) => {
@@ -79,9 +80,7 @@ test("signup confirmation and password reset preserve scan destination", async (
     r.url().includes("/auth/v1/recover"),
   );
   await page.getByRole("button", { name: "Send reset link" }).click();
-  expect((await reset).url()).toContain(
-    encodeURIComponent("/auth/update-password?next=%2Fscan"),
-  );
+  expect((await reset).url()).toContain(encodeURIComponent("/auth/confirm"));
   await expect(page.getByRole("status")).toContainText("If an account exists");
 });
 test("login failure remains retryable and rejects external return destinations", async ({
@@ -125,8 +124,8 @@ test("recovery session can update password and expired link cannot", async ({
 }) => {
   await page.goto("/auth/update-password");
   await expect(
-    page.getByRole("button", { name: "Update password" }),
-  ).toBeDisabled();
+    page.getByRole("link", { name: "Request Another Link" }),
+  ).toBeVisible();
   // Email links open a new document, not a same-document fragment change.
   await page.goto("about:blank");
   await page.goto(
@@ -171,4 +170,95 @@ test("account controls fit phone widths and remain keyboard accessible", async (
     await expect(page.getByLabel("Password", { exact: true })).toBeFocused();
     await page.screenshot({ path: testInfo.outputPath(`auth-${width}.png`) });
   }
+});
+
+test("reset requested in one browser completes in a fresh browser and survives refresh", async ({
+  page,
+  browser,
+}) => {
+  await page.goto("/auth/reset");
+  await page.getByLabel("Email", { exact: true }).fill(user.email);
+  await page.getByRole("button", { name: "Send reset link" }).click();
+  await expect(page.getByRole("status")).toContainText("If an account exists");
+  const other = await browser.newContext();
+  const second = await other.newPage();
+  await authFixture(second);
+  try {
+    await second.goto(
+      "/auth/confirm#access_token=" +
+        token +
+        "&refresh_token=fixture-refresh&expires_in=3600&token_type=bearer&type=recovery",
+    );
+    await expect(second).toHaveURL(/reset-password$/);
+    await expect(
+      second.getByRole("heading", { name: "Set New Password" }),
+    ).toBeVisible();
+    await second.reload();
+    await expect(
+      second.getByRole("button", { name: "Update password" }),
+    ).toBeEnabled();
+    await second
+      .getByLabel("New password", { exact: true })
+      .fill("changed-password");
+    await second
+      .getByLabel("Confirm new password", { exact: true })
+      .fill("wrong-password");
+    await second.getByRole("button", { name: "Update password" }).click();
+    await expect(second.getByRole("alert")).toContainText("do not match");
+    await second
+      .getByLabel("Confirm new password", { exact: true })
+      .fill("changed-password");
+    await second.getByRole("button", { name: "Update password" }).click();
+    await expect(second.getByRole("status")).toContainText("Password updated");
+    await second.getByRole("link", { name: "Log In", exact: true }).click();
+    await expect(second).toHaveURL(/auth\/login$/);
+    await second.getByLabel("Email", { exact: true }).fill(user.email);
+    await second
+      .getByLabel("Password", { exact: true })
+      .fill("changed-password");
+    await second.getByRole("button", { name: "Log In", exact: true }).click();
+    await expect(second).toHaveURL(/scan$/);
+  } finally {
+    await other.close();
+  }
+});
+
+test("root fallback recovery is rescued; expired links and ordinary sessions cannot reset", async ({
+  page,
+}) => {
+  await page.goto(
+    "/#access_token=" +
+      token +
+      "&refresh_token=fixture-refresh&expires_in=3600&token_type=bearer&type=recovery",
+  );
+  await expect(page).toHaveURL(/reset-password$/);
+  await page.goto(
+    "/auth/confirm#error=access_denied&error_code=otp_expired&error_description=Expired",
+  );
+  await expect(page.getByRole("alert")).toContainText("expired");
+  await expect(
+    page.getByRole("link", { name: "Request Another Link" }),
+  ).toBeVisible();
+  await page.goto("/reset-password");
+  await expect(
+    page.getByRole("button", { name: "Update password" }),
+  ).toHaveCount(0);
+});
+
+test("invalid recovery cannot be bypassed by next or a fake token", async ({
+  page,
+}) => {
+  await page.route("**/auth/v1/user", (route) =>
+    route.fulfill({ status: 401, json: { message: "Invalid token" } }),
+  );
+  await page.goto(
+    "/auth/confirm?next=https://example.com#access_token=invalid&refresh_token=invalid&expires_in=3600&token_type=bearer&type=recovery",
+  );
+  await expect(
+    page.getByRole("link", { name: "Request Another Link" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Update password" }),
+  ).toHaveCount(0);
+  expect(new URL(page.url()).hostname).toBe("127.0.0.1");
 });
