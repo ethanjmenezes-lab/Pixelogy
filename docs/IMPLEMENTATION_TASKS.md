@@ -1,4 +1,4 @@
-> Story Mode update (2026-10-24): Shellshore’s four trainers and Captain Sandy are implemented with animated cutscenes, stars and server-validated Supabase progression. Regions 2–5 and final endings remain future chapters. Database migration applied; frontend/API deployment acceptance pending. See [scope and verification](STORY_MODE.md).
+> Story Mode update (2026-10-24): **The Blacktide Conspiracy** is canonical. All five regions and 25 battles, evidence, animated opening/boss/restoration scenes and final exposure are implemented. Existing Shellshore progress is preserved. Supabase expansion applied; 104 browser tests passed. Frontend/API redeployment and physical-device acceptance remain pending. See [scope and verification](STORY_MODE.md).
 
 > Current release update: AI-only identification is required for new discoveries; manual identification and safety/category overrides are removed. Online analysis must succeed before saving. Real geography uses the authored tropical pixel-art MapLibre style; older manual-fallback and Liberty-style descriptions below are historical. Existing saves remain intact.
 

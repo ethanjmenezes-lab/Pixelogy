@@ -24,7 +24,7 @@ const titles: Record<string, string> = {
   "/auth/reset": "Password reset",
   "/auth/callback": "Confirm account",
   "/auth/update-password": "New password",
-  "/story": "The Shattered Tide",
+  "/story": "The Blacktide Conspiracy",
   "/scan": "Field scanner",
   "/collection": "ShoreDex",
   "/workshop": "My crab",

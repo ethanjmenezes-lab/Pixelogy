@@ -61,7 +61,9 @@ export default async function handler(
         .eq("user_id", userId);
       if (progress.error) throw progress.error;
       if (!unlocked(stage, progress.data))
-        throw new Error("Defeat all four Shellshore trainers first.");
+        throw new Error(
+          "Clear the previous region and this region’s four trainers before challenging its boss.",
+        );
       state = storyBattle(await playerBattle(client, userId), stage);
       state.id = body.requestId;
     } else {

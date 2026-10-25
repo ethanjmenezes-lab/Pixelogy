@@ -239,16 +239,7 @@
   filter: brightness(0.45);
   animation: crab-arrive 2s steps(10) both;
 }
-.cinema-cap {
-  position: absolute;
-  top: 19%;
-  left: 41%;
-  width: 27%;
-  height: 14%;
-  background: #bfc9c7;
-  border: 3px solid #594793;
-  border-radius: 3px;
-}
+
 .story-caption {
   min-height: 76px;
   padding: 12px;
@@ -261,28 +252,7 @@
 .story-cinema .button {
   min-height: 44px;
 }
-.story-airship {
-  animation: airship 5s steps(24) both;
-}
-.story-lightning {
-  animation: lightning 1.5s steps(1) 1;
-}
-.story-shockwave {
-  transform-origin: 183px 60px;
-  animation: shockwave 4s linear both;
-}
-.stolen-shard {
-  animation: shard 3s steps(16) both;
-}
-.lighthouse-glow {
-  animation: beacon 3s ease-in-out infinite alternate;
-}
-.scene-1 .cinema-land {
-  filter: saturate(0.55);
-}
-.scene-4 .story-island-art {
-  animation: zoom-island 6s ease-out both;
-}
+
 .story-ripples {
   animation: beacon 2s steps(4) infinite alternate;
 }
@@ -302,57 +272,13 @@
     transform: translateX(0);
   }
 }
-@keyframes airship {
-  from {
-    transform: translateX(-100px);
-  }
-  to {
-    transform: translateX(60px);
-  }
-}
-@keyframes lightning {
-  0%,
-  35%,
-  70% {
-    opacity: 0;
-  }
-  20%,
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-@keyframes shockwave {
-  from {
-    transform: scale(0);
-    opacity: 1;
-  }
-  to {
-    transform: scale(8);
-    opacity: 0;
-  }
-}
-@keyframes shard {
-  to {
-    transform: translate(-80px, -25px);
-    opacity: 0;
-  }
-}
+
 @keyframes beacon {
   to {
     opacity: 0.25;
   }
 }
-@keyframes zoom-island {
-  from {
-    transform: scale(1.8);
-  }
-  to {
-    transform: scale(1);
-  }
-}
+
 .reduced-motion .story-cinema *,
 .reduced-motion .story-ripples {
   animation: none !important;
@@ -485,5 +411,145 @@
   .story-cinema .story-caption {
     padding: 8px;
     font-size: 12px;
+  }
+}
+.corporate-avatar {
+  position: relative;
+  width: 48px;
+  height: 65px;
+}
+.corporate-avatar .player-avatar {
+  width: 100%;
+  height: 100%;
+}
+.corporate-badge {
+  position: absolute;
+  left: 40%;
+  top: 59%;
+  background: #fff8df;
+  color: #594793;
+  font: bold 7px monospace;
+  border: 1px solid #594793;
+  padding: 1px;
+  line-height: 1;
+}
+.cinema-rival .corporate-avatar {
+  width: 58px;
+  height: 82px;
+}
+.conspiracy-cinema .cinema-rival {
+  filter: none;
+}
+.dump-truck {
+  animation: truck-arrive 5s steps(20) both;
+}
+.dumped-package {
+  animation: package-fall 2s steps(8) both;
+}
+.night-searchlight {
+  animation: searchlight 3s ease-in-out infinite alternate;
+  transform-origin: 200px 140px;
+}
+.opening-4 .cinema-crab {
+  animation: crab-ready 1s steps(2) infinite;
+}
+.evidence-document {
+  position: absolute;
+  top: 20%;
+  right: 7%;
+  width: 43%;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 10px;
+  background: #fff8df;
+  color: #282044;
+  border: 4px solid #594793;
+  box-shadow: 6px 6px #28204444;
+  animation: evidence-arrive 0.6s steps(6) both;
+}
+.evidence-document span {
+  font-size: 50px;
+}
+.evidence-document b {
+  font-size: 12px;
+}
+.evidence-document small {
+  text-align: center;
+  font-size: 12px;
+}
+.evidence-case {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: #fff8df;
+  border: 3px solid #594793;
+}
+.evidence-case h2 {
+  font-size: 20px;
+}
+.evidence-case article {
+  border-top: 2px dotted #594793;
+  padding-top: 8px;
+}
+.evidence-case p,
+.region-condition {
+  font-size: 13px;
+}
+.region-label[aria-pressed="true"] {
+  outline: 3px solid #f58a08;
+  outline-offset: 1px;
+}
+.restored-wildlife {
+  animation: beacon 2s steps(3) infinite alternate;
+}
+.cinema-frame > .beach-backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+@keyframes truck-arrive {
+  from {
+    transform: translateX(90px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes package-fall {
+  from {
+    transform: translate(40px, -70px);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes searchlight {
+  to {
+    transform: rotate(12deg);
+    opacity: 0.4;
+  }
+}
+@keyframes crab-ready {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes evidence-arrive {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.reduced-motion .restored-wildlife {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .restored-wildlife {
+    animation: none;
   }
 }

@@ -15,13 +15,18 @@ import {
   moves,
 } from "../lib/moves";
 import {
-  stages,
   stageById,
-  regions,
+  regionDefinitions,
+  regionStages,
+  regionUnlocked,
+  restored,
+  evidenceFound,
+  STORY_TITLE,
   unlocked,
   type StoryProgress,
 } from "./campaign";
-import { Cutscene, IslandArt, ShellshoreArt, type Cinematic } from "./Cutscene";
+import { Cutscene, OPENING, cinematicIds, type Cinematic } from "./Cutscene";
+import { IslandArt, RegionScenery, CorporateTrainer } from "./StoryArt";
 import "./story.css";
 type Save = { progress: StoryProgress[]; watched: string[] };
 export function Story() {
@@ -29,7 +34,7 @@ export function Story() {
   const [params] = useSearchParams();
   return (
     <StorySession
-      key={`${userId ?? "guest"}:${params.get("stage") ?? "map"}`}
+      key={`${userId ?? "guest"}:${params.get("stage") ?? params.get("region") ?? "map"}`}
     />
   );
 }
@@ -38,6 +43,11 @@ function StorySession() {
   const [params, setParams] = useSearchParams();
   const stage = stageById(params.get("stage") ?? "");
   const requestedScene = useRef(params.get("scene"));
+  const regionIndex = Math.max(
+    0,
+    regionDefinitions.findIndex((r) => r.id === params.get("region")),
+  );
+  const region = regionDefinitions[regionIndex];
   const [save, setSave] = useState<Save | null>(null),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
@@ -80,15 +90,23 @@ function StorySession() {
     document.addEventListener("visibilitychange", visibility);
     void load()
       .then((s) => {
-        if (s && !s.watched.includes("opening") && mounted.current)
-          setCinematic("opening");
-        else if (
-          s &&
-          requestedScene.current === "shellshore-clear" &&
-          s.progress.some((p) => p.stage_id === "shellshore-5") &&
-          mounted.current
-        )
-          setCinematic("shellshore-clear");
+        if (s && mounted.current) {
+          if (!s.watched.includes(OPENING)) setCinematic(OPENING);
+          else if (
+            requestedScene.current &&
+            cinematicIds.includes(requestedScene.current)
+          ) {
+            const scene = requestedScene.current;
+            const r = regionDefinitions.findIndex((r) =>
+              scene.startsWith(r.id + "-"),
+            );
+            if (
+              (scene === "conspiracy-ending" && restored(4, s.progress)) ||
+              (r >= 0 && scene.endsWith("-restored") && restored(r, s.progress))
+            )
+              setCinematic(scene);
+          }
+        }
       })
       .catch((e) => {
         if (mounted.current) setError(e.message);
@@ -102,7 +120,8 @@ function StorySession() {
     if (!cinematic) return;
     const id = cinematic;
     setCinematic(null);
-    if (id === "shellshore-clear") setParams({}, { replace: true });
+    if (id.endsWith("-restored") || id === "conspiracy-ending")
+      setParams({ region: region.id }, { replace: true });
     if (userId)
       void rpc("watch_story", { cinematic: id })
         .then(() => load())
@@ -115,7 +134,7 @@ function StorySession() {
     const next = afterCinema.current;
     afterCinema.current = null;
     next?.();
-  }, [cinematic, load, userId, setParams]);
+  }, [cinematic, load, userId, setParams, region.id]);
   async function request(body: object) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20000);
@@ -185,29 +204,39 @@ function StorySession() {
   const gear = ownedBlueprints(loadout, items),
     selected = normalizeProgression(progression, gear);
   function leaveBattle() {
-    const win = session?.battle.winnerId === "player",
-      boss = session?.battle.storyStageId === "shellshore-5";
+    const win = session?.battle.winnerId === "player";
+    const current = stageById(session?.battle.storyStageId ?? "");
     setSession(null);
     startId.current = crypto.randomUUID();
-    setParams(win && boss ? { scene: "shellshore-clear" } : {});
+    const r = current?.region ?? 0,
+      region = regionDefinitions[r];
+    setParams(
+      win && current?.boss
+        ? {
+            region: region.id,
+            scene: r === 4 ? "conspiracy-ending" : `${region.id}-restored`,
+          }
+        : { region: region.id },
+    );
   }
+
   if (!userId)
     return (
       <section className="story-screen">
-        <h1>The Shattered Tide</h1>
+        <h1>{STORY_TITLE}</h1>
         <div className="story-map-art">
           <IslandArt />
         </div>
         <p>
-          A five-stage Shellshore adventure. Sign in for permanent progress,
-          stars and battle XP.
+          A five-region adventure against Blacktide Industries. Sign in for
+          permanent progress, stars and battle XP.
         </p>
         <Link className="button primary" to="/auth/login?next=%2Fstory">
           Sign in to begin
         </Link>
         <button
           className="button secondary"
-          onClick={() => setCinematic("opening")}
+          onClick={() => setCinematic(OPENING)}
         >
           Watch the opening
         </button>
@@ -221,7 +250,7 @@ function StorySession() {
   if (!save)
     return (
       <section className="story-screen">
-        <h1>The Shattered Tide</h1>
+        <h1>{STORY_TITLE}</h1>
         <p role={error ? "alert" : "status"}>
           {error || "Opening your adventure…"}
         </p>
@@ -253,6 +282,13 @@ function StorySession() {
           gear={session.battle.fighters[0].snapshotBlueprints}
           opponent={{ ...s.trainer, motion: profile.motion }}
           storyTitle={s.name}
+          opponentRole={s.role}
+          scenery={
+            <RegionScenery
+              region={s.region}
+              clean={restored(s.region, save.progress)}
+            />
+          }
           visible={visible}
           requestPending={busy}
           act={(move) => void action("turn", move)}
@@ -280,7 +316,8 @@ function StorySession() {
     return (
       <section className="story-screen story-preview">
         <span className="eyebrow">
-          SHELLSHORE · STAGE {stages.indexOf(stage) + 1}
+          {regionDefinitions[stage.region].name.toUpperCase()} · STAGE{" "}
+          {regionStages(stage.region).indexOf(stage) + 1}
           {stage.boss ? " · BOSS" : ""}
         </span>
         <h1>{stage.name}</h1>
@@ -300,7 +337,11 @@ function StorySession() {
             },
           ].map((f, i) => (
             <div key={i}>
-              <PlayerAvatar profile={f.trainer} facing={i ? "left" : "right"} />
+              {i ? (
+                <CorporateTrainer profile={f.trainer} />
+              ) : (
+                <PlayerAvatar profile={f.trainer} facing="right" />
+              )}
               <Crab gear={f.gear} label={f.name} />
               <strong>
                 {f.trainer.nickname}
@@ -329,16 +370,25 @@ function StorySession() {
             className="button primary"
             disabled={busy}
             onClick={() => {
-              if (stage.boss && !save.watched.includes("sandy-intro")) {
+              if (
+                stage.boss &&
+                !save.watched.includes(
+                  `${regionDefinitions[stage.region].id}-boss`,
+                )
+              ) {
                 afterCinema.current = () => void start();
-                setCinematic("sandy-intro");
+                setCinematic(`${regionDefinitions[stage.region].id}-boss`);
               } else void start();
             }}
           >
             {busy ? "Preparing…" : "Start Battle"}
           </button>
         ) : (
-          <p role="status">Defeat all four trainers to unlock Captain Sandy.</p>
+          <p role="status">
+            {regionUnlocked(stage.region, save.progress)
+              ? `Defeat all four trainers to unlock ${regionDefinitions[stage.region].boss}.`
+              : "Clear the previous region to enter this stage."}
+          </p>
         )}
         <div className="button-row">
           <Link
@@ -354,53 +404,69 @@ function StorySession() {
             Change Gear
           </Link>
         </div>
-        <button className="button text" onClick={() => setParams({})}>
+        <button
+          className="button text"
+          onClick={() =>
+            setParams({ region: regionDefinitions[stage.region].id })
+          }
+        >
           Island map
         </button>
       </section>
     );
   }
-  const cleared = save.progress.length,
-    bossCleared = save.progress.some((p) => p.stage_id === "shellshore-5");
+  const currentStages = regionStages(regionIndex),
+    cleared = currentStages.filter((s) =>
+      save.progress.some((p) => p.stage_id === s.id),
+    ).length,
+    clean = restored(regionIndex, save.progress),
+    evidence = evidenceFound(save.progress);
   return (
     <section className="story-screen">
       <span className="eyebrow">A PIXELOGY ADVENTURE</span>
-      <h1>The Shattered Tide</h1>
+      <h1>{STORY_TITLE}</h1>
       <div className="story-map-art">
-        <IslandArt />
-        {regions.map((name, i) => (
+        <IslandArt
+          clean={regionDefinitions.map((_, i) => restored(i, save.progress))}
+        />
+        {regionDefinitions.map((r, i) => (
           <button
             type="button"
-            disabled={i > 0}
-            onClick={() =>
-              document
-                .querySelector(".story-stage-path")
-                ?.scrollIntoView({ block: "center" })
-            }
+            key={r.id}
             className={`region-label region-${i}`}
-            key={name}
+            disabled={!regionUnlocked(i, save.progress)}
+            aria-pressed={i === regionIndex}
+            onClick={() => setParams({ region: r.id })}
           >
             <strong>
-              {i + 1}. {name}
+              {i + 1}. {r.name}
             </strong>
             <small>
-              {i === 0
-                ? `${cleared}/5 wins`
-                : i === 1 && bossCleared
-                  ? "Route unlocked · chapter in development"
-                  : "Locked · future chapter"}
+              {restored(i, save.progress)
+                ? "Restored · evidence secured"
+                : regionUnlocked(i, save.progress)
+                  ? "Open investigation"
+                  : "Locked"}
             </small>
           </button>
         ))}
       </div>
-      <h2>Shellshore Beach</h2>
+      <h2>{region.name}</h2>
       <p className="story-progress">
-        {cleared}/5 wins · {save.progress.reduce((n, p) => n + p.best_stars, 0)}
-        /15 stars · {bossCleared ? 1 : 0}/5 Tide Shards
+        {cleared}/5 wins ·{" "}
+        {save.progress
+          .filter((p) => currentStages.some((s) => s.id === p.stage_id))
+          .reduce((n, p) => n + p.best_stars, 0)}
+        /15 stars · {evidence.length}/5 evidence files
       </p>
-      <div className="story-stage-path" aria-label="Shellshore stages">
-        <ShellshoreArt />
-        {stages.map((s, i) => {
+      <p className="region-condition" role="status">
+        {clean
+          ? "Restored: dumping stopped, wildlife returning."
+          : "Investigation active: Blacktide operations continue."}
+      </p>
+      <div className="story-stage-path" aria-label={`${region.name} stages`}>
+        <RegionScenery region={regionIndex} clean={clean} map />
+        {currentStages.map((s, i) => {
           const canPlay = unlocked(s, save.progress),
             stars =
               save.progress.find((p) => p.stage_id === s.id)?.best_stars ?? 0;
@@ -426,7 +492,7 @@ function StorySession() {
           );
         })}
       </div>
-      {bossCleared && (
+      {restored(0, save.progress) && (
         <div className="story-reward">
           <Crab gear={gear} label="Your crab with the Shellshore sunburst" />
           <span aria-hidden="true">✺</span>
@@ -434,40 +500,75 @@ function StorySession() {
           <small>Story portrait cosmetic · no stats or equipment granted</small>
         </div>
       )}
+      <section
+        className="evidence-case"
+        aria-label="Evidence against Blacktide"
+      >
+        <h2>Case file</h2>
+        {evidence.length ? (
+          evidence.map((r) => (
+            <article key={r.id}>
+              <strong>▤ {r.evidence}</strong>
+              <p>{r.finding}</p>
+            </article>
+          ))
+        ) : (
+          <p>Defeat Foreman Sandy to recover the night-shift manifest.</p>
+        )}
+        {restored(4, save.progress) && (
+          <strong>Case exposed · coastline restoration underway</strong>
+        )}
+      </section>
       <details>
         <summary>Cutscenes & star challenges</summary>
         <p>
           Win for one star; finish with 50% HP for two; 75% HP within six own
-          turns (eight for Sandy) for three. Stars never block progress.
+          turns (eight for bosses) for three. Stars never block progress.
         </p>
-        {(
-          [
-            "opening",
-            "shellshore-entry",
-            "sandy-intro",
-            ...(bossCleared ? ["shellshore-clear"] : []),
-          ] as Cinematic[]
-        ).map((id) => (
+        <button
+          className="button secondary"
+          onClick={() => setCinematic(OPENING)}
+        >
+          Replay opening
+        </button>
+        {regionUnlocked(regionIndex, save.progress) && (
+          <>
+            <button
+              className="button secondary"
+              onClick={() => setCinematic(`${region.id}-briefing`)}
+            >
+              Region briefing
+            </button>
+            <button
+              className="button secondary"
+              onClick={() => setCinematic(`${region.id}-boss`)}
+            >
+              {region.boss} introduction
+            </button>
+          </>
+        )}
+        {clean && (
           <button
-            key={id}
             className="button secondary"
-            onClick={() => setCinematic(id)}
+            onClick={() => setCinematic(`${region.id}-restored`)}
           >
-            {
-              {
-                opening: "Replay opening",
-                "shellshore-entry": "Visit Shellshore",
-                "sandy-intro": "Captain Sandy",
-                "shellshore-clear": "A light returns",
-              }[id]
-            }
+            Replay restoration
           </button>
-        ))}
+        )}
+        {restored(4, save.progress) && (
+          <button
+            className="button secondary"
+            onClick={() => setCinematic("conspiracy-ending")}
+          >
+            Replay ending
+          </button>
+        )}
       </details>
       {error && <p role="alert">{error}</p>}
       <small>
-        Fictional island · account progress · online battles. Regions 2–5 and
-        the final endings are in development.
+        Fictional island · account progress · online battles. Story restoration
+        is fictional and awards no cleanup XP. Safe discoveries can equip your
+        crab; no hazardous pickup is required.
       </small>
     </section>
   );

@@ -1,3 +1,11 @@
+# The Blacktide Conspiracy (2026-10-24)
+
+- Replaced the magical Shattered Tide story with Blacktide Industries, CEO Caspian Vale and the deliberate dumping/cleanup-contract scheme. The earlier Shellshore entry below is historical and superseded.
+- All five regions now contain four trainers and a boss (25 playable encounters). Added original regional SVG scenery, corporate trainer styling, evidence case files, cleaner maps after boss wins, new opening, regional briefings, boss/restoration scenes and final public exposure.
+- Kept Shellshore stage IDs, best stars, XP and cinematic flags. The new opening uses its own versioned ID. Applied additive migration 20261025013308_blacktide_conspiracy.sql; the live transaction/rollback test verifies all 25 rewards, legacy replays, prerequisites, ownership and forgery rejection. No fixture accounts remain; existing story row counts are unchanged.
+- Typecheck, lint, 79 unit tests, nine plain-Node API checks and production build passed. All 104 Chromium/WebKit tests passed, including the unchanged scan-to-cleanup flow, all Shellshore stages, each later boss, evidence/restoration, finale, legacy saves, gates, retries, phone layouts, reduced motion and production PWA checks. Original screenshots inspected; no external/Figma artwork used.
+- Frontend/API changes still require Vercel redeployment and signed-in hosted acceptance. Physical phone testing remains unverified. See [canonical story and verification](STORY_MODE.md).
+
 # Story Mode: Shellshore (2026-10-24)
 
 - Added the permanent Story Mode menu tile; Profile/Settings remains on the avatar HUD. Added original animated opening, five-region overview, authored Shellshore beach path, five distinct NPC battles, boss intro/completion, best stars, first Tide Shard and a story-portrait Sunburst cosmetic.

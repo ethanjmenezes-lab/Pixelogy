@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Crab } from "../components/Crab";
@@ -321,6 +322,8 @@ export function BattleArenaScreen({
   currentLevel,
   opponent,
   storyTitle,
+  scenery,
+  opponentRole,
 }: {
   battle: BattleState;
   visible?: boolean;
@@ -338,6 +341,8 @@ export function BattleArenaScreen({
   currentLevel: number;
   opponent?: Profile;
   storyTitle?: string;
+  scenery?: ReactNode;
+  opponentRole?: string;
 }) {
   const { battle, phase, action, resolving } = useCombatPresentation(
     authoritative,
@@ -367,7 +372,7 @@ export function BattleArenaScreen({
           : (storyTitle ?? "Beach battle")}
       </h1>
       <div className="battle-stage">
-        <BattleBackground />
+        {scenery ?? <BattleBackground />}
         <div className="battle-hud">
           {battle.fighters.map((f) => (
             <HealthBar key={f.userId} fighter={f} />
@@ -400,7 +405,7 @@ export function BattleArenaScreen({
             }
             facing="left"
           />
-          <span>CPU</span>
+          <span title={opponentRole}>{opponentRole ? "B · CPU" : "CPU"}</span>
         </div>
         {battle.fighters.map((f, i) => (
           <div
