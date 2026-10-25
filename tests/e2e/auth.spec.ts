@@ -55,6 +55,7 @@ test("guest scan redirects, login persists across reload, logout restores guest"
 test("signup confirmation and password reset preserve scan destination", async ({
   page,
 }) => {
+  await page.clock.install();
   await page.goto("/auth/signup?next=%2Fscan");
   await page.getByLabel("Email", { exact: true }).fill(user.email);
   await page.getByLabel("Password", { exact: true }).fill("fixture-password");
@@ -76,12 +77,15 @@ test("signup confirmation and password reset preserve scan destination", async (
     page.getByRole("heading", { name: "Reset your password." }),
   ).toBeVisible();
   await page.getByLabel("Email", { exact: true }).fill(user.email);
+  await page.clock.fastForward(61000);
   const reset = page.waitForRequest((r) =>
     r.url().includes("/auth/v1/recover"),
   );
   await page.getByRole("button", { name: "Send reset link" }).click();
   expect((await reset).url()).toContain(encodeURIComponent("/auth/confirm"));
-  await expect(page.getByRole("status")).toContainText("If an account exists");
+  await expect(
+    page.getByRole("status").filter({ hasText: "If an account exists" }),
+  ).toBeVisible();
 });
 test("login failure remains retryable and rejects external return destinations", async ({
   page,
@@ -179,7 +183,9 @@ test("reset requested in one browser completes in a fresh browser and survives r
   await page.goto("/auth/reset");
   await page.getByLabel("Email", { exact: true }).fill(user.email);
   await page.getByRole("button", { name: "Send reset link" }).click();
-  await expect(page.getByRole("status")).toContainText("If an account exists");
+  await expect(
+    page.getByRole("status").filter({ hasText: "If an account exists" }),
+  ).toBeVisible();
   const other = await browser.newContext();
   const second = await other.newPage();
   await authFixture(second);
@@ -261,4 +267,46 @@ test("invalid recovery cannot be bypassed by next or a fake token", async ({
     page.getByRole("button", { name: "Update password" }),
   ).toHaveCount(0);
   expect(new URL(page.url()).hostname).toBe("127.0.0.1");
+});
+
+test("email quota errors are friendly and cooldown survives reload without duplicate submissions", async ({
+  page,
+}) => {
+  await page.clock.install();
+  let requests = 0;
+  await page.route("**/auth/v1/signup**", (route) => {
+    requests++;
+    return route.fulfill({
+      status: 429,
+      json: {
+        code: "over_email_send_rate_limit",
+        msg: "email rate limit exceeded",
+      },
+    });
+  });
+  await page.goto("/auth/signup");
+  await page.getByLabel("Email", { exact: true }).fill(user.email);
+  await page.getByLabel("Password", { exact: true }).fill("fixture-password");
+  await page
+    .getByRole("button", { name: "Create account", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText(
+    "Too many email requests",
+  );
+  await expect(
+    page.getByRole("button", { name: "Create account", exact: true }),
+  ).toBeDisabled();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "Create account", exact: true }),
+  ).toBeDisabled();
+  await page.goto("/auth/reset");
+  await expect(
+    page.getByRole("button", { name: "Send reset link" }),
+  ).toBeDisabled();
+  await page.clock.fastForward(61000);
+  await expect(
+    page.getByRole("button", { name: "Send reset link" }),
+  ).toBeEnabled();
+  expect(requests).toBe(1);
 });

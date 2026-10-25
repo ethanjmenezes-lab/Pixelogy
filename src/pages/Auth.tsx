@@ -1,3 +1,8 @@
+import {
+  emailWait,
+  beginEmailWait,
+  authErrorMessage,
+} from "../cloud/emailCooldown";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -31,7 +36,24 @@ function AuthScreen() {
     [busy, setBusy] = useState(false),
     [error, setError] = useState(authCallbackError),
     [message, setMessage] = useState("");
-  const [resendAt, setResendAt] = useState(0);
+  const [wait, setWait] = useState(() => emailWait());
+  useEffect(() => {
+    const update = () => setWait(emailWait());
+    const timer = setInterval(update, 1000);
+    window.addEventListener("storage", update);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("storage", update);
+    };
+  }, []);
+  function reserveEmail() {
+    if (emailWait())
+      throw new Error(
+        `Please wait ${emailWait()} seconds before requesting another email.`,
+      );
+    beginEmailWait();
+    setWait(emailWait());
+  }
   const lock = useRef(false);
   const updating = mode === "update-password",
     reset = mode === "reset",
@@ -54,11 +76,7 @@ function AuthScreen() {
     try {
       await action();
     } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "Authentication is temporarily unavailable. Please retry.",
-      );
+      setError(authErrorMessage(e));
     } finally {
       lock.current = false;
       setBusy(false);
@@ -67,6 +85,7 @@ function AuthScreen() {
   async function submit() {
     await run(async () => {
       if (reset) {
+        reserveEmail();
         const { error } = await cloud!.auth.resetPasswordForEmail(email, {
           redirectTo: recoveryUrl(window.location.origin),
         });
@@ -75,6 +94,7 @@ function AuthScreen() {
           "If an account exists for this email, a password-reset link has been sent. Check your inbox and spam folder.",
         );
       } else if (signup) {
+        reserveEmail();
         const { data, error } = await cloud!.auth.signUp({
           email,
           password,
@@ -164,13 +184,10 @@ function AuthScreen() {
           </p>
           <button
             className="button secondary"
-            disabled={!cloud || busy}
+            disabled={!cloud || busy || wait > 0}
             onClick={() =>
               void run(async () => {
-                if (Date.now() < resendAt)
-                  throw new Error(
-                    "Please wait a minute before requesting another email.",
-                  );
+                reserveEmail();
                 const { error } = await cloud!.auth.resend({
                   type: "signup",
                   email,
@@ -182,14 +199,13 @@ function AuthScreen() {
                   },
                 });
                 if (error) throw error;
-                setResendAt(Date.now() + 60000);
                 setMessage(
                   "Confirmation email requested. Check your inbox and spam folder.",
                 );
               })
             }
           >
-            Resend confirmation email
+            {wait ? `Resend in ${wait}s` : "Resend confirmation email"}
           </button>
           <Link className="button primary" to={authLink("login", next)}>
             I’ve confirmed — Log In
@@ -202,6 +218,9 @@ function AuthScreen() {
             void submit();
           }}
         >
+          {(reset || signup) && wait > 0 && (
+            <p role="status">You can request another email in {wait}s.</p>
+          )}
           {!updating && (
             <label>
               Email
@@ -246,7 +265,12 @@ function AuthScreen() {
           )}
           <button
             className="button primary full"
-            disabled={!cloud || busy || (updating && !userId)}
+            disabled={
+              !cloud ||
+              busy ||
+              ((reset || signup) && wait > 0) ||
+              (updating && !userId)
+            }
           >
             {busy
               ? "Please wait…"
