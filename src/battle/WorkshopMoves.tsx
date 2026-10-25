@@ -34,20 +34,20 @@ export function WorkshopMoves() {
     <section className="panel workshop-moves" aria-label="Crab moves">
       <h2>Moves</h2>
       <p>
-        <strong>Crab level {level}</strong> · {progression.xp} battle XP ·{" "}
+        <strong>Crab level {level}</strong> · {progression.xp} Crab XP ·{" "}
         {100 - (progression.xp % 100)} XP to next level
       </p>
       <progress
-        aria-label="Crab battle XP to next level"
+        aria-label="Crab Crab XP to next level"
         max={100}
         value={progression.xp % 100}
       />
       <details>
-        <summary>Battle XP & move rules</summary>
+        <summary>Crab XP & move rules</summary>
         <p>
-          Win +40 battle XP · loss +15 · exit +0. Battle XP is separate from
-          cleanup XP and your explorer level. Specials require their equipped
-          gear.
+          Walk +5 per 100 eligible metres · win +40 Crab XP · loss +15 · exit
+          +0. Crab XP is separate from cleanup XP and Player XP. Specials
+          require their equipped gear.
         </p>
       </details>
       <p role="status">{notice}</p>

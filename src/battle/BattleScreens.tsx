@@ -92,14 +92,14 @@ export function BattleIntroScreen({
         ))}
       </section>
       {offline ? (
-        <div className="prep-rewards">Offline practice · No battle XP</div>
+        <div className="prep-rewards">Offline practice · No Crab XP</div>
       ) : (
         <div className="prep-rewards" aria-label="Battle rewards">
           <span>
-            ✦ <strong>Victory +40</strong> Battle XP
+            ✦ <strong>Victory +40</strong> Crab XP
           </span>
           <span>
-            ◇ <strong>Defeat +15</strong> Battle XP
+            ◇ <strong>Defeat +15</strong> Crab XP
           </span>
         </div>
       )}

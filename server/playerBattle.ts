@@ -23,6 +23,11 @@ export async function playerBattle(client: SupabaseClient, userId: string) {
   );
   const items = discoveries.map((d) => {
     const c = catalogById[d.catalog_id];
+    if (!c && d.legacy_metadata)
+      return {
+        id: d.id,
+        gearBlueprintId: d.legacy_metadata.gearBlueprintId,
+      } as Collectible;
     if (!c) throw new Error("Unknown catalog entry");
     return { id: d.id, gearBlueprintId: c.gearId } as Collectible;
   });

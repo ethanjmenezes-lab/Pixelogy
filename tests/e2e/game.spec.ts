@@ -101,19 +101,17 @@ test("AI discovery → saved gear → CPU battle → persistent optional cleanup
   await page.getByRole("button", { name: "Open crab menu" }).click();
   await page.getByRole("link", { name: /^ShoreDex Collection/ }).click();
   await page.locator(".dex-entry.unlocked").click();
-  await page
-    .getByRole("button", { name: "I safely disposed of this litter" })
-    .click();
+  await page.getByRole("button", { name: "I Picked It Up" }).click();
   await expect(
     page.getByText("All owned finds have cleanup self-reports."),
   ).toBeVisible();
-  await expect(page.locator(".hud-info > small")).toContainText("15");
+  await expect(page.locator(".hud-info > small")).toContainText("0 Player XP");
   await page.reload();
   await page.locator(".dex-entry.unlocked").click();
   await expect(
     page.getByText("All owned finds have cleanup self-reports."),
   ).toBeVisible();
-  await expect(page.locator(".hud-info > small")).toContainText("15");
+  await expect(page.locator(".hud-info > small")).toContainText("0 Player XP");
 });
 test("unsafe results cannot save and declining first-time consent never uploads", async ({
   page,
@@ -524,7 +522,7 @@ test("account practice remains available offline without awarding cloud XP", asy
     .getByRole("button", { name: "Exit Practice", exact: true })
     .click();
   await expect(
-    page.getByText(/Offline practice · no battle XP awarded/),
+    page.getByText(/Offline practice · no Crab XP awarded/),
   ).toBeVisible();
   await context.setOffline(false);
 });

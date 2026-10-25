@@ -77,7 +77,7 @@ export function StoryStagePreview({
           <span key={id}>{moves[id].name}</span>
         ))}
       </div>
-      <p>First clear +{stage.xp} battle XP · Replays +0</p>
+      <p>First clear +{stage.xp} Crab XP · Replays +0</p>
       {error && (
         <p role="alert" className="notice error">
           {error}

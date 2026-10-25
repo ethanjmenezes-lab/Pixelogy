@@ -1,3 +1,8 @@
+import {
+  readGuestStory,
+  watchGuestStory,
+  guestStoryRequest,
+} from "../guest/story";
 import { script } from "./script";
 import {
   StoryStagePreview,
@@ -6,7 +11,7 @@ import {
   ScriptDialogue,
 } from "./StoryPresentation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useGame } from "../components/GameContext";
 import { cloud, authHeaders, rpc } from "../cloud/client";
 import { analyzeUrl } from "../mobile/platform";
@@ -71,7 +76,12 @@ function StorySession() {
     lock = useRef(false),
     startId = useRef(crypto.randomUUID());
   const load = useCallback(async () => {
-    if (!cloud || !userId) return null;
+    if (!userId) {
+      const next = await readGuestStory();
+      if (mounted.current) setSave(next);
+      return next;
+    }
+    if (!cloud) throw new Error("Cloud unavailable");
     const [p, w] = await Promise.all([
       cloud
         .from("story_progress")
@@ -149,18 +159,18 @@ function StorySession() {
       setParams({ stage: "shellshore.01", start: "1" });
     }
     if (id === script.regions[4].outro_scene.id) setCinematic(script.ending.id);
-    if (userId)
-      void rpc("watch_story", { cinematic: id })
-        .then(() => load())
-        .catch(() => {
-          if (mounted.current)
-            setError(
-              "Cinematic preference could not be saved. It may replay next visit.",
-            );
-        });
+    void (userId ? rpc("watch_story", { cinematic: id }) : watchGuestStory(id))
+      .then(() => load())
+      .catch(() => {
+        if (mounted.current)
+          setError(
+            "Cinematic preference could not be saved. It may replay next visit.",
+          );
+      });
   }, [cinematic, load, userId, setParams, region.id, save?.watched]);
 
-  async function request(body: object) {
+  async function request(body: Parameters<typeof guestStoryRequest>[0]) {
+    if (!userId) return guestStoryRequest(body);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20000);
     try {
@@ -267,7 +277,7 @@ function StorySession() {
         done={finishCinema}
       />
     );
-  if (landing || !userId)
+  if (landing)
     return (
       <section className="story-screen story-landing">
         <h1>{STORY_TITLE}</h1>
@@ -279,7 +289,7 @@ function StorySession() {
           <IslandArt />
           <Crab gear={[]} label="Baby red crab" />
         </div>
-        {userId ? (
+        {
           <button
             className="button primary"
             disabled={!save}
@@ -293,11 +303,7 @@ function StorySession() {
           >
             Start Story
           </button>
-        ) : (
-          <Link className="button primary" to="/auth/login?next=%2Fstory">
-            Start Story
-          </Link>
-        )}
+        }
         <button
           className="button secondary"
           onClick={() => {
@@ -368,7 +374,7 @@ function StorySession() {
           storyDialogue={<ScriptDialogue lines={s.defeatLines} />}
           rewardText={
             session.battle.winnerId === "player"
-              ? `Victory saved. Best stars: ${save.progress.find((p) => p.stage_id === s.id)?.best_stars ?? "…"}/3. First-clear reward +${s.xp} battle XP; repeats +0.`
+              ? `Victory saved. Best stars: ${save.progress.find((p) => p.stage_id === s.id)?.best_stars ?? "…"}/3. First-clear reward +${s.xp} Crab XP; repeats +0.`
               : "No story XP for defeat or exit. Try another approach."
           }
         />
@@ -507,9 +513,9 @@ function StorySession() {
       </details>
       {error && <p role="alert">{error}</p>}
       <small>
-        Fictional island · account progress · online battles. Story restoration
-        is fictional and awards no cleanup XP. Safe discoveries can equip your
-        crab; no hazardous pickup is required.
+        Fictional island · saved adventure. Story restoration is fictional and
+        awards no cleanup XP. Safe discoveries can equip your crab; no hazardous
+        pickup is required.
       </small>
     </section>
   );

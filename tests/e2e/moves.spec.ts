@@ -11,7 +11,7 @@ test("workshop separates main unlocks from equipped specials and persists select
     page.getByRole("button", { name: "Unlock at level 3", exact: true }),
   ).toBeDisabled();
   await expect(section).toContainText("Basic Splash · Equipped");
-  // Seed two owned discoveries and earned battle XP in this isolated test profile.
+  // Seed two owned discoveries and earned Crab XP in this isolated test profile.
   await page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
       const r = indexedDB.open("pixelogy-v4");
@@ -108,10 +108,10 @@ test("workshop separates main unlocks from equipped specials and persists select
   await expect(section).toContainText("Basic Splash · Equipped");
   await page.reload();
   await expect(section).toContainText("Shell Slam · Equipped");
-  await expect(section).toContainText("200 battle XP");
+  await expect(section).toContainText("200 Crab XP");
 });
 
-test("battle XP retries once, unlocks Shell Slam without replacing Pinch, and survives reload", async ({
+test("Crab XP retries once, unlocks Shell Slam without replacing Pinch, and survives reload", async ({
   page,
 }) => {
   await mockLocation(page);
@@ -195,17 +195,17 @@ test("battle XP retries once, unlocks Shell Slam without replacing Pinch, and su
     .getByRole("button", { name: "Retry XP save", exact: true })
     .click();
   await expect(page.locator(".arena-results")).toContainText(
-    "+40 battle XP saved.",
+    "+40 Crab XP saved.",
   );
   await expect(page.locator(".arena-results")).toContainText("Crab level 3");
   await expect(page.locator(".arena-results")).toContainText("Level up!");
   await page.getByRole("link", { name: "Change Gear", exact: true }).click();
   await page.reload();
   const section = page.getByRole("region", { name: "Crab moves" });
-  await expect(section).toContainText("230 battle XP");
+  await expect(section).toContainText("230 Crab XP");
   await expect(section).toContainText("Pinch Attack · Equipped");
   await expect(
     page.getByRole("button", { name: "Equip Shell Slam", exact: true }),
   ).toBeEnabled();
-  await expect(page.locator(".hud-info > small")).toContainText("0");
+  await expect(page.locator(".hud-info > small")).toContainText("0 Player XP");
 });

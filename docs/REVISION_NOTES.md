@@ -210,3 +210,33 @@ Not verified: actual iPhone Add to Home Screen installation, physical camera/GPS
 ## 2026-10-24 — Priority release audit
 
 Fixed canonical confirmation callbacks, shared persistent email cooldown, capture lock/lifecycle races, camera-first consent flow and optional account-cache failure handling. Corrected the opening observation label to CAPTION without changing its words. Live Supabase redirect allowlist extended to all allowed production return pages; SMTP is still disabled. No migrations or player-data deletion. Full browser regression 120/120 passed, plus live rollback RLS/campaign SQL checks and production HTTPS/API rejection checks. See `docs/audit/RELEASE_AUDIT.md` for final checks, file list, configuration and blockers. New code remains local until deployment.
+
+
+## 2026-10-25 — Independent Player/Crab progression and foreground walking
+
+Implemented separate Player XP (cosmetics) and Crab XP (existing battle_xp; attacks), with unchanged cleanup statistics. Both levels use 1 + floor(XP / 100). Each cumulative 100 eligible GPS metres awards +8 Player XP and +5 Crab XP together, capped at 10 km per UTC receipt day. Added conservative raw-GPS filtering, durable account-scoped distance outbox, authenticated idempotent server receipts and shared server-time limits. Precise coordinates remain in memory. Existing explorer levels are seeded once from old cleanup totals; future cleanups affect neither level.
+
+Added six original cosmetics beyond the default: Lagoon/Sunshine shirts (2), Coastal bun (3), Wave shirt (5), Sunset shades (8), Explorer vest (10). Added independent HUD/Profile progress, locked customization with server enforcement, avatar layers and queued Player/Crab celebrations. Attack thresholds and selected attacks, permanent Defend, gear specials and battle rules are preserved. Fixed Profile draft refresh so walking sync cannot discard unsaved customization.
+
+Applied additive Supabase migrations `20261025120000_dual_progression.sql` and `20261025120100_bind_walking_account.sql` to project `rsdgbxpqpdewqpmeuwvp`. No existing player rows were deleted. Local IndexedDB upgrades to v5 without resetting prior stores.
+
+Verification completed:
+- TypeScript frontend and NodeNext server checks, ESLint, 95 unit tests, nine plain-Node API assertions and production build passed. Existing large-chunk warning remains.
+- Full Chromium/WebKit run: 121 passed, three failed (two obsolete cleanup-HUD assertions and one asynchronous consent-helper race). Corrected those tests without changing scanner behavior; reran all scanner/game, polish and move tests: **46/46 passed**, including all three prior failures. All 124 browser cases have passing results across the full run and focused rerun; this is not a claim of a second clean full-suite run.
+- Both engines passed new walking/dual-level/reload/cosmetic tests. Reviewed phone screenshots at 375×812, 390×844 and 430×932. Existing landscape, keyboard, reduced-motion, GPS lifecycle, full campaign, PWA update and offline regressions passed in the full run.
+- Live rollback SQL tests `walking.sql`, `rls.sql` and `conspiracy.sql` passed, including duplicate receipts, server-time/speed/cap rejection, account binding, RLS, cosmetic locks, cleanup independence and story reward independence. Test fixture transactions roll back.
+
+Frontend is not deployed. Physical iPhone/Android walking, stationary drift, low-signal/foreground transitions and spoof-resistance remain unverified; browser fixtures cannot establish these. Server bounds do not prove genuine walking or perfectly detect slow vehicles/cross-device duplicate measurement. Pending offline segments remain on their original device and need online syncing time. See `PROGRESSION.md` for formulas, file inventory, migration and privacy details.
+
+## 2026-10-25 — Optional accounts and U.S. cleanup map
+
+Implemented guest camera/Gemini discovery, canonical local inventory/equipment, local Story Mode and foreground walking with separate Player/Crab XP. Added optional Save Your Progress, verified/idempotent guest snapshot import, safe conflict rules, legacy-art preservation and failed-transfer recovery. IndexedDB v6 is additive. Exact story dialogue, battle calculations, auth/recovery and existing gameplay remain intact.
+
+ShoreDex retains its default grid and adds an optional interactive 50-state map with Alaska/Hawaii insets, searchable state controls, real cleanup statistics and offline support. Only optional safe-disposal reports color states. State lookup runs on-device from a fresh fix; uncertain borders require confirmation and denied/poor/outside-U.S. fixes remain unassigned. Coordinates are discarded. Reviewed 375×812, 390×844 and 430×932 screenshots; added an opaque cream footer for readable privacy/attribution text over the tropical background.
+
+Verification:
+- TypeScript frontend/NodeNext, ESLint, **103 unit tests**, **nine plain-Node API assertions**, production build and diff whitespace checks passed. Production still warns about large chunks; bundled geometry adds to the main bundle.
+- Complete Chromium/WebKit suite: **130/130 passed**. After final hardening and map polish, focused guest/offline checks passed **8/8**, then the final camera→discovery→two-state cleanup→equipment→CPU/reload and production-offline rerun passed **4/4** across both engines. Some existing non-failing Vite module-load messages occur during browser teardown/navigation.
+- All repository migrations applied successfully to isolated PGlite PostgreSQL with pgcrypto; four rollback SQL fixtures (`rls`, `conspiracy`, `walking`, `guest`) passed. Checks include quota forgery and caps, source/account isolation, import retry and overlap, legacy gear, malformed legacy records, cleanup provenance/state immutability and existing reward rules. Local database results are not hosted acceptance.
+
+Three staged guest/quota/map migrations are prepared but **not applied live**. Automatic approval review rejected the combined live migration because it changes privileged functions, grants/RLS, cleanup rewards and guest imports. No bypass or live database change was performed for this feature. Migrations require review/approval before deployment. Hosted anonymous Gemini, real email delivery, cross-device imports/map sync and physical-phone camera/GPS remain unverified. See `GUEST_AND_US_MAP.md` for changed files, merge limits and rollout order.

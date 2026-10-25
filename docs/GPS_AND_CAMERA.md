@@ -1,3 +1,5 @@
+> Current progression (2026-10-25): eligible foreground GPS walking awards **both Player XP and Crab XP**. Player Level unlocks cosmetics; Crab Level unlocks main attacks; cleanup XP remains separate. See [progression rules and migration](PROGRESSION.md). This supersedes older movement/no-XP and cleanup-derived explorer-level statements.
+
 # GPS and camera architecture
 
 ## GPS

@@ -280,6 +280,8 @@ describe("move persistence and battle rewards", () => {
         upgradePixelDB(db, 0);
         db.deleteObjectStore("battleProgression");
         db.deleteObjectStore("battleRewards");
+        db.deleteObjectStore("playerProgression");
+        db.deleteObjectStore("guest");
       },
     });
     await old.put("loadouts", { head: "existing" }, "local");
@@ -294,7 +296,7 @@ describe("move persistence and battle rewards", () => {
       "existing",
     );
     old.close();
-    const next = await openDB<PixelDB>(name, 4, { upgrade: upgradePixelDB });
+    const next = await openDB<PixelDB>(name, 6, { upgrade: upgradePixelDB });
     expect(await next.get("loadouts", "local")).toEqual({ head: "existing" });
     expect((await next.get("preferences", "privacy"))?.analysisConsent).toBe(
       true,

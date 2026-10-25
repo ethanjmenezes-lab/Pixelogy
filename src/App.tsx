@@ -1,3 +1,5 @@
+import { CleanupMap } from "./cleanup/Map";
+import { LevelUps } from "./progression/LevelUps";
 import { Recovery, RecoveryRedirect } from "./pages/Recovery";
 import { PwaUpdate } from "./pwa/PwaUpdate";
 import { NativeLifecycle } from "./mobile/NativeLifecycle";
@@ -30,6 +32,7 @@ const titles: Record<string, string> = {
   "/story": "The Blacktide Conspiracy",
   "/scan": "Field scanner",
   "/collection": "ShoreDex",
+  "/collection/map": "U.S. Map",
   "/workshop": "My crab",
   "/battle/practice": "Training grounds",
   "/leaderboard": "Cleanup champions",
@@ -49,6 +52,15 @@ function Layout() {
       panel.current?.focus();
     }
   }, [location.pathname, covered]);
+  useEffect(() => {
+    if (!covered || !location.hash) return;
+    const frame = requestAnimationFrame(() =>
+      document
+        .getElementById(location.hash.slice(1))
+        ?.scrollIntoView({ block: "start" }),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [location.hash, covered, loading]);
   return (
     <div
       className={`game-device ${profile.motion === "reduced" ? "reduced-motion" : ""}`}
@@ -56,6 +68,7 @@ function Layout() {
       <RecoveryRedirect />
       <NativeLifecycle />
       <PwaUpdate />
+      <LevelUps />
       <a
         tabIndex={0}
         className="skip-link"
@@ -94,6 +107,7 @@ function Layout() {
                   <Route path="/story" element={<Story />} />
                   <Route path="/scan" element={<Scan />} />
                   <Route path="/collection" element={<Collection />} />
+                  <Route path="/collection/map" element={<CleanupMap />} />
                   <Route path="/workshop" element={<Workshop />} />
                   <Route path="/battle/practice" element={<Battle />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />

@@ -1,3 +1,6 @@
+import { ProgressionPanel } from "../progression/ProgressionPanel";
+import { cosmetics, appearanceUnlocked } from "../progression/cosmetics";
+import { playerLevel } from "../progression/model";
 import { AccountPanel } from "../cloud/AccountPanel";
 import { InstallGuide } from "../pwa/InstallGuide";
 import { readConsent, saveConsent } from "../lib/storage";
@@ -11,13 +14,13 @@ import {
   type Profile as ProfileType,
 } from "../world/profile";
 import { PlayerAvatar } from "../world/PlayerAvatar";
-import { levelFor } from "../world/model";
+
 export function Profile() {
   const { userId } = useGame();
   return <ProfileSession key={userId ?? "local"} />;
 }
 function ProfileSession() {
-  const { profile, refresh, items, claims, userId } = useGame();
+  const { profile, refresh, items, claims, userId, player } = useGame();
   const [consent, setConsent] = useState(false);
   useEffect(() => {
     void readConsent()
@@ -25,15 +28,15 @@ function ProfileSession() {
       .catch(() => {});
   }, []);
   const [draft, setDraft] = useState<ProfileType>(profile);
-  const [loadedProfile, setLoadedProfile] = useState(profile);
-  if (loadedProfile !== profile) {
-    setLoadedProfile(profile);
+  const [loadedProfile, setLoadedProfile] = useState(JSON.stringify(profile));
+  if (loadedProfile !== JSON.stringify(profile)) {
+    setLoadedProfile(JSON.stringify(profile));
     setDraft(profile);
   }
 
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const xp = claims.reduce((s, c) => s + c.xpAwarded, 0);
+  const level = playerLevel(player.xp);
   async function save() {
     setBusy(true);
     try {
@@ -55,11 +58,17 @@ function ProfileSession() {
           <span className="eyebrow">YOUR COASTAL ALTER EGO</span>
           <h1>Hey, explorer.</h1>
           <p>
-            Level {levelFor(xp).level} · {xp} cleanup XP
+            Player Lv. {level} · {player.xp} Player XP
           </p>
         </div>
       </div>
-      <section className="panel">
+      <ProgressionPanel />
+      <section
+        className="panel"
+        id="customization"
+        aria-label="Player customization"
+      >
+        <h2>Customize player</h2>
         <label className="field-label">
           Explorer name
           <input
@@ -81,6 +90,14 @@ function ProfileSession() {
               {group.colors.map((color, i) => (
                 <button
                   key={color}
+                  disabled={
+                    !appearanceUnlocked({ ...draft, [group.key]: i }, level)
+                  }
+                  title={
+                    group.key === "clothing" && i >= 4
+                      ? "Player Lv. 2"
+                      : undefined
+                  }
                   aria-label={`${group.label} ${i + 1}`}
                   aria-pressed={draft[group.key] === i}
                   style={{ backgroundColor: color }}
@@ -106,6 +123,9 @@ function ProfileSession() {
             >
               <option value="short">Short</option>
               <option value="long">Long</option>
+              <option value="bun" disabled={level < 3}>
+                Coastal bun · Lv. 3
+              </option>
             </select>
           </label>
           <label className="field-label">
@@ -124,6 +144,35 @@ function ProfileSession() {
             </select>
           </label>
         </div>
+        <div className="cosmetic-grid">
+          {cosmetics.map((c) => (
+            <button
+              key={c.id}
+              className="button secondary"
+              disabled={level < c.level}
+              aria-pressed={Object.entries(c.patch).every(
+                ([k, v]) => draft[k as keyof ProfileType] === v,
+              )}
+              onClick={() => setDraft({ ...draft, ...c.patch })}
+            >
+              <PlayerAvatar profile={{ ...draft, ...c.patch }} />
+              {c.name}
+              <small>
+                {level < c.level
+                  ? `Locked · Player Lv. ${c.level}`
+                  : "Unlocked"}
+              </small>
+            </button>
+          ))}
+        </div>
+        <button
+          className="button text"
+          onClick={() =>
+            setDraft({ ...draft, outfit: "plain", accessory: "none" })
+          }
+        >
+          Remove outfit & accessories
+        </button>
         <label className="check-label">
           <input
             type="checkbox"
@@ -178,8 +227,8 @@ function ProfileSession() {
           {items.length} discoveries · {claims.length} self-reported cleanups
         </p>
         <p>
-          Level is cosmetic: every 100 cleanup XP adds a level. Discoveries,
-          walking and battles do not award cleanup XP or combat power.
+          Player XP unlocks cosmetics. Crab XP unlocks main attacks. Cleanup XP
+          stays separate.
         </p>
         <p>
           {userId

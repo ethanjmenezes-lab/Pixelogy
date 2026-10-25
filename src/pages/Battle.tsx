@@ -72,7 +72,7 @@ function BattleSession() {
         if (active)
           setReward({
             id: battle.id,
-            text: `+${result.xp} battle XP saved.`,
+            text: `+${result.xp} Crab XP saved.`,
             saved: true,
           });
       })
@@ -80,7 +80,7 @@ function BattleSession() {
         if (active)
           setReward({
             id: battle.id,
-            text: "Battle XP could not be saved. Retry before leaving.",
+            text: "Crab XP could not be saved. Retry before leaving.",
             saved: false,
           });
       });
@@ -254,15 +254,15 @@ function BattleSession() {
         rewardText={
           session.remote
             ? battle?.status === "completed"
-              ? "Battle XP saved to your account."
+              ? "Crab XP saved to your account."
               : "Account practice · server-validated turns."
             : session.offline
-              ? "Offline practice · no battle XP awarded."
+              ? "Offline practice · no Crab XP awarded."
               : battle?.status === "completed"
                 ? reward?.id === battle.id
                   ? reward.text
-                  : "Saving battle XP…"
-                : "Exit grants no battle XP."
+                  : "Saving Crab XP…"
+                : "Exit grants no Crab XP."
         }
         rewardReady={
           !!session.remote ||

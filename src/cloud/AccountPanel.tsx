@@ -22,11 +22,11 @@ export function AccountPanel() {
   }
   return (
     <section className="panel account-panel">
-      <h2>Your Pixelogy account</h2>
+      <h2>Save Your Progress</h2>
       <p>
         {userId
-          ? "Signed in. Your discoveries and progress belong to this account."
-          : "Sign in to collect across devices. Existing device-only saves remain separate."}
+          ? "Signed in. Guest saves are backed up automatically. Existing account equipment and appearance take precedence."
+          : "Back up your adventure and play across devices. Guest progress stays on this device and can be lost if browser data is cleared."}
       </p>
       {userId ? (
         <>

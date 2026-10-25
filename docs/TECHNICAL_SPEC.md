@@ -1,3 +1,5 @@
+> Current progression (2026-10-25): eligible foreground GPS walking awards **both Player XP and Crab XP**. Player Level unlocks cosmetics; Crab Level unlocks main attacks; cleanup XP remains separate. See [progression rules and migration](PROGRESSION.md). This supersedes older movement/no-XP and cleanup-derived explorer-level statements.
+
 > Authentication repair (2026-10-24): dedicated auth routes and scan return are implemented; Supabase schema/catalog are applied and rollback RLS tests passed. Vercel configuration, matching receipt-signing secret, and production deployment 33b72c2 are complete. Hosted signup UI and unauthenticated API rejection passed; real email/camera/Gemini acceptance remains pending. See [release status](AUTH_RELEASE.md). This status supersedes earlier unapplied-schema notes below.
 
 > Current ShoreDex change: predefined 200-species catalog and authenticated Supabase account saves replace photo pixelization for new discoveries. See [cloud architecture and pending setup](SHOREDEX_CLOUD.md). The prepared migrations are not yet applied; older local-only/crop descriptions below are historical. Existing local saves are preserved.

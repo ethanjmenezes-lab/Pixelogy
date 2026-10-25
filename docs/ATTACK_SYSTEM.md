@@ -1,3 +1,5 @@
+> Current progression (2026-10-25): eligible foreground GPS walking awards **both Player XP and Crab XP**. Player Level unlocks cosmetics; Crab Level unlocks main attacks; cleanup XP remains separate. See [progression rules and migration](PROGRESSION.md). This supersedes older movement/no-XP and cleanup-derived explorer-level statements.
+
 # Three-slot crab attacks — rules version 2
 
 The beach arena, trainer, gear and integer combat calculations remain in place. Each fighter snapshots exactly three moves on Start Battle. No mid-match equipment or move edit changes that snapshot.
@@ -6,7 +8,7 @@ The beach arena, trainer, gear and integer combat calculations remain in place. 
 
 - Main attacks unlock permanently through **crab battle level**. `level = 1 + floor(battleXP / 100)`. Completed wins grant 40 battle XP, losses 15 and exits 0. Selecting a newly unlocked move is explicit; unlocking never replaces the current main attack.
 - Equipment specials require the relevant **currently equipped owned collectible**, at any crab level. Discovery alone adds gear to inventory, not to the active move set. With multiple eligible pieces, choose one special in Workshop → Moves.
-- The existing **explorer level** remains derived from optional self-reported cleanup XP. Battle rewards do not add cleanup credit. Neither level grants additional HP/ATK/DEF/SPD; existing gear bonuses remain the stat source.
+- **Player Level** now derives from independent Player XP, primarily earned through walking. Battle rewards do not add cleanup credit. Neither level grants additional HP/ATK/DEF/SPD; existing gear bonuses remain the stat source.
 - Defend always occupies slot 2. If there are no gear specials, slot 3 is explicitly labeled **Basic Splash**, retaining the former Tidal Slam power/cooldown. If a selected special becomes ineligible, the first eligible special in registry order replaces it, or Basic Splash if none remain. Re-equipping gear does not resurrect an invalid old selection.
 
 ## Registry and initial balance

@@ -31,6 +31,7 @@ do $$ declare s jsonb; p text; sig text; mid uuid; n integer; phase integer; sid
  end loop;
  end loop;
  set local role authenticated;
+ if (select player_xp from public.player_progression)<>0 then raise exception 'Story awarded Player XP';end if;
  if (select battle_xp from public.player_progression)<>1200 then raise exception 'Duplicate XP or wrong first-clear total';end if;
  if (select count(*) from public.story_progress)<>25 then raise exception 'Missing stages';end if;
  if exists(select 1 from public.story_progress where best_stars<>3) then raise exception 'Best stars regressed';end if;

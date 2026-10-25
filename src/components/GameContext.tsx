@@ -1,3 +1,5 @@
+import { backupGuest } from "../guest/backup";
+import { emptyPlayer, type PlayerProgress } from "../progression/model";
 import { cloud, cloudSession } from "../cloud/client";
 import { fetchCloudGame } from "../cloud/game";
 import { initialProgression, type BattleProgression } from "../lib/moves";
@@ -14,6 +16,7 @@ import {
 import { readGame, readProfile, type CleanupClaim } from "../lib/storage";
 import type { Collectible, Equipment } from "../lib/gear";
 type Game = {
+  player: PlayerProgress;
   userId: string | null;
   cloudOffline: boolean;
   progression: BattleProgression;
@@ -28,9 +31,10 @@ type Game = {
 const Context = createContext<Game | null>(null);
 export function GameProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<
-    Pick<Game, "items" | "claims" | "loadout" | "progression">
+    Pick<Game, "items" | "claims" | "loadout" | "progression" | "player">
   >({
     progression: initialProgression(),
+    player: emptyPlayer(),
     items: [],
     claims: [],
     loadout: {},
@@ -55,11 +59,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
           claims: [],
           loadout: {},
           progression: initialProgression(),
+          player: emptyPlayer(),
         });
         setProfile(defaultProfile);
         setLoading(true);
       }
       setUserId(id);
+      if (session)
+        await backupGuest().catch((e) => {
+          throw new Error(
+            "Guest backup needs a retry. Your device save is intact. " +
+              (e as Error).message,
+          );
+        });
       const remote = session ? await fetchCloudGame() : null;
       const next = remote ?? (await readGame());
       const appearance = remote?.profile ?? (await readProfile());
@@ -96,6 +108,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           claims: [],
           loadout: {},
           progression: initialProgression(),
+          player: emptyPlayer(),
         });
         setProfile(defaultProfile);
         setLoading(true);

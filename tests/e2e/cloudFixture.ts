@@ -47,6 +47,8 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
     equipment: Array<Record<string, unknown>>;
     claims: Array<Record<string, unknown>>;
     xp: number;
+    playerXp: number;
+    walkingMm: number;
     special: string;
     appearance: typeof defaultProfile;
   } = {
@@ -54,10 +56,13 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
     equipment: [],
     claims: [],
     xp: 0,
+    playerXp: 0,
+    walkingMm: 0,
     special: "tidal_slam",
     appearance: defaultProfile,
   };
   const receipts = new Map<string, string>();
+  const walked = new Set<string>();
   await page.route(
     "https://rsdgbxpqpdewqpmeuwvp.supabase.co/**",
     async (route) => {
@@ -67,6 +72,19 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
       if (path.startsWith("/auth/")) return route.fulfill({ json: user });
       if (path.includes("/rpc/")) {
         const fn = path.split("/").pop();
+        if (fn === "credit_walk") {
+          if (walked.has(body.event_id))
+            return route.fulfill({ json: { playerXp: 0, crabXp: 0 } });
+          walked.add(body.event_id);
+          const before = Math.floor(state.walkingMm / 100000);
+          state.walkingMm += body.distance_mm;
+          const count = Math.floor(state.walkingMm / 100000) - before;
+          state.playerXp += count * 8;
+          state.xp += count * 5;
+          return route.fulfill({
+            json: { playerXp: count * 8, crabXp: count * 5 },
+          });
+        }
         if (fn === "award_discovery") {
           if (body.catalog_id !== catalogId)
             return route.fulfill({
@@ -96,9 +114,10 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
           state.special = body.discovery ? "bag_snare" : "tidal_slam";
         }
         if (fn === "save_appearance") state.appearance = body.appearance;
-        if (fn === "claim_cleanup") {
+        if (fn === "claim_cleanup" || fn === "claim_cleanup_state") {
           if (!state.claims.length)
             state.claims.push({
+              state_code: body.state_code ?? null,
               id: crypto.randomUUID(),
               discovery_id: discoveryId,
               user_id: userId,
@@ -115,7 +134,13 @@ export async function mockAccount(page: Page, catalogId = "grocery-bag") {
         player_discoveries: state.discoveries,
         crab_equipment: state.equipment,
         cleanup_claims: state.claims,
-        player_progression: [{ battle_xp: state.xp }],
+        player_progression: [
+          {
+            battle_xp: state.xp,
+            player_xp: state.playerXp,
+            walking_mm: state.walkingMm,
+          },
+        ],
         selected_moves: [{ main: "pinch", special: state.special }],
         player_profiles: [{ appearance: state.appearance }],
       };

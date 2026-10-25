@@ -1,3 +1,6 @@
+import { validState } from "../cleanup/states";
+import { appearanceUnlocked } from "../progression/cosmetics";
+import { playerLevel, type PlayerProgress } from "../progression/model";
 import { cloudSession, rpc } from "../cloud/client";
 import {
   normalizeProgression,
@@ -23,6 +26,7 @@ import {
   type Category,
 } from "./gear";
 export type CleanupClaim = {
+  stateCode?: string | null;
   eventId: string;
   collectibleId: string;
   confirmedAtIso: string;
@@ -31,6 +35,9 @@ export type CleanupClaim = {
   selfReported: true;
 };
 export interface PixelDB extends DBSchema {
+  guest: { key: string; value: unknown };
+
+  playerProgression: { key: string; value: PlayerProgress };
   battleProgression: { key: string; value: BattleProgression };
   battleRewards: {
     key: string;
@@ -73,18 +80,26 @@ export function upgradePixelDB(db: IDBPDatabase<PixelDB>, oldVersion: number) {
   }
   if (oldVersion < 2) db.createObjectStore("profiles");
   if (oldVersion < 3) db.createObjectStore("preferences");
+  if (oldVersion < 5) db.createObjectStore("playerProgression");
+  if (oldVersion < 6) db.createObjectStore("guest");
   if (oldVersion < 4) {
     db.createObjectStore("battleProgression");
     db.createObjectStore("battleRewards", { keyPath: "matchId" });
   }
 }
-export const dbPromise = openDB<PixelDB>("pixelogy-v4", 4, {
+export const dbPromise = openDB<PixelDB>("pixelogy-v4", 6, {
   upgrade: upgradePixelDB,
 });
 export async function readGame() {
   const db = await dbPromise;
   const tx = db.transaction(
-    ["collectibles", "cleanupEvents", "loadouts", "battleProgression"],
+    [
+      "collectibles",
+      "cleanupEvents",
+      "loadouts",
+      "battleProgression",
+      "playerProgression",
+    ],
     "readwrite",
   );
   const [items, claims, raw, rawProgression] = await Promise.all([
@@ -110,8 +125,14 @@ export async function readGame() {
     ownedBlueprints(loadout, items),
   );
   await tx.objectStore("battleProgression").put(progression, "local");
+  const player = (await tx.objectStore("playerProgression").get("local")) ?? {
+    xp: claims.reduce((n, c) => n + c.xpAwarded, 0),
+    distanceMm: 0,
+  };
+  await tx.objectStore("playerProgression").put(player, "local");
   await tx.done;
   return {
+    player,
     items: items.sort((a, b) => b.createdAtIso.localeCompare(a.createdAtIso)),
     claims,
     loadout,
@@ -176,7 +197,10 @@ export async function saveDiscovery(input: {
 export async function claimCleanup(
   collectibleId: string,
   eventId: string,
+  stateCode: string | null = null,
 ): Promise<CleanupClaim> {
+  if (stateCode !== null && !validState(stateCode))
+    throw new Error("Invalid U.S. state");
   if (await cloudSession()) {
     const c = await rpc<{
       id: string;
@@ -184,8 +208,13 @@ export async function claimCleanup(
       category: Category;
       claimed_at: string;
       xp: 10 | 15;
-    }>("claim_cleanup", { discovery: collectibleId });
+      state_code?: string | null;
+    }>("claim_cleanup_state", {
+      discovery: collectibleId,
+      state_code: stateCode,
+    });
     return {
+      stateCode: c.state_code ?? null,
       eventId: c.id,
       collectibleId: c.discovery_id,
       category: c.category,
@@ -215,6 +244,7 @@ export async function claimCleanup(
     throw new Error("Cleanup event already used.");
   }
   const claim: CleanupClaim = {
+    stateCode,
     eventId,
     collectibleId,
     category: item.category,
@@ -283,6 +313,8 @@ export async function saveProfile(profile: Profile) {
   }
   if (!validProfile(profile))
     throw new Error("Please choose a valid explorer name and appearance.");
+  if (!appearanceUnlocked(profile, playerLevel((await readGame()).player.xp)))
+    throw new Error("Cosmetic locked");
   await (
     await dbPromise
   ).put("profiles", { ...profile, nickname: profile.nickname.trim() }, "local");

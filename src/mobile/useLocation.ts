@@ -8,7 +8,13 @@ import {
   type LocationFix,
   type LocationStatus,
 } from "./location";
-export function useDeviceLocation(enabled: boolean) {
+export function useDeviceLocation(
+  enabled: boolean,
+  onRawFix?: (fix: LocationFix) => void,
+  onStop?: () => void,
+) {
+  const callbacks = useRef({ onRawFix, onStop });
+  callbacks.current = { onRawFix, onStop };
   const [active, setActive] = useState(!document.hidden);
   const [attempt, setAttempt] = useState(0);
   const [status, setStatus] = useState<LocationStatus>("idle");
@@ -37,6 +43,7 @@ export function useDeviceLocation(enabled: boolean) {
     const stop = startLocation(
       locationProvider,
       (next) => {
+        callbacks.current.onRawFix?.(next);
         if (!validFix(next)) {
           setStatus("unavailable");
           return;
@@ -52,6 +59,7 @@ export function useDeviceLocation(enabled: boolean) {
         setStatus("ready");
       },
       (error) => {
+        callbacks.current.onStop?.();
         const code = (error as { code?: string | number })?.code;
         setStatus(
           code === 1 || code === "OS-PLUG-GLOC-0003" ? "denied" : "unavailable",
@@ -59,6 +67,7 @@ export function useDeviceLocation(enabled: boolean) {
       },
     );
     return () => {
+      callbacks.current.onStop?.();
       clearInterval(stale);
       stop();
     };

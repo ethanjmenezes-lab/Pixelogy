@@ -29,6 +29,8 @@ export function ItemArt({ item }: { item: Collectible }) {
         alt={item.label}
       />
     );
+  if (item.legacyArt?.startsWith("data:image/png;base64,"))
+    return <img className="item-art" src={item.legacyArt} alt={item.label} />;
   return url ? (
     <img className="item-art" src={url} alt={`Pixel art of ${item.label}`} />
   ) : (

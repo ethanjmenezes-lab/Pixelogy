@@ -45,5 +45,11 @@ test("production app installs its shell, excludes API and works after offline re
   await expect(page.getByRole("button", { name: /Pinch/ })).toBeEnabled();
   await page.getByRole("button", { name: /Pinch/ }).click();
   await expect(page.locator(".combat-log")).toContainText("You used Pinch");
+  await page.goto("http://127.0.0.1:4173/collection/map");
+  await page.reload();
+  await expect(page.locator(".state-map path")).toHaveCount(50);
+  await expect(
+    page.getByRole("heading", { name: "U.S. Map", exact: true }),
+  ).toBeVisible();
   await context.setOffline(false);
 });

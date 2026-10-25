@@ -102,6 +102,13 @@ export async function enableScanning(page: Page) {
       .first(),
   ).toBeVisible();
   if (await enable.isVisible()) await enable.click();
+  // Consent is saved asynchronously; a second capture helper must not click
+  // the disappearing consent button while its first save is still pending.
+  await expect(
+    page.getByRole("link", {
+      name: "Automatic photo analysis is on · Privacy settings",
+    }),
+  ).toBeVisible();
 }
 export async function takePhoto(page: Page) {
   await enableScanning(page);

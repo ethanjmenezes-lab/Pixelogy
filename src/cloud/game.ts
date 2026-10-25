@@ -1,3 +1,4 @@
+import type { PlayerProgress } from "../progression/model";
 import { openDB } from "idb";
 import { cloud, cloudSession } from "./client";
 import { catalogById } from "../catalog";
@@ -6,6 +7,7 @@ import type { CleanupClaim } from "../lib/storage";
 import { normalizeProgression, ownedBlueprints } from "../lib/moves";
 import { defaultProfile, validProfile, type Profile } from "../world/profile";
 type CloudGame = {
+  player: PlayerProgress;
   items: Collectible[];
   loadout: Equipment;
   claims: CleanupClaim[];
@@ -52,6 +54,12 @@ export async function fetchCloudGame(): Promise<CloudGame | null> {
     ] = values;
     const items: Collectible[] = discoveries.map((d) => {
       const c = catalogById[d.catalog_id];
+      if (!c && d.legacy_metadata)
+        return {
+          ...d.legacy_metadata,
+          id: d.id,
+          createdAtIso: d.discovered_at,
+        } as Collectible;
       if (!c) throw new Error("Catalog update required.");
       return {
         id: d.id,
@@ -71,11 +79,15 @@ export async function fetchCloudGame(): Promise<CloudGame | null> {
     ) as Equipment;
     const claims: CleanupClaim[] = cleanups.map((c) => ({
       eventId: c.id,
+      stateCode: c.state_code ?? null,
       collectibleId: c.discovery_id,
       category:
         catalogById[
           discoveries.find((d) => d.id === c.discovery_id)?.catalog_id
-        ]?.gearCategory ?? "other_litter",
+        ]?.gearCategory ??
+        discoveries.find((d) => d.id === c.discovery_id)?.legacy_metadata
+          ?.category ??
+        "other_litter",
       confirmedAtIso: c.claimed_at,
       xpAwarded: c.xp,
       selfReported: true,
@@ -92,6 +104,10 @@ export async function fetchCloudGame(): Promise<CloudGame | null> {
     const profile =
       appearance && validProfile(appearance) ? appearance : defaultProfile;
     const result = {
+      player: {
+        xp: progressions[0]?.player_xp ?? 0,
+        distanceMm: progressions[0]?.walking_mm ?? 0,
+      },
       items,
       loadout,
       claims,
@@ -112,7 +128,18 @@ export async function fetchCloudGame(): Promise<CloudGame | null> {
     const cached = await cache
       ?.get("snapshots", session.user.id)
       .catch(() => undefined);
-    if (cached) return { ...cached, offline: true } as CloudGame;
+    if (cached)
+      return {
+        ...cached,
+        player: cached.player ?? {
+          xp: cached.claims.reduce(
+            (n: number, c: CleanupClaim) => n + c.xpAwarded,
+            0,
+          ),
+          distanceMm: 0,
+        },
+        offline: true,
+      } as CloudGame;
     throw new Error(
       "This account has no offline save on this device. Connect to load it.",
     );

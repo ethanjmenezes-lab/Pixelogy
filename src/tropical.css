@@ -1176,3 +1176,121 @@ body {
 .rarity.legendary {
   color: #704600;
 }
+
+/* Separate Player/Crab progression; celebration queue never obscures the whole game. */
+.game-hud .discovery-counter {
+  font-size: 0.7rem;
+  max-width: 64px;
+  text-align: center;
+}
+.walking-notice {
+  position: absolute;
+  top: 150px;
+  left: 16px;
+  right: 16px;
+  padding: 10px;
+  background: #fff8df;
+  color: #282044;
+  border: 2px solid #594793;
+  z-index: 5;
+  font-size: 0.8rem;
+  text-align: center;
+}
+.level-celebration {
+  position: absolute;
+  z-index: 60;
+  left: 16px;
+  right: 16px;
+  top: max(90px, calc(env(safe-area-inset-top) + 70px));
+  max-height: 32dvh;
+  overflow: auto;
+  text-align: center;
+  box-shadow: 0 4px 0 #594793;
+}
+.level-sprite {
+  width: 48px;
+  height: 60px;
+  margin: auto;
+  animation: level-hop 0.6s ease-in-out 3;
+}
+.level-sprite svg {
+  height: 100%;
+  width: 100%;
+}
+@keyframes level-hop {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.reduced-motion .level-sprite {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .level-sprite {
+    animation: none;
+  }
+}
+.cosmetic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-block: 16px;
+}
+.cosmetic-grid button {
+  display: flex;
+  flex-direction: column;
+  white-space: normal;
+  min-width: 0;
+}
+.cosmetic-grid svg {
+  height: 64px;
+  width: 48px;
+}
+.cosmetic-grid small {
+  font-size: 0.7rem;
+}
+.progression-details progress {
+  width: 100%;
+  accent-color: #594793;
+}
+.progression-details p {
+  overflow-wrap: anywhere;
+}
+#customization,
+#crab-progression {
+  scroll-margin-top: 12px;
+}
+
+.level-celebration {
+  font-size: 0.8rem;
+  padding: 12px;
+}
+.level-celebration p {
+  margin: 4px 0;
+}
+.level-celebration .level-sprite {
+  float: left;
+  width: 36px;
+  height: 45px;
+  margin-right: 8px;
+}
+.level-celebration .button {
+  min-height: 44px;
+  padding: 8px;
+  font-size: 0.8rem;
+}
+
+.cosmetic-grid button:disabled {
+  opacity: 1;
+  background: #e4deee;
+  color: #403252;
+  border-color: #594793;
+  box-shadow: none;
+}
+.cosmetic-grid button:disabled svg {
+  opacity: 0.55;
+}
+
+.cleanup-map h1{font-size:1.7rem;margin:.5rem 0}.map-statistics{display:flex;flex-wrap:wrap;gap:.3rem 1rem}.cleanup-map progress{width:100%;accent-color:#25c6b2}.state-map{width:100%;height:auto;background:#fff8df;border:2px solid #594793;margin:12px 0;touch-action:pan-y}.state-map path{fill:#b9b5c6;stroke:#594793;stroke-width:1.5;cursor:pointer;transition:fill .2s}.state-map path.cleaned{fill:#25c6b2}.state-map path.selected,.state-map path:focus{fill:#f58a08;stroke:#282044;stroke-width:3;outline:none}.state-detail{padding:12px;margin:12px 0}.state-detail h2{margin:0 0 6px}.state-list{max-height:200px;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:8px 0}.state-list button{min-height:44px;display:flex;justify-content:space-between;align-items:center;padding:8px;background:#fff8df;border:1px solid #594793;font-size:12px}.state-list button[aria-pressed=true]{background:#a9ddab}.cleanup-confirm [role=group]{display:flex;flex-wrap:wrap;gap:6px}.reduced-motion .state-map path{transition:none}@media(prefers-reduced-motion:reduce){.state-map path{transition:none}}
+.cleanup-map>label{display:block;font-weight:600}.cleanup-map>label input{display:block;width:100%;min-height:44px;margin-top:6px;padding:8px;border:2px solid #594793;background:#fff8df;border-radius:4px}
+.cleanup-map .map-privacy{background:#fff8df;color:#282044;padding:10px;border:1px solid #594793;margin-top:12px}.cleanup-map .map-privacy .field-help,.cleanup-map .map-privacy a{color:#282044}.cleanup-map .map-privacy p{margin:0 0 6px}

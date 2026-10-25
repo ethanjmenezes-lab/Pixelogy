@@ -9,6 +9,8 @@ vi.mock("@google/genai", () => ({
     models = { generateContent };
   },
 }));
+const guestQuota = vi.hoisted(() => vi.fn());
+vi.mock("../server/guest.js", () => ({ reserveGuestScan: guestQuota }));
 const authorize = vi.hoisted(() => vi.fn());
 const beginScan = vi.hoisted(() => vi.fn());
 vi.mock("../server/cloud.js", () => ({
@@ -30,7 +32,10 @@ const valid = {
 async function call(
   body: unknown,
   method = "POST",
-  headers: AnalyzeRequest["headers"] = { "content-type": "application/json" },
+  headers: AnalyzeRequest["headers"] = {
+    "content-type": "application/json",
+    authorization: "Bearer test",
+  },
 ) {
   let code = 200;
   let data: unknown;
@@ -50,6 +55,9 @@ async function call(
 beforeEach(() => {
   vi.stubEnv("GEMINI_API_KEY", "test-only");
   generateContent.mockReset();
+  guestQuota
+    .mockReset()
+    .mockResolvedValue({ userId: "guest", scanId: "guest-id" });
   beginScan.mockResolvedValue({ data: "scan-id", error: null });
   authorize.mockResolvedValue({
     userId: "user-id",
@@ -118,7 +126,7 @@ it("allows native preflight only for explicitly configured origins", async () =>
   expect(generateContent).not.toHaveBeenCalled();
 });
 
-it("rejects unauthenticated scans before contacting Gemini", async () => {
+it("rejects expired account credentials before contacting Gemini", async () => {
   authorize.mockRejectedValueOnce(new Error("AUTH"));
   expect(
     (await call({ consent: true, image: "data:image/jpeg;base64,YQ==" })).code,
@@ -149,4 +157,30 @@ it("rate limits before invoking Gemini and does not issue unsafe receipts", asyn
       recognition: { ...valid, safety: "hazardous" },
     },
   });
+});
+
+it("accepts guests only after anonymous quota reservation and fails closed on quota errors", async () => {
+  generateContent.mockResolvedValue({ text: JSON.stringify(valid) });
+  expect(
+    (
+      await call(
+        { consent: true, image: "data:image/jpeg;base64,YQ==" },
+        "POST",
+        { "content-type": "application/json" },
+      )
+    ).code,
+  ).toBe(200);
+  expect(guestQuota).toHaveBeenCalled();
+  generateContent.mockClear();
+  guestQuota.mockRejectedValueOnce(new Error("QUOTA"));
+  expect(
+    (
+      await call(
+        { consent: true, image: "data:image/jpeg;base64,YQ==" },
+        "POST",
+        { "content-type": "application/json" },
+      )
+    ).code,
+  ).toBe(429);
+  expect(generateContent).not.toHaveBeenCalled();
 });

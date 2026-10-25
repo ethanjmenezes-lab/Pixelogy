@@ -1,3 +1,4 @@
+import { CleanupButton } from "../cleanup/CleanupButton";
 import {
   useEffect,
   useRef,
@@ -15,7 +16,7 @@ import { moves } from "../lib/moves";
 import { claimCleanup } from "../lib/storage";
 
 export function Collection() {
-  const { items, claims, refresh, userId, cloudOffline } = useGame();
+  const { items, claims, cloudOffline } = useGame();
   const [category, setCategory] = useState("all"),
     [rarity, setRarity] = useState("all"),
     [slot, setSlot] = useState("all"),
@@ -28,8 +29,7 @@ export function Collection() {
     (v) => v !== "all",
   ).length;
   const [selected, setSelected] = useState<CatalogEntry | null>(null),
-    [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
+    [message, setMessage] = useState("");
   const byCatalog = new Map<string, Collectible[]>();
   for (const item of items)
     if (item.catalogId)
@@ -68,13 +68,10 @@ export function Collection() {
         <Link className="button primary" to="/scan">
           Scan
         </Link>
+        <Link className="button secondary" to="/collection/map">
+          U.S. Map
+        </Link>
       </div>
-      {!userId && (
-        <p className="notice">
-          Sign in in Profile to collect across devices. Previous local
-          discoveries remain below.
-        </p>
-      )}
       {cloudOffline && (
         <p className="notice">
           Offline account snapshot. Connect to save new discoveries or change
@@ -297,22 +294,7 @@ export function Collection() {
                     Optional self-report for the earliest unclaimed find.
                     Discovery alone earns no cleanup XP.
                   </p>
-                  <button
-                    className="button secondary"
-                    disabled={busy || cloudOffline}
-                    onClick={() => {
-                      setBusy(true);
-                      void claimCleanup(unclaimed.id, crypto.randomUUID())
-                        .then(async (c) => {
-                          setMessage(`+${c.xpAwarded} cleanup XP saved.`);
-                          await refresh();
-                        })
-                        .catch((e) => setMessage(e.message))
-                        .finally(() => setBusy(false));
-                    }}
-                  >
-                    I safely disposed of this litter
-                  </button>
+                  <CleanupButton id={unclaimed.id} disabled={cloudOffline} />
                 </>
               ) : (
                 <p>All owned finds have cleanup self-reports.</p>

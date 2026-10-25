@@ -22,6 +22,7 @@ do $$ begin
  if (select quantity from public.player_inventory where catalog_id='grocery-bag')<>1 then raise exception 'Replay inflated quantity';end if;
  if (select count(*) from public.player_discoveries)<>1 then raise exception 'Replay duplicated discovery';end if;
  if exists(select 1 from public.cleanup_claims where id=discovery_id) then raise exception 'Cleanup event identity must be separate';end if;
+ if (select player_xp from public.player_progression)<>0 then raise exception 'Cleanup awarded Player XP';end if;
  if (select sum(xp) from public.cleanup_claims)<>15 then raise exception 'Cleanup was not idempotent';end if;
  if (select special from public.selected_moves)<>'bag_snare' then raise exception 'Equipment special not synchronized';end if;
  begin

@@ -53,9 +53,9 @@ export async function rpc<T>(
 }
 export async function authHeaders() {
   const session = await cloudSession();
-  if (!session) throw new Error("Sign in before scanning.");
+
   return {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${session.access_token}`,
+    ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
   };
 }

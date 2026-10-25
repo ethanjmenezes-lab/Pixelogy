@@ -83,7 +83,7 @@ test("Legendary discovery reveals, persists canonical rarity and awards no clean
   const { mockAccount } = await import("./cloudFixture");
   const { mockCamera, mockRecognition, takePhoto, safeRecognition } =
     await import("./device");
-  await mockAccount(page, "spiral-straw");
+  const account = await mockAccount(page, "spiral-straw");
   await mockCamera(page);
   await mockRecognition(page, {
     ...safeRecognition,
@@ -104,7 +104,8 @@ test("Legendary discovery reveals, persists canonical rarity and awards no clean
   await expect(page.locator(".discovery-result .rarity")).toHaveText(
     "legendary",
   );
-  await expect(page.locator(".hud-info > small")).toContainText("0 cleanup XP");
+  await expect(page.locator(".hud-info > small")).toContainText("0 Player XP");
+  expect(account.claims).toHaveLength(0);
   await expect(page.locator(".catalog-reveal")).toHaveCSS(
     "filter",
     /^(none|brightness\(1\))$/,
@@ -121,7 +122,8 @@ test("Legendary discovery reveals, persists canonical rarity and awards no clean
     "legendary",
   );
   await expect(page.getByRole("dialog")).toContainText("tide-twisting spear");
-  await expect(page.locator(".hud-info > small")).toContainText("0 cleanup XP");
+  await expect(page.locator(".hud-info > small")).toContainText("0 Player XP");
+  expect(account.claims).toHaveLength(0);
 });
 
 test("compact Workshop preserves slot artwork and stat preview at phone sizes", async ({

@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { Crab } from "../components/Crab";
 import { useGame } from "../components/GameContext";
 import { equippedBlueprints } from "../lib/storage";
-import { levelFor } from "./model";
+import { playerLevel } from "../progression/model";
+import { crabLevel } from "../lib/moves";
+import { useWalking } from "../progression/useWalking";
 import { useDeviceLocation } from "../mobile/useLocation";
 const GeographicMap = lazy(() =>
   import("./GeographicMap").then((m) => ({ default: m.GeographicMap })),
@@ -13,7 +15,7 @@ import { PlayerAvatar } from "./PlayerAvatar";
 
 import { GameMenu, PixelIcon } from "./GameMenu";
 export function OverworldScreen({ covered }: { covered: boolean }) {
-  const { items, loadout, claims, profile } = useGame();
+  const { items, loadout, profile, player, progression, userId } = useGame();
   const [, setSystemReduced] = useState(
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -32,9 +34,13 @@ export function OverworldScreen({ covered }: { covered: boolean }) {
   const [requested, setRequested] = useState(false);
   const [detached, setDetached] = useState(false);
   const [recenter, setRecenter] = useState(0);
-  const gps = useDeviceLocation(requested && !covered && !menu);
-  const xp = claims.reduce((sum, c) => sum + c.xpAwarded, 0),
-    level = levelFor(xp);
+  const walking = useWalking();
+  const gps = useDeviceLocation(
+    requested && !covered && !menu,
+    walking.receive,
+    walking.reset,
+  );
+  const level = { level: playerLevel(player.xp), progress: player.xp % 100 };
   const gear = equippedBlueprints(loadout, items);
   return (
     <section
@@ -105,13 +111,11 @@ export function OverworldScreen({ covered }: { covered: boolean }) {
           </div>
           <div className="hud-info">
             <strong>{profile.nickname}</strong>
-            <span>
-              LEVEL {level.level} <i>·</i> SHORE EXPLORER
-            </span>
+            <span>Player Lv. {level.level}</span>
             <div
               className="xp-track"
               role="progressbar"
-              aria-label="Cleanup XP toward next level"
+              aria-label="Player XP toward next level"
               aria-valuenow={level.progress}
               aria-valuemin={0}
               aria-valuemax={100}
@@ -119,9 +123,16 @@ export function OverworldScreen({ covered }: { covered: boolean }) {
               <i style={{ width: `${level.progress}%` }} />
             </div>
             <small>
-              {xp} cleanup XP <span>{level.progress}/100</span>
+              {player.xp} Player XP <span>{level.progress}/100</span>
             </small>
           </div>
+        </Link>
+        <Link
+          to="/profile#crab-progression"
+          className="discovery-counter"
+          aria-label="Open crab progression"
+        >
+          Crab Lv. {crabLevel(progression.xp)}
         </Link>
         <Link
           to="/collection"
@@ -194,9 +205,22 @@ export function OverworldScreen({ covered }: { covered: boolean }) {
             </div>
           </div>
           <div className="world-hint">
-            Stay aware of your surroundings. Movement earns no XP.
+            {userId
+              ? "Walk to earn Player and Crab XP."
+              : "Walk to earn Player and Crab XP."}
+            {walking.pending > 0 && (
+              <span>
+                {" "}
+                · {(walking.pending / 1000).toFixed(0)} m pending sync
+              </span>
+            )}
           </div>
         </>
+      )}
+      {walking.notice && !covered && (
+        <div className="walking-notice" role="status">
+          {walking.notice}
+        </div>
       )}
       {menu && <GameMenu onClose={closeMenu} />}
     </section>

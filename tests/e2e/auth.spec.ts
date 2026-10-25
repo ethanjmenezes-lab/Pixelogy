@@ -33,11 +33,15 @@ async function authFixture(page: import("@playwright/test").Page) {
   );
 }
 test.beforeEach(async ({ page }) => authFixture(page));
-test("guest scan redirects, login persists across reload, logout restores guest", async ({
+test("guest scan stays open, optional login persists and logout restores guest", async ({
   page,
 }) => {
   await page.goto("/scan");
-  await expect(page).toHaveURL(/auth\/login/);
+  await expect(page).toHaveURL(/\/scan$/);
+  await expect(
+    page.getByRole("button", { name: "Take photo", exact: true }),
+  ).toBeVisible();
+  await page.goto("/auth/login?next=%2Fscan");
   await page.getByLabel("Email", { exact: true }).fill(user.email);
   await page.getByLabel("Password", { exact: true }).fill("fixture-password");
   await page.getByRole("button", { name: "Log In", exact: true }).click();
@@ -50,7 +54,7 @@ test("guest scan redirects, login persists across reload, logout restores guest"
   await page.goto("/profile");
   await page.getByRole("button", { name: /Log out/i }).click();
   await page.goto("/scan");
-  await expect(page).toHaveURL(/auth\/login/);
+  await expect(page).toHaveURL(/\/scan$/);
 });
 test("signup confirmation and password reset preserve scan destination", async ({
   page,

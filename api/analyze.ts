@@ -1,3 +1,4 @@
+import { reserveGuestScan } from "../server/guest.js";
 import type { IncomingHttpHeaders } from "node:http";
 export type AnalyzeRequest = {
   method?: string;
@@ -53,12 +54,20 @@ export default async function handler(
       .status(503)
       .json({ error: "Gemini is not configured. Please try again later." });
   try {
-    const { client, userId } = await authorized(req.headers);
-    const hash = createHash("sha256").update(parsed.data.image).digest("hex");
-    const { data: scanId, error: scanError } = await client.rpc("begin_scan", {
-      image_hash: hash,
-    });
-    if (scanError) return res.status(429).json({ error: scanError.message });
+    let userId: string, scanId: string;
+    if (req.headers.authorization) {
+      const auth = await authorized(req.headers);
+      userId = auth.userId;
+      const hash = createHash("sha256").update(parsed.data.image).digest("hex");
+      const result = await auth.client.rpc("begin_scan", { image_hash: hash });
+      if (result.error)
+        return res.status(429).json({ error: result.error.message });
+      scanId = result.data;
+    } else
+      ({ userId, scanId } = await reserveGuestScan(
+        req.headers,
+        parsed.data.image,
+      ));
     const ai = new GoogleGenAI({
       apiKey: process.env.GEMINI_API_KEY,
       httpOptions: { timeout: 25000 },
@@ -121,30 +130,32 @@ export default async function handler(
     });
     const recognition = objectRecognition.parse(JSON.parse(result.text ?? ""));
     const match = matchCatalog(recognition);
-    return res
-      .status(200)
-      .json({
-        ...match,
-        recognition,
-        ...(match.candidates.length
-          ? receipt({
-              purpose: "discovery",
-              userId,
-              scanId,
-              candidates: match.candidates,
-            })
-          : {}),
-      });
+    return res.status(200).json({
+      ...match,
+      recognition,
+      ...(match.candidates.length
+        ? receipt({
+            purpose: "discovery",
+            userId,
+            scanId,
+            candidates: match.candidates,
+          })
+        : {}),
+    });
   } catch (error) {
-    if (error instanceof Error && error.message === "AUTH")
-      return res.status(401).json({ error: "Sign in before scanning." });
-    if (error instanceof Error && error.message === "CONFIG")
+    if (error instanceof Error && error.message === "QUOTA")
       return res
-        .status(503)
-        .json({
-          error:
-            "Cloud discovery is not configured. No collectible was awarded.",
-        });
+        .status(429)
+        .json({ error: "Scan allowance reached. Please try again later." });
+    if (error instanceof Error && error.message === "AUTH")
+      return res.status(401).json({
+        error:
+          "Your account session expired. Sign out to scan as a guest or sign in again.",
+      });
+    if (error instanceof Error && error.message === "CONFIG")
+      return res.status(503).json({
+        error: "Cloud discovery is not configured. No collectible was awarded.",
+      });
     return res.status(502).json({
       error:
         "Gemini could not identify this photo. Retry identification or retake your photo.",

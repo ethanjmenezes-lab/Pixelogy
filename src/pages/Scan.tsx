@@ -1,9 +1,11 @@
+import { CleanupButton } from "../cleanup/CleanupButton";
+import { saveGuestDiscovery } from "../guest/local";
 import { useEffect, useRef, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CameraCapture } from "../mobile/CameraCapture";
 import { analyzeUrl } from "../mobile/platform";
 import { normalizePhoto } from "../lib/pixel";
-import { readConsent, saveConsent, claimCleanup } from "../lib/storage";
+import { readConsent, saveConsent } from "../lib/storage";
 import { useGame } from "../components/GameContext";
 import { authHeaders, rpc } from "../cloud/client";
 import { catalogById } from "../catalog";
@@ -13,11 +15,7 @@ import { moves } from "../lib/moves";
 type Analysis = ReturnType<typeof catalogAnalysisSchema.parse>;
 export function Scan() {
   const { userId } = useGame();
-  return userId ? (
-    <ScanSession key={userId} />
-  ) : (
-    <Navigate replace to="/auth/login?next=%2Fscan" />
-  );
+  return <ScanSession key={userId ?? "guest"} />;
 }
 function ScanSession() {
   const { userId, refresh } = useGame();
@@ -34,8 +32,7 @@ function ScanSession() {
       id: string;
       catalogId: string;
       isNew: boolean;
-    } | null>(null),
-    [cleanup, setCleanup] = useState("");
+    } | null>(null);
   const generation = useRef(0),
     controller = useRef<AbortController | null>(null),
     mounted = useRef(true),
@@ -69,12 +66,12 @@ function ScanSession() {
     setReviewed(false);
     setSaved(null);
     setError("");
-    setCleanup("");
+
     lock.current = false;
     setBusy(false);
   }
   async function analyze(image: string, justConsented = false) {
-    if ((!consent && !justConsented) || !userId || lock.current) return;
+    if ((!consent && !justConsented) || lock.current) return;
     reset();
     const version = generation.current;
     const abort = new AbortController();
@@ -153,15 +150,17 @@ function ScanSession() {
         throw new Error(
           "Photo analysis consent was revoked. Retake after enabling it again.",
         );
-      const result = await rpc<{
-        id: string;
-        catalogId: string;
-        isNew: boolean;
-      }>("award_discovery", {
-        payload: analysis.payload,
-        signature: analysis.signature,
-        catalog_id: selected,
-      });
+      const result = !userId
+        ? await saveGuestDiscovery(selected, analysis.payload!)
+        : await rpc<{
+            id: string;
+            catalogId: string;
+            isNew: boolean;
+          }>("award_discovery", {
+            payload: analysis.payload,
+            signature: analysis.signature,
+            catalog_id: selected,
+          });
       if (!mounted.current || version !== generation.current) return;
       setSaved(result);
       setSource("");
@@ -193,18 +192,7 @@ function ScanSession() {
           {error}
         </p>
       )}
-      {!userId ? (
-        <section className="panel">
-          <h2>Your discoveries deserve a home.</h2>
-          <p>
-            Sign in to save validated discoveries to your account across
-            devices. Your existing local collection stays safe.
-          </p>
-          <Link to="/profile" className="button primary">
-            Sign in to scan
-          </Link>
-        </section>
-      ) : saved && entry ? (
+      {saved && entry ? (
         <section className={`panel discovery-result ${entry.rarity}`}>
           <span className="eyebrow">
             {saved.isNew
@@ -255,26 +243,7 @@ function ScanSession() {
             </button>
           </div>
           <p>Optional self-report: did you safely dispose of this litter?</p>
-          {cleanup ? (
-            <p role="status">{cleanup}</p>
-          ) : (
-            <button
-              className="button secondary"
-              disabled={busy}
-              onClick={() => {
-                setBusy(true);
-                void claimCleanup(saved.id, crypto.randomUUID())
-                  .then(async (c) => {
-                    setCleanup(`+${c.xpAwarded} cleanup XP saved.`);
-                    await refresh();
-                  })
-                  .catch((e) => setError(e.message))
-                  .finally(() => setBusy(false));
-              }}
-            >
-              I safely disposed of this litter
-            </button>
-          )}
+          <CleanupButton id={saved.id} />
         </section>
       ) : (
         <section className="scan-flow panel" data-scan-state={mode}>
@@ -293,8 +262,8 @@ function ScanSession() {
               <h2>Snap. Discover. Collect.</h2>
               <p>
                 Resized photos are sent to Google Gemini to identify a safe
-                catalog match. Raw photos are not stored. Your account stores
-                the catalog discovery, not the photo.
+                catalog match. Raw photos are not stored. Only the catalog
+                discovery is saved, not the photo.
               </p>
               <button
                 className="button primary"

@@ -1,0 +1,14 @@
+{
+  "xpPerLevel": 100,
+  "milestoneMm": 100000,
+  "playerXp": 8,
+  "crabXp": 5,
+  "dailyCapMm": 10000000,
+  "minSpeed": 0.3,
+  "maxSpeed": 2.7,
+  "maxAccuracy": 20,
+  "minDistance": 5,
+  "maxGapMs": 30000,
+  "maxBatchMs": 120000,
+  "syncMs": 10000
+}
